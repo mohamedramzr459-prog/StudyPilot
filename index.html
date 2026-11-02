@@ -1,989 +1,185 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="midnight">
-<head>
-<meta charset="UTF-8">
+<html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#04040f" id="tc">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="StudyPilot">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="manifest" href="manifest.json">
-<link rel="icon" href="icon-192.png">
-<link rel="apple-touch-icon" href="icon-192.png">
-<title>StudyPilot</title>
-<script>
-try{var d=JSON.parse(localStorage.getItem('studypilot_v1'));if(d&&d.theme)document.documentElement.dataset.theme=d.theme}catch(e){}
-</script>
+<meta name="theme-color" content="#04040f"><title>StudyPilot</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Amiri:wght@400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.58.0/dist/umd/supabase.js"></script>
 <style>
-:root,[data-theme=midnight]{--bg:#04040f;--card:#08081c;--line:#1b1b3d;--text:#f4f4ff;--mut:#8f93b5;--a:#8b7bff;--a2:#22d3ee;--btn:#4a35c9;--nav:#06061a;--tc:#04040f;color-scheme:dark}
-[data-theme=amoled]{--bg:#000;--card:#0b0b0b;--line:#222;--text:#fff;--mut:#9a9a9a;--a:#00e5a0;--a2:#38bdf8;--btn:#009e70;--nav:#000;--tc:#000000;color-scheme:dark}
-[data-theme=aurora]{--bg:#041016;--card:#0a1d28;--line:#143546;--text:#eafcff;--mut:#7fa6b5;--a:#2dd4bf;--a2:#a78bfa;--btn:#0f8f82;--nav:#06161e;--tc:#041016;color-scheme:dark}
-[data-theme=sunset]{--bg:#130708;--card:#1f0c11;--line:#3d1922;--text:#fff1f0;--mut:#b58a90;--a:#fb7185;--a2:#fbbf24;--btn:#be3a52;--nav:#190a0d;--tc:#130708;color-scheme:dark}
-[data-theme=forest]{--bg:#030f08;--card:#09190f;--line:#143321;--text:#ecfff2;--mut:#80a98c;--a:#4ade80;--a2:#facc15;--btn:#1f9b4d;--nav:#06140c;--tc:#030f08;color-scheme:dark}
-[data-theme=ocean]{--bg:#020f1d;--card:#06192c;--line:#0f3153;--text:#eaf6ff;--mut:#7f9fbd;--a:#38bdf8;--a2:#818cf8;--btn:#1673b0;--nav:#04152a;--tc:#020f1d;color-scheme:dark}
-[data-theme=gold]{--bg:#0c0904;--card:#16100a;--line:#382a12;--text:#fff8e6;--mut:#b09a6e;--a:#fbbf24;--a2:#f97316;--btn:#a8730a;--nav:#120d06;--tc:#0c0904;color-scheme:dark}
-[data-theme=pearl]{--bg:#f4f5fb;--card:#ffffff;--line:#e2e5f1;--text:#14142b;--mut:#6a6f92;--a:#6c4cff;--a2:#0ea5e9;--btn:#6c4cff;--nav:#ffffff;--tc:#f4f5fb;color-scheme:light}
-
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-[hidden]{display:none!important}
-html,body{margin:0;background:var(--bg);color:var(--text);font-family:Roboto,system-ui,-apple-system,"Segoe UI",sans-serif}
-main{max-width:560px;margin:auto;padding:calc(22px + env(safe-area-inset-top)) 18px calc(112px + env(safe-area-inset-bottom))}
-.eyebrow{color:var(--a);font-weight:800;letter-spacing:4px;font-size:15px}
-h1{font-size:38px;line-height:1.1;margin:14px 0 8px;font-weight:800}
-h2{font-size:28px;margin:6px 0 16px}
-h3{margin:0 0 10px;font-size:20px}
-.mut,.date{color:var(--mut)}
-.center{text-align:center}
-.screen{display:none}
-.screen.on{display:block;animation:in .3s}
-@keyframes in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-.card{background:var(--card);border:1px solid var(--line);border-radius:28px;padding:22px;margin-bottom:14px}
-.lbl{color:var(--mut);font-size:12.5px;font-weight:700;letter-spacing:2px;text-transform:uppercase}
-.big{font-size:30px;font-weight:800;margin:6px 0}
-.bar{height:10px;border-radius:10px;background:rgba(128,128,160,.2);overflow:hidden;margin:10px 0}
-.bar i{display:block;height:100%;width:0;border-radius:10px;background:linear-gradient(90deg,var(--a),var(--a2));transition:width .5s}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
-.grid .card{margin:0;padding:18px;border-radius:24px}
-.num{font-size:32px;font-weight:800;margin-top:8px}
-.btn{display:inline-block;border:0;border-radius:18px;padding:15px 20px;background:var(--btn);color:#fff;font-size:16px;font-weight:700;font-family:inherit;cursor:pointer;text-align:center}
-.btn:active{transform:scale(.97)}
-.btn.block{display:block;width:100%;margin-top:10px}
-.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--text)}
-.btn.red{background:#dc2626}
-.btn.sm{padding:10px 14px;font-size:14px;border-radius:14px}
-.row{display:flex;gap:10px}
-.row>*{flex:1;min-width:0}
-.rowc{display:flex;align-items:center;gap:16px}
-input,select,textarea{width:100%;padding:14px;margin:0 0 10px;background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:14px;font-size:16px;font-family:inherit}
-input:focus,select:focus,textarea:focus{outline:2px solid var(--a);border-color:transparent}
-label{display:block;color:var(--mut);font-size:13px;margin:6px 0}
-.pills{display:flex;gap:8px;overflow-x:auto;margin-bottom:14px;padding-bottom:4px;scrollbar-width:none}
-.pills::-webkit-scrollbar{display:none}
-.pills button{flex:none;padding:10px 16px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--mut);font-weight:700;font-size:14px;font-family:inherit}
-.pills button.on{background:var(--btn);color:#fff;border-color:transparent}
-.tabs{display:flex;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:4px;margin-bottom:14px}
-.tabs button{flex:1;padding:12px;border:0;border-radius:14px;background:none;color:var(--mut);font-weight:700;font-size:15px;font-family:inherit}
-.tabs button.on{background:var(--btn);color:#fff}
-.item{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:14px;margin-bottom:10px}
-.item.done b{text-decoration:line-through;opacity:.5}
-.grow{flex:1;min-width:0}
-.grow b{display:block;word-break:break-word}
-.grow small{color:var(--mut)}
-.grow p{margin:6px 0 0;white-space:pre-wrap;word-break:break-word;font-size:14px;color:var(--mut)}
-.ib{background:none;border:0;font-size:21px;padding:4px;color:var(--text)}
-.empty{text-align:center;color:var(--mut);padding:18px}
-.flash{min-height:170px;display:grid;place-items:center;text-align:center;padding:22px;margin-bottom:12px;font-size:21px;font-weight:700;border-radius:28px;background:linear-gradient(135deg,var(--btn),var(--a2));color:#fff;word-break:break-word}
-.ringwrap{position:relative;flex:none}
-.ringwrap svg{display:block;transform:rotate(-90deg)}
-.ringwrap .rt{position:absolute;inset:0;display:grid;place-items:center;text-align:center;font-weight:800}
-.rtrack{fill:none;stroke:rgba(128,128,160,.2)}
-.rfill{fill:none;stroke:url(#rg);stroke-linecap:round;transition:stroke-dashoffset .6s}
-#time{font-size:58px;font-variant-numeric:tabular-nums;letter-spacing:1px}
-.dots{display:flex;gap:8px;justify-content:center;margin:6px 0 14px}
-.dots i{width:12px;height:12px;border-radius:50%;background:rgba(128,128,160,.25)}
-.dots i.f{background:linear-gradient(135deg,var(--a),var(--a2))}
-.chips{display:flex;gap:8px;margin-bottom:12px}
-.chips button{flex:1;padding:11px 0;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--text);font-weight:700;font-family:inherit}
-.chips button.on{border-color:var(--a);color:var(--a)}
-.bars{display:flex;gap:6px;height:170px}
-.b{flex:1;display:flex;flex-direction:column;align-items:center}
-.col{flex:1;width:100%;display:flex;align-items:flex-end}
-.col i{display:block;width:100%;min-height:3px;border-radius:8px 8px 3px 3px;background:linear-gradient(var(--a2),var(--a))}
-.b small{font-size:11px;color:var(--a);margin-top:4px}
-.b em{font-size:11px;color:var(--mut);font-style:normal}
-.heat{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;grid-template-rows:repeat(7,auto);gap:4px}
-.heat i{aspect-ratio:1;border-radius:4px;background:rgba(128,128,160,.15)}
-.opt{display:block;width:100%;text-align:left;padding:15px;margin-bottom:10px;border-radius:16px;border:1px solid var(--line);background:var(--card);color:var(--text);font-size:16px;font-family:inherit}
-.opt.ok{border-color:#22c55e;background:rgba(34,197,94,.18)}
-.opt.bad{border-color:#ef4444;background:rgba(239,68,68,.18)}
-.aiout{white-space:pre-wrap;word-break:break-word;line-height:1.6}
-.themes{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-.sw{border:2px solid var(--line);border-radius:16px;padding:10px 2px;background:var(--bg);color:var(--text);font-size:11px;font-weight:700;font-family:inherit;text-align:center}
-.sw i{display:block;width:34px;height:34px;border-radius:50%;margin:0 auto 6px}
-.sw.on{border-color:var(--a)}
-.sw2{display:flex;justify-content:space-between;align-items:center;padding:8px 0}
-.tg{width:54px;height:30px;border-radius:30px;border:0;background:rgba(128,128,160,.3);position:relative;padding:0;margin:0}
-.tg::after{content:'';position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:.2s}
-.tg.on{background:var(--btn)}
-.tg.on::after{left:27px}
-nav{position:fixed;left:0;right:0;bottom:0;display:flex;gap:2px;background:var(--nav);border-top:1px solid var(--line);padding:8px 6px calc(8px + env(safe-area-inset-bottom));z-index:9}
-nav button{flex:1;border:0;background:none;color:var(--mut);border-radius:16px;padding:8px 0;font-size:10.5px;font-weight:700;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:3px}
-nav button.on{background:rgba(128,128,160,.18);color:var(--a)}
-#toast{position:fixed;left:50%;bottom:calc(100px + env(safe-area-inset-bottom));transform:translate(-50%,20px);background:var(--card);border:1px solid var(--line);color:var(--text);padding:12px 18px;border-radius:16px;opacity:0;transition:.3s;z-index:80;max-width:88%;text-align:center;pointer-events:none}
-#toast.show{opacity:1;transform:translate(-50%,0)}
-.cf{position:fixed;width:9px;height:14px;top:42%;border-radius:2px;z-index:85;pointer-events:none;animation:cf 1.1s ease-out forwards}
-@keyframes cf{to{transform:translate(var(--x),var(--y)) rotate(var(--r));opacity:0}}
-#splash{position:fixed;inset:0;z-index:100;background:var(--bg);display:grid;place-content:center;text-align:center;transition:opacity .5s,visibility .5s}
-#splash.hide{opacity:0;visibility:hidden}
-.logo{width:96px;height:96px;margin:0 auto 18px;border-radius:30px;background:linear-gradient(135deg,var(--a),var(--a2));display:grid;place-items:center;font-size:48px;color:#fff;animation:pop .8s}
-@keyframes pop{0%{transform:scale(.6);opacity:0}70%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
-.sname{font-size:28px;font-weight:800;letter-spacing:3px}
-#onb{position:fixed;inset:0;z-index:90;background:var(--bg);display:flex;flex-direction:column;padding:calc(40px + env(safe-area-inset-top)) 24px calc(28px + env(safe-area-inset-bottom));overflow:auto}
-.slide{display:none;flex:1;flex-direction:column;justify-content:center;text-align:center}
-.slide.on{display:flex}
-.slide .em{font-size:84px;margin-bottom:10px}
-.slide h2{font-size:30px}
-.lgb{display:flex;gap:10px;justify-content:center;margin-top:16px}
-.lgb button{padding:12px 22px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--text);font-weight:700;font-size:16px;font-family:inherit}
-.lgb button.on{border-color:var(--a);color:var(--a)}
-</style>
-</head>
-<body>
-<div id="splash"><div><div class="logo">✦</div><div class="sname">STUDYPILOT</div></div></div>
-
-<div id="onb" hidden>
-  <div class="slide on" data-n="0">
-    <div class="em">🚀</div>
-    <h2 data-i="ob1t">Welcome to StudyPilot</h2>
-    <p class="mut" data-i="ob1p">Your smart study companion for planning, focus, revision and progress.</p>
-    <div class="lgb"><button class="lg on" data-l="en" onclick="setLang('en')">English</button><button class="lg" data-l="ta" onclick="setLang('ta')">தமிழ்</button></div>
-  </div>
-  <div class="slide" data-n="1">
-    <div class="em">🧠</div>
-    <h2 data-i="ob2t">Study smarter</h2>
-    <p class="mut" data-i="ob2p">Flashcards with spaced repetition, quizzes, timetable and exam planner, all in one place.</p>
-  </div>
-  <div class="slide" data-n="2">
-    <div class="em">✨</div>
-    <h2 data-i="ob3t">Your AI tutor</h2>
-    <p class="mut" data-i="ob3p">Get explanations, summaries, quizzes and study plans. Tell us your name to begin.</p>
-    <input id="obName" placeholder="Your name" data-p="p_name" style="margin-top:14px">
-  </div>
-  <div class="row">
-    <button class="btn ghost" onclick="obDone()" data-i="skip">Skip</button>
-    <button class="btn" id="obNext" onclick="obNext()" data-i="next">Next</button>
-  </div>
-</div>
-
+:root{--bg:#04040f;--card:#11122a;--tx:#f1f1ff;--mu:#8e90b5;--ac:#7c5cff;--fs:16px}
+[data-t=ocean]{--bg:#03111a;--card:#0b2433;--ac:#22b8f0}
+[data-t=forest]{--bg:#04120a;--card:#0d2417;--ac:#3ddc84}
+[data-t=sunset]{--bg:#150808;--card:#2a1210;--ac:#ff7a45}
+[data-t=rose]{--bg:#150610;--card:#2b1022;--ac:#ff5fa2}
+[data-t=violet]{--bg:#0a0618;--card:#1b1236;--ac:#a66bff}
+[data-t=gold]{--bg:#100d03;--card:#241d08;--ac:#f5c542}
+[data-t=paper]{--bg:#f4f5fb;--card:#fff;--tx:#16172b;--mu:#667;--ac:#5b4bff}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--tx);font:var(--fs)/1.5 Poppins,sans-serif;padding:env(safe-area-inset-top) 0 calc(80px + env(safe-area-inset-bottom))}
+main{max-width:560px;margin:auto;padding:16px}
+.view{display:none}.view.on{display:block;animation:in .25s}
+@keyframes in{from{opacity:0;transform:translateY(8px)}}
+h1{font-size:1.5em;margin:8px 0 14px}h3{margin:16px 0 8px}small,.mu{color:var(--mu)}
+.card{background:var(--card);border-radius:16px;padding:14px;margin:0 0 10px}
+.row{display:flex;gap:8px;align-items:center}.g{flex:1}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.grid .card b{font-size:1.6em;display:block}
+input,select,textarea{width:100%;background:var(--card);color:var(--tx);border:1px solid #8883;border-radius:12px;padding:10px;font:inherit;margin:0 0 8px}
+input[type=checkbox]{width:22px;height:22px;margin:0}input[type=color]{padding:2px;height:42px}
+.btn{background:var(--ac);color:#fff;border:0;border-radius:12px;padding:10px 16px;font:600 1em Poppins;cursor:pointer;margin-bottom:8px}
+.btn.o{background:none;border:1px solid var(--ac);color:var(--ac)}
+.chip{background:var(--card);color:var(--tx);border:1px solid #8883;border-radius:99px;padding:6px 14px;margin:0 6px 8px 0;font:inherit;text-transform:capitalize}
+.chip.on{background:var(--ac);color:#fff}
+.x{background:none;border:0;font-size:1.1em}.dn{text-decoration:line-through;opacity:.5}
+.ringc{display:flex;align-items:center;gap:18px}.ringc svg{width:120px;transform:rotate(-90deg)}
+.ringc circle{fill:none;stroke-width:10;stroke-linecap:round}.ringc .bg{stroke:#8883}
+.ringc .fg{stroke:var(--ac);transition:stroke-dashoffset 1s;filter:drop-shadow(0 0 6px var(--ac))}
+.ringc b{font-size:2em}
+#tm{font-size:4.5em;font-weight:700;text-align:center;margin:20px 0 4px}#fm,#cy{text-align:center}
+.bars{display:flex;gap:8px;height:130px;align-items:flex-end}.bars div{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;text-align:center}
+.bars i{background:var(--ac);border-radius:6px;min-height:3px;transition:height .6s}
+.heat{display:grid;grid-template-columns:repeat(14,1fr);gap:4px}.heat i{aspect-ratio:1;background:var(--ac);border-radius:4px}
+.flip{text-align:center;padding:40px 14px;cursor:pointer}
+.ar{font:1.6em Amiri,serif;direction:rtl}.ay{border-bottom:1px solid #8883;padding:12px 0}.ay .ar{font-size:1.9em;line-height:2.1}
+nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:var(--card);padding:6px 4px calc(6px + env(safe-area-inset-bottom));border-top:1px solid #8883}
+nav button{flex:1;background:none;border:0;color:var(--mu);font:.7em Poppins}nav button span{display:block;font-size:1.7em}nav .on{color:var(--ac)}
+#splash,#onb{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;z-index:50;transition:opacity .5s}
+#splash h1{font-size:2.2em}#splash i{font-size:4em;font-style:normal;color:var(--ac);animation:pul 1.2s infinite alternate}
+@keyframes pul{to{transform:scale(1.2);text-shadow:0 0 30px var(--ac)}}
+#onb{z-index:40}#onb .em{font-size:5em}
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--ac);color:#fff;padding:8px 18px;border-radius:99px;opacity:0;transition:.3s;pointer-events:none;z-index:60}#toast.on{opacity:1}
+.cf{position:fixed;top:-10px;width:8px;height:12px;z-index:99;animation:fall 1.5s ease-in forwards}@keyframes fall{to{transform:translateY(105vh) rotate(540deg)}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head><body>
+<div id="splash"><i>✦</i><h1>StudyPilot</h1><p class="mu">Plan. Focus. Grow.</p></div>
+<div id="onb" hidden></div>
 <main>
-
-<!-- HOME -->
-<section id="home" class="screen on">
-  <div class="eyebrow">STUDYPILOT ✦</div>
-  <h1 id="greet">Good afternoon.</h1>
-  <p class="date" id="date"></p>
-
-  <div class="card rowc">
-    <div class="ringwrap" style="width:120px;height:120px">
-      <svg width="120" height="120" viewBox="0 0 120 120">
-        <defs><linearGradient id="rg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--a)"/><stop offset="1" style="stop-color:var(--a2)"/></linearGradient></defs>
-        <circle class="rtrack" cx="60" cy="60" r="50" stroke-width="10"/>
-        <circle class="rfill" id="hRing" cx="60" cy="60" r="50" stroke-width="10"/>
-      </svg>
-      <div class="rt" id="hPct" style="font-size:26px">0%</div>
-    </div>
-    <div class="grow">
-      <div class="lbl" data-i="h_prog">Today's progress</div>
-      <div class="big" id="hMin">0 min</div>
-      <p class="mut" id="hGoal" style="margin:0"></p>
-      <p class="mut" id="pcount" style="margin:4px 0 0"></p>
-    </div>
-  </div>
-
-  <div class="grid">
-    <div class="card"><div class="lbl" data-i="h_left">Tasks left</div><div class="num" id="tLeft">0</div></div>
-    <div class="card"><div class="lbl" data-i="h_focusmin">Focus minutes</div><div class="num" id="fMin">0</div></div>
-    <div class="card"><div class="lbl" data-i="h_streak">🔥 Streak</div><div class="num" id="hStreak">0</div></div>
-    <div class="card"><div class="lbl" data-i="h_due">Cards due</div><div class="num" id="hDue">0</div></div>
-  </div>
-
-  <div class="card">
-    <h3 data-i="h_next">Your next step</h3>
-    <p class="mut" id="nextTxt"></p>
-    <div class="row">
-      <button class="btn" onclick="go('study')" data-i="h_open">Open study planner →</button>
-      <button class="btn ghost" onclick="go('focus')" data-i="h_start">Start focus</button>
-    </div>
-  </div>
-
-  <div class="card" id="hClassCard" hidden>
-    <div class="lbl" data-i="h_classes">📅 Today's classes</div>
-    <div id="hClasses" style="margin-top:10px"></div>
-  </div>
-  <div class="card" id="hExamCard" hidden>
-    <div class="lbl" data-i="h_exam">⏳ Next exam</div>
-    <div class="big" id="hExam" style="font-size:24px"></div>
-  </div>
+<section id="home" class="view on"></section>
+<section id="study" class="view"></section>
+<section id="focus" class="view">
+ <h1>⏱ Focus</h1><div class="row"><button class="chip on" id="bf" onclick="setMode('f')">Focus</button><button class="chip" id="bb" onclick="setMode('b')">Break</button></div>
+ <div id="tm">25:00</div><p id="fm"></p><p id="cy" class="mu"></p>
+ <div class="row" style="margin-top:20px"><button class="btn g" onclick="startT()">▶ Start</button><button class="btn o g" onclick="pauseT()">⏸ Pause</button><button class="btn o" onclick="resetT()">↺</button></div>
 </section>
-
-<!-- STUDY -->
-<section id="study" class="screen">
-  <h2 data-i="n_study_t">📚 Study</h2>
-  <div class="pills" id="spills">
-    <button data-s="tasks" class="on" onclick="sub('tasks')" data-i="s_tasks">Tasks</button>
-    <button data-s="notes" onclick="sub('notes')" data-i="s_notes">Notes</button>
-    <button data-s="cards" onclick="sub('cards')" data-i="s_cards">Cards</button>
-    <button data-s="quiz" onclick="sub('quiz')" data-i="s_quiz">Quiz</button>
-    <button data-s="plan" onclick="sub('plan')" data-i="s_plan">Plan</button>
-    <button data-s="papers" onclick="sub('papers')" data-i="s_papers">Papers</button>
-  </div>
-
-  <div id="v-tasks">
-    <div class="card">
-      <input id="tTitle" placeholder="New task (e.g. Read chapter 3)" data-p="p_task">
-      <div class="row"><input id="tSub" placeholder="Subject" data-p="p_sub"><input id="tDue" type="date"></div>
-      <select id="tPri">
-        <option value="high">🔴 High</option>
-        <option value="med" selected>🟡 Medium</option>
-        <option value="low">🟢 Low</option>
-      </select>
-      <button class="btn block" onclick="addTask()" data-i="add_task">＋ Add task</button>
-    </div>
-    <div class="row">
-      <input id="tSearch" placeholder="🔍 Search" oninput="renderTasks()" data-p="p_search">
-      <select id="tFilter" onchange="renderTasks()">
-        <option value="all">All</option><option value="pending">Pending</option><option value="done">Done</option>
-      </select>
-    </div>
-    <div id="taskList"></div>
-  </div>
-
-  <div id="v-notes" hidden>
-    <div class="card">
-      <input id="nTitle" placeholder="Note title" data-p="p_ntitle">
-      <textarea id="nBody" rows="4" placeholder="Write your note..." data-p="p_nbody"></textarea>
-      <button class="btn block" id="nSave" onclick="saveNote()" data-i="save_note">＋ Save note</button>
-    </div>
-    <input id="nSearch" placeholder="🔍 Search notes" oninput="renderNotes()" data-p="p_search">
-    <div id="noteList"></div>
-  </div>
-
-  <div id="v-cards" hidden>
-    <div class="card">
-      <input id="cQ" placeholder="Question" data-p="p_q">
-      <input id="cA" placeholder="Answer" data-p="p_a">
-      <button class="btn block" onclick="addCard()" data-i="add_card">＋ Add flashcard</button>
-    </div>
-    <p class="mut center" id="cStat"></p>
-    <div class="flash" id="fc"></div>
-    <button class="btn block" id="cReveal" onclick="reveal()" data-i="show_ans">Show answer</button>
-    <div class="row" id="cBtns" hidden>
-      <button class="btn red" onclick="grade('again')" data-i="g_again">Again</button>
-      <button class="btn" onclick="grade('good')" data-i="g_good">Good</button>
-      <button class="btn ghost" onclick="grade('easy')" data-i="g_easy">Easy</button>
-    </div>
-    <h3 style="margin-top:22px" data-i="all_cards">All cards</h3>
-    <div id="cList"></div>
-  </div>
-
-  <div id="v-quiz" hidden>
-    <div id="qHome" class="card center">
-      <div style="font-size:54px">🎯</div>
-      <h3 data-i="quiz_t">Quiz yourself</h3>
-      <p class="mut" data-i="quiz_p">Multiple-choice questions made from your flashcards. You need at least 4 cards with different answers.</p>
-      <button class="btn block" onclick="startQuiz()" data-i="quiz_start">Start quiz</button>
-    </div>
-    <div id="qRun" hidden>
-      <p class="mut center" id="qProg"></p>
-      <div class="flash" id="qQ"></div>
-      <div id="qOpts"></div>
-    </div>
-    <div id="qEnd" class="card center" hidden>
-      <div style="font-size:54px" id="qEmoji">🏆</div>
-      <div class="big" id="qScore"></div>
-      <button class="btn block" onclick="startQuiz()" data-i="quiz_again">Try again</button>
-      <button class="btn ghost block" onclick="quizHome()" data-i="back">Back</button>
-    </div>
-  </div>
-
-  <div id="v-plan" hidden>
-    <div class="card">
-      <h3 data-i="exams_t">⏳ Exams</h3>
-      <input id="xName" placeholder="Exam name" data-p="p_exam">
-      <div class="row"><input id="xSub" placeholder="Subject" data-p="p_sub"><input id="xDate" type="date"></div>
-      <button class="btn block" onclick="addExam()" data-i="add_exam">＋ Add exam</button>
-      <div id="examList" style="margin-top:12px"></div>
-    </div>
-    <div class="card">
-      <h3 data-i="tt_t">📅 Timetable</h3>
-      <select id="ttDay"></select>
-      <div class="row"><input id="ttS" type="time" value="09:00"><input id="ttE" type="time" value="10:00"></div>
-      <input id="ttT" placeholder="Class or study block" data-p="p_class">
-      <button class="btn block" onclick="addTT()" data-i="add_tt">＋ Add to timetable</button>
-      <div id="ttList" style="margin-top:12px"></div>
-    </div>
-  </div>
-
-  <div id="v-papers" hidden>
-    <div class="card">
-      <h3 data-i="papers_t">📝 Past papers</h3>
-      <input id="pSub" placeholder="Subject" data-p="p_sub">
-      <input id="pName" placeholder="Paper name (e.g. 2023 Paper 1)" data-p="p_paper">
-      <div class="row"><input id="pM" type="number" min="0" placeholder="Marks"><input id="pT" type="number" min="1" placeholder="Out of" value="100"></div>
-      <button class="btn block" onclick="addPaper()" data-i="add_paper">＋ Save result</button>
-    </div>
-    <p class="mut center" id="pAvg"></p>
-    <div id="paperList"></div>
-  </div>
-</section>
-
-<!-- FOCUS -->
-<section id="focus" class="screen">
-  <h2 data-i="n_focus_t">⏱ Focus</h2>
-  <div class="tabs">
-    <button id="mF" class="on" onclick="setMode('focus')" data-i="m_focus">Focus</button>
-    <button id="mB" onclick="setMode('break')" data-i="m_break">Break</button>
-  </div>
-  <div class="chips" id="chips">
-    <button data-m="15" onclick="setFocusLen(15)">15</button>
-    <button data-m="25" onclick="setFocusLen(25)">25</button>
-    <button data-m="45" onclick="setFocusLen(45)">45</button>
-    <button data-m="60" onclick="setFocusLen(60)">60</button>
-  </div>
-  <div class="card center">
-    <div class="ringwrap" style="width:250px;height:250px;margin:0 auto">
-      <svg width="250" height="250" viewBox="0 0 250 250">
-        <circle class="rtrack" cx="125" cy="125" r="112" stroke-width="12"/>
-        <circle class="rfill" id="fRing" cx="125" cy="125" r="112" stroke-width="12"/>
-      </svg>
-      <div class="rt"><div><div id="time">25:00</div><div class="mut" id="tState" style="font-size:15px;font-weight:600">Ready</div></div></div>
-    </div>
-    <div class="dots" id="cyc" style="margin-top:16px"></div>
-  </div>
-  <input id="fSub" placeholder="Subject (optional)" data-p="p_sub2">
-  <div class="row">
-    <button class="btn" onclick="startT()" data-i="start">▶ Start</button>
-    <button class="btn ghost" onclick="pauseT()" data-i="pause">⏸ Pause</button>
-    <button class="btn ghost" onclick="resetT()">↺</button>
-  </div>
-  <p class="mut center" id="fToday"></p>
-</section>
-
-<!-- PROGRESS -->
-<section id="progress" class="screen">
-  <h2 data-i="n_progress_t">📊 Progress</h2>
-  <div class="grid">
-    <div class="card"><div class="lbl" data-i="pr_today">Min today</div><div class="num" id="pToday">0</div></div>
-    <div class="card"><div class="lbl" data-i="pr_week">Min this week</div><div class="num" id="pWeek">0</div></div>
-    <div class="card"><div class="lbl" data-i="pr_done">Tasks done</div><div class="num" id="pDone">0</div></div>
-    <div class="card"><div class="lbl" data-i="pr_streak">Day streak</div><div class="num" id="pStreak">0</div></div>
-  </div>
-  <div class="card"><h3 data-i="wr_t">📈 Weekly report</h3><div id="wReport"></div></div>
-  <div class="card"><h3 data-i="l7">Last 7 days</h3><div class="bars" id="bars"></div></div>
-  <div class="card"><h3 data-i="heat_t">🔥 Study heatmap</h3><div class="heat" id="heat"></div><p class="mut" style="margin:10px 0 0;font-size:12px" data-i="heat_p">Last 12 weeks. Brighter = more study.</p></div>
-  <div class="card"><h3 data-i="subj">Subjects</h3><div id="subProg"></div></div>
-  <div class="card"><h3 data-i="hist_t">Quiz and papers</h3><div id="hist"></div></div>
-  <div class="card"><h3 data-i="recent">Recent sessions</h3><div id="recent"></div></div>
-</section>
-
-<!-- AI -->
-<section id="ai" class="screen">
-  <h2 data-i="n_ai_t">✨ AI Tutor</h2>
-  <div class="card" id="aiGate" hidden>
-    <p class="mut" data-i="ai_login">Log in to use the AI tutor. Go to Settings → Account.</p>
-    <button class="btn block" onclick="go('settings')" data-i="ai_goset">Open Settings</button>
-  </div>
-  <div id="aiBox">
-    <div class="pills" id="aiModes">
-      <button data-m="explain" class="on" onclick="aiMode('explain')" data-i="ai_explain">Explain</button>
-      <button data-m="summary" onclick="aiMode('summary')" data-i="ai_summary">Summarize</button>
-      <button data-m="cards" onclick="aiMode('cards')" data-i="ai_cards">Flashcards</button>
-      <button data-m="quiz" onclick="aiMode('quiz')" data-i="ai_quiz">Quiz me</button>
-      <button data-m="plan" onclick="aiMode('plan')" data-i="ai_plan">Study plan</button>
-    </div>
-    <div class="card">
-      <textarea id="aiIn" rows="5" placeholder="Type a topic or paste your notes..." data-p="p_ai"></textarea>
-      <button class="btn block" id="aiGo" onclick="askAI()" data-i="ai_ask">✨ Ask AI</button>
-      <p class="mut center" id="aiLeft" style="margin:10px 0 0;font-size:13px"></p>
-    </div>
-    <div class="card" id="aiOutCard" hidden>
-      <div class="aiout" id="aiOut"></div>
-      <div class="row" style="margin-top:12px">
-        <button class="btn ghost sm" onclick="copyAI()" data-i="copy">📋 Copy</button>
-        <button class="btn sm" id="aiAdd" onclick="addAICards()" hidden>➕ Add cards</button>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- SETTINGS -->
-<section id="settings" class="screen">
-  <h2 data-i="n_settings_t">⚙️ Settings</h2>
-  <div class="card">
-    <h3 data-i="theme_t">🎨 Theme</h3>
-    <div class="themes" id="themes"></div>
-  </div>
-  <div class="card">
-    <h3 data-i="lang_t">🌐 Language</h3>
-    <div class="lgb" style="margin:0"><button class="lg" data-l="en" onclick="setLang('en')">English</button><button class="lg" data-l="ta" onclick="setLang('ta')">தமிழ்</button></div>
-  </div>
-  <div class="card">
-    <label data-i="l_name">Your name</label>
-    <input id="sName" onchange="saveSettings()" placeholder="Name" data-p="p_name">
-    <label data-i="l_goal">Daily focus goal (minutes)</label>
-    <input id="sGoal" type="number" min="1" onchange="saveSettings()">
-    <label data-i="l_focus">Focus length (minutes)</label>
-    <input id="sFocus" type="number" min="1" max="180" onchange="saveSettings()">
-    <label data-i="l_brk">Short break (minutes)</label>
-    <input id="sBrk" type="number" min="1" max="60" onchange="saveSettings()">
-    <label data-i="l_lbrk">Long break after 4 sessions (minutes)</label>
-    <input id="sLbrk" type="number" min="1" max="90" onchange="saveSettings()">
-    <div class="sw2"><span data-i="l_sound">🔔 Sounds</span><button class="tg" id="tgSound" onclick="toggle('sound')"></button></div>
-    <div class="sw2"><span data-i="l_haptic">📳 Vibration</span><button class="tg" id="tgHaptic" onclick="toggle('haptic')"></button></div>
-  </div>
-
-  <div class="card">
-    <h3 data-i="acc_t">☁️ Account</h3>
-    <div id="accOut">
-      <p class="mut" data-i="acc_p">Log in to back up your data, use it on any phone, and unlock the AI tutor.</p>
-      <input id="aMail" type="email" placeholder="Email" autocomplete="email">
-      <input id="aPass" type="password" placeholder="Password (min 6 characters)" autocomplete="current-password" data-p="p_pass">
-      <div class="row">
-        <button class="btn" onclick="signIn()" data-i="login">Log in</button>
-        <button class="btn ghost" onclick="signUp()" data-i="signup">Sign up</button>
-      </div>
-      <button class="btn ghost block" onclick="resetPw()" data-i="forgot">Forgot password?</button>
-    </div>
-    <div id="accIn" hidden>
-      <p><span data-i="signed_as">Signed in as</span> <b id="aWho"></b></p>
-      <p class="mut" id="aSync">Not synced yet</p>
-      <button class="btn block" onclick="syncNow()" data-i="sync_now">🔄 Sync now</button>
-      <button class="btn ghost block" onclick="signOut()" data-i="logout">Log out</button>
-    </div>
-  </div>
-
-  <div class="card">
-    <h3 data-i="backup_t">💾 Backup</h3>
-    <button class="btn block" onclick="exportData()" data-i="export">⬇ Export data</button>
-    <label class="btn ghost block">⬆ <span data-i="import">Import data</span>
-      <input type="file" accept="application/json" onchange="importData(event)" hidden>
-    </label>
-    <button class="btn red block" onclick="clearData()" data-i="clear">🗑 Clear all data</button>
-  </div>
-  <div class="card center">
-    <h3 data-i="about_t">About StudyPilot</h3>
-    <p class="mut"><span data-i="ver">Version</span> 3.0<br><br><span data-i="founder">Founder &amp; Creator</span><br><b style="color:var(--text)">Asjadh Rilwan</b></p>
-  </div>
-</section>
-
+<section id="quran" class="view"></section>
+<section id="prog" class="view"></section>
+<section id="set" class="view"></section>
 </main>
-
-<nav id="nav"></nav>
+<nav>
+<button class="on" data-v="home"><span>🏠</span>Home</button><button data-v="study"><span>📚</span>Study</button><button data-v="focus"><span>⏱</span>Focus</button><button data-v="quran"><span>🕌</span>Quran</button><button data-v="prog"><span>📊</span>Progress</button><button data-v="set"><span>⚙️</span>Me</button>
+</nav>
 <div id="toast"></div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.0/dist/umd/supabase.js"></script>
 <script>
-/* ===== CONFIG (paste your Supabase values) ===== */
-const KEY='studypilot_v1';
-const SB_URL='PASTE_PROJECT_URL_HERE';
-const SB_KEY='PASTE_PUBLISHABLE_KEY_HERE';
-const AI_FN='studypilot-ai';
+/* ===== 1. YOUR SUPABASE KEYS (already filled in) ===== */
+const SB_URL='https://lryhksbykyktsfpcklzj.supabase.co', SB_KEY='sb_publishable_PU7QS0Fwdk0LdsgRmLa6aw_jx7g6UTM';
+/* =========================================================== */
+const sb=(SB_URL.startsWith('http')&&window.supabase)?supabase.createClient(SB_URL,SB_KEY):null;
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const iso=d=>new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,10),D=()=>iso(new Date());
+const id=()=>Date.now()+Math.floor(Math.random()*999);
+const T=['midnight','ocean','forest','sunset','rose','violet','gold','paper'];
+const def={name:'',bio:'',theme:'midnight',accent:'',fs:16,goal:60,focus:25,brk:5,onb:false,w:{ring:1,stats:1,exam:1,quran:1},tasks:[],notes:[],cards:[],log:{},exam:{n:'',d:''},q:{last:null,marks:[]},t:0};
+let S=Object.assign({},def,JSON.parse(localStorage.sp3||'{}')),user=null,st='tasks';
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2200)}
+function beep(){try{const a=new AudioContext(),o=a.createOscillator(),g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.value=880;g.gain.setValueAtTime(.2,a.currentTime);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+1);o.start();o.stop(a.currentTime+1)}catch(e){}}
+function boom(){for(let i=0;i<24;i++){const c=document.createElement('i');c.className='cf';c.style.cssText=`left:${Math.random()*100}vw;background:hsl(${Math.random()*360},90%,60%);animation-delay:${Math.random()*.3}s`;document.body.append(c);setTimeout(()=>c.remove(),1800)}}
 
-const THEMES=[['midnight','Midnight','#8b7bff','#22d3ee'],['amoled','AMOLED','#00e5a0','#38bdf8'],['aurora','Aurora','#2dd4bf','#a78bfa'],['sunset','Sunset','#fb7185','#fbbf24'],['forest','Forest','#4ade80','#facc15'],['ocean','Ocean','#38bdf8','#818cf8'],['gold','Royal Gold','#fbbf24','#f97316'],['pearl','Pearl Light','#6c4cff','#0ea5e9']];
+/* ---------- storage + cloud sync ---------- */
+function save(){S.t=Date.now();localStorage.sp3=JSON.stringify(S);clearTimeout(save.h);if(user&&sb)save.h=setTimeout(push,1500)}
+async function push(){const{error}=await sb.from('user_data').upsert({user_id:user.id,data:S,updated_at:new Date().toISOString()});toast(error?'Sync failed':'Synced ✓')}
+async function pull(){const{data}=await sb.from('user_data').select('data').eq('user_id',user.id).maybeSingle();
+ if(data&&data.data&&(data.data.t||0)>S.t){S=Object.assign({},def,data.data);localStorage.sp3=JSON.stringify(S);applyAll();toast('Data loaded ✓')}else push()}
+async function auth(k){if(!sb)return toast('Add Supabase keys first');const email=$('#em').value.trim(),password=$('#pw').value;
+ const r=k=='up'?await sb.auth.signUp({email,password}):await sb.auth.signInWithPassword({email,password});
+ toast(r.error?r.error.message:k=='up'?'Check your email to confirm':'Logged in ✓')}
+async function logout(){await sb.auth.signOut();toast('Logged out')}
+if(sb)sb.auth.onAuthStateChange((_e,s)=>{user=s?s.user:null;if(user)setTimeout(pull,0);rSet();rHome()});
 
-/* ===== Tamil strings ===== */
-const TA={
-ob1t:'StudyPilot-க்கு வரவேற்கிறோம்',ob1p:'திட்டமிடல், கவனம், மீள்பார்வை மற்றும் முன்னேற்றத்திற்கான உங்கள் ஸ்மார்ட் படிப்புத் துணை.',
-ob2t:'புத்திசாலித்தனமாகப் படியுங்கள்',ob2p:'இடைவெளி மீள்பார்வை அட்டைகள், வினாடி வினா, நேரசூசி மற்றும் தேர்வுத் திட்டம் — எல்லாம் ஒரே இடத்தில்.',
-ob3t:'உங்கள் AI ஆசிரியர்',ob3p:'விளக்கங்கள், சுருக்கங்கள், வினாடி வினாக்கள் மற்றும் படிப்புத் திட்டங்களைப் பெறுங்கள். தொடங்க உங்கள் பெயரைச் சொல்லுங்கள்.',
-skip:'தவிர்',next:'அடுத்து',go:'தொடங்குவோம்',
-h_prog:'இன்றைய முன்னேற்றம்',h_left:'மீதமுள்ள பணிகள்',h_focusmin:'கவன நிமிடங்கள்',h_streak:'🔥 தொடர் நாட்கள்',h_due:'இன்றைய அட்டைகள்',
-h_next:'உங்கள் அடுத்த படி',h_open:'படிப்புத் திட்டத்தைத் திற →',h_start:'கவனத்தைத் தொடங்கு',h_classes:'📅 இன்றைய வகுப்புகள்',h_exam:'⏳ அடுத்த தேர்வு',
-n_study_t:'📚 படிப்பு',s_tasks:'பணிகள்',s_notes:'குறிப்புகள்',s_cards:'அட்டைகள்',s_quiz:'வினாடி வினா',s_plan:'திட்டம்',s_papers:'தாள்கள்',
-add_task:'＋ பணியைச் சேர்',save_note:'＋ குறிப்பைச் சேமி',update_note:'💾 குறிப்பைப் புதுப்பி',add_card:'＋ அட்டையைச் சேர்',
-show_ans:'பதிலைக் காட்டு',g_again:'மீண்டும்',g_good:'சரி',g_easy:'எளிது',all_cards:'அனைத்து அட்டைகள்',
-quiz_t:'உங்களை சோதித்துப் பாருங்கள்',quiz_p:'உங்கள் அட்டைகளிலிருந்து பல தேர்வு வினாக்கள். குறைந்தது 4 வெவ்வேறு பதில்களுடன் அட்டைகள் தேவை.',quiz_start:'வினாடி வினாவைத் தொடங்கு',quiz_again:'மீண்டும் முயற்சி',back:'பின்',
-exams_t:'⏳ தேர்வுகள்',add_exam:'＋ தேர்வைச் சேர்',tt_t:'📅 நேரசூசி',add_tt:'＋ நேரசூசியில் சேர்',papers_t:'📝 முந்தைய தாள்கள்',add_paper:'＋ முடிவைச் சேமி',
-n_focus_t:'⏱ கவனம்',m_focus:'கவனம்',m_break:'இடைவேளை',start:'▶ தொடங்கு',pause:'⏸ நிறுத்து',
-n_progress_t:'📊 முன்னேற்றம்',pr_today:'இன்று (நிமி)',pr_week:'இந்த வாரம் (நிமி)',pr_done:'முடித்த பணிகள்',pr_streak:'தொடர் நாட்கள்',
-wr_t:'📈 வாராந்திர அறிக்கை',l7:'கடந்த 7 நாட்கள்',heat_t:'🔥 படிப்பு வெப்பவரைபடம்',heat_p:'கடந்த 12 வாரங்கள். பிரகாசம் அதிகம் = அதிகம் படித்தீர்கள்.',
-subj:'பாடங்கள்',hist_t:'வினாடி வினா மற்றும் தாள்கள்',recent:'சமீபத்திய அமர்வுகள்',
-n_ai_t:'✨ AI ஆசிரியர்',ai_login:'AI ஆசிரியரைப் பயன்படுத்த உள்நுழையுங்கள். அமைப்புகள் → கணக்கு.',ai_goset:'அமைப்புகளைத் திற',
-ai_explain:'விளக்கு',ai_summary:'சுருக்கு',ai_cards:'அட்டைகள்',ai_quiz:'எனக்கு வினா',ai_plan:'படிப்புத் திட்டம்',ai_ask:'✨ AI-யிடம் கேள்',copy:'📋 நகலெடு',
-n_settings_t:'⚙️ அமைப்புகள்',theme_t:'🎨 தீம்',lang_t:'🌐 மொழி',l_name:'உங்கள் பெயர்',l_goal:'தினசரி கவன இலக்கு (நிமிடங்கள்)',l_focus:'கவன நேரம் (நிமிடங்கள்)',
-l_brk:'குறுகிய இடைவேளை (நிமிடங்கள்)',l_lbrk:'4 அமர்வுகளுக்குப் பின் நீண்ட இடைவேளை (நிமிடங்கள்)',l_sound:'🔔 ஒலிகள்',l_haptic:'📳 அதிர்வு',
-acc_t:'☁️ கணக்கு',acc_p:'தரவை காப்புப்பிரதி எடுக்கவும், எந்த போனிலும் பயன்படுத்தவும், AI ஆசிரியரைத் திறக்கவும் உள்நுழையுங்கள்.',
-login:'உள்நுழை',signup:'பதிவு செய்',forgot:'கடவுச்சொல் மறந்துவிட்டதா?',signed_as:'உள்நுழைந்தவர்:',sync_now:'🔄 இப்போது ஒத்திசை',logout:'வெளியேறு',
-backup_t:'💾 காப்புப்பிரதி',export:'⬇ தரவை ஏற்றுமதி செய்',import:'தரவை இறக்குமதி செய்',clear:'🗑 அனைத்து தரவையும் அழி',about_t:'StudyPilot பற்றி',ver:'பதிப்பு',founder:'நிறுவனர் மற்றும் உருவாக்குநர்',
-nav_home:'முகப்பு',nav_study:'படிப்பு',nav_focus:'கவனம்',nav_progress:'முன்னேற்றம்',nav_ai:'AI',nav_settings:'அமைப்பு',
-p_name:'உங்கள் பெயர்',p_task:'புதிய பணி (எ.கா. அத்தியாயம் 3 படி)',p_sub:'பாடம்',p_search:'🔍 தேடு',p_ntitle:'குறிப்புத் தலைப்பு',p_nbody:'உங்கள் குறிப்பை எழுதுங்கள்...',
-p_q:'கேள்வி',p_a:'பதில்',p_exam:'தேர்வின் பெயர்',p_class:'வகுப்பு அல்லது படிப்புப் பகுதி',p_paper:'தாளின் பெயர்',p_sub2:'பாடம் (விருப்பம்)',p_pass:'கடவுச்சொல் (குறைந்தது 6)',p_ai:'தலைப்பை எழுதுங்கள் அல்லது குறிப்புகளை ஒட்டுங்கள்...',
-g_m:'காலை வணக்கம்',g_a:'மதிய வணக்கம்',g_e:'மாலை வணக்கம்',min:'நிமி',goal:'இலக்கு',tasks_w:'பணிகள் முடிந்தன',
-empty_tasks:'இன்னும் பணிகள் இல்லை ✨',empty_notes:'இன்னும் குறிப்புகள் இல்லை 📝',empty_cards:'படிக்கத் தொடங்க ஒரு அட்டையைச் சேர்க்கவும் 🧠',caught_up:'🎉 இன்றைக்கு எல்லாம் முடிந்தது!',
-due_w:'இன்று',total_w:'மொத்தம்',days:'நாட்கள்',today:'இன்று',passed:'முடிந்தது',no_exam:'இன்னும் தேர்வுகள் இல்லை',no_tt:'நேரசூசி காலியாக உள்ளது',
-ready:'தயார்',focusing:'🎯 கவனமாக இருங்கள்...',relax:'☕ ஓய்வெடுங்கள்...',focused_today:'இன்று கவனித்தது',
-done_focus:'🎉 கவன அமர்வு முடிந்தது!',done_break:'⏰ இடைவேளை முடிந்தது!',need_login:'முதலில் உள்நுழையுங்கள்',type_first:'முதலில் ஏதாவது எழுதுங்கள்',
-need4:'வெவ்வேறு பதில்களுடன் குறைந்தது 4 அட்டைகள் சேர்க்கவும்',copied:'நகலெடுக்கப்பட்டது',left_today:'AI பயன்பாடுகள் இன்று மீதம்'
-};
-const tr=(k,en)=>(S.lang==='ta'&&TA[k])||en;
+/* ---------- helpers ---------- */
+function streak(){let n=0,d=new Date();if(!S.log[D()])d.setDate(d.getDate()-1);while(S.log[iso(d)]>0){n++;d.setDate(d.getDate()-1)}return n}
+function last(n){return[...Array(n)].map((_,i)=>{const d=new Date();d.setDate(d.getDate()-n+1+i);return[iso(d),d.toLocaleDateString('en',{weekday:'short'})]})}
+function applyAll(){document.documentElement.dataset.t=S.theme;const r=document.documentElement.style;r.setProperty('--fs',S.fs+'px');S.accent?r.setProperty('--ac',S.accent):r.removeProperty('--ac');rAll()}
+function rAll(){rHome();rStudy();rProg();rSet();rFocus()}
+function show(v){$$('.view').forEach(e=>e.classList.toggle('on',e.id==v));$$('nav button').forEach(b=>b.classList.toggle('on',b.dataset.v==v));if(v=='quran')rQ();scrollTo(0,0)}
+$$('nav button').forEach(b=>b.onclick=()=>show(b.dataset.v));
 
-/* ===== helpers ===== */
-const $=id=>document.getElementById(id);
-const pad=n=>String(n).padStart(2,'0');
-const day=d=>{d=d||new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())};
-const addDays=(s,n)=>{const d=new Date(s+'T00:00');d.setDate(d.getDate()+n);return day(d)};
-const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
-const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
-const dleft=d=>Math.round((new Date(d+'T00:00')-new Date(day()+'T00:00'))/864e5);
-const PR={high:'🔴',med:'🟡',low:'🟢'},ORDER={high:0,med:1,low:2};
-const weekday=(i,l)=>new Date(2024,0,7+i).toLocaleDateString(S.lang==='ta'?'ta-IN':'en-GB',{weekday:l||'long'});
+/* ---------- home ---------- */
+function rHome(){const h=new Date().getHours(),m=S.log[D()]||0,p=Math.min(1,m/S.goal),left=S.tasks.filter(t=>!t.d).length;
+ let ex='';if(S.exam.d){const n=Math.ceil((new Date(S.exam.d)-new Date(D()))/864e5);ex=`<div class=card>⏳ ${esc(S.exam.n||'Exam')}<br><b>${n>=0?n+' days left':'Done. Well done!'}</b></div>`}
+ $('#home').innerHTML=`<h1>${h<12?'Good morning':h<18?'Good afternoon':'Good evening'}${S.name?', '+esc(S.name):''}.</h1>`
+ +(!user&&sb?`<div class=card onclick="show('set')">☁️ Sign in to sync your data across devices</div>`:'')
+ +(S.w.ring?`<div class="card ringc"><svg viewBox="0 0 120 120"><circle class=bg cx=60 cy=60 r=52 /><circle class=fg cx=60 cy=60 r=52 style="stroke-dasharray:327;stroke-dashoffset:${327*(1-p)}"/></svg><div><b>${Math.round(p*100)}%</b><br><small>${m} of ${S.goal} min today</small></div></div>`:'')
+ +(S.w.stats?`<div class=grid><div class=card><b>${left}</b><small>Tasks left</small></div><div class=card><b>${streak()} 🔥</b><small>Day streak</small></div><div class=card><b>${m}</b><small>Focus minutes</small></div><div class=card><b>${S.cards.length}</b><small>Flashcards</small></div></div>`:'')
+ +(S.w.exam?ex:'')+(S.w.quran&&S.q.last?`<div class=card onclick="show('quran');openS(${S.q.last})">🕌 Continue reading Surah ${S.q.last}</div>`:'')
+ +`<button class=btn onclick="show('focus')">Start focus</button>`}
 
-/* ===== state ===== */
-const def={name:'',goal:60,focus:25,brk:5,lbrk:15,theme:'midnight',lang:'en',sound:true,haptic:true,onboarded:false,cyc:0,tasks:[],notes:[],cards:[],sessions:[],exams:[],tt:[],papers:[],quizzes:[]};
-let S,sb=null,user=null,pushT=null;
-try{S=Object.assign({},def,JSON.parse(localStorage.getItem(KEY)||'{}'))}catch(e){S=Object.assign({},def)}
-function fix(){
-  ['tasks','notes','cards','sessions','exams','tt','papers','quizzes'].forEach(k=>{if(!Array.isArray(S[k]))S[k]=[]});
-  if(!THEMES.some(x=>x[0]===S.theme))S.theme='midnight';
-  if(S.lang!=='ta')S.lang='en';
-  if(S.exam&&S.exam.name&&!S.exams.length)S.exams.push({id:uid(),name:S.exam.name,date:S.exam.date,sub:''});
-  delete S.exam;
-  if(!S.onboarded&&(S.name||S.tasks.length||S.sessions.length))S.onboarded=true;
-}
-fix();
-function persist(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
-function save(){S.updated=Date.now();persist();if(user)schedulePush()}
+/* ---------- study ---------- */
+let qc=null,qf=0,qs={r:0,w:0};
+function rStudy(){const tabs=['tasks','notes','cards','quiz'].map(t=>`<button class="chip ${st==t?'on':''}" onclick="st='${t}';rStudy()">${t}</button>`).join('');let b='';
+ if(st=='tasks')b=`<div class=row><input id=ti placeholder="New task"><select id=tp style="width:70px"><option value=3>🔴</option><option value=2 selected>🟡</option><option value=1>🟢</option></select></div><button class=btn onclick=addT()>Add task</button>`
+  +[...S.tasks].sort((a,b)=>a.d-b.d||b.p-a.p).map(t=>`<div class="card row"><input type=checkbox ${t.d?'checked':''} onchange="tog(${t.id})"><span class="g ${t.d?'dn':''}">${['','🟢','🟡','🔴'][t.p]} ${esc(t.x)}</span><button class=x onclick="del('tasks',${t.id})">🗑</button></div>`).join('')||'<p class=mu>No tasks yet. Add your first one.</p>';
+ if(st=='notes')b=`<input id=ns placeholder="Search notes" oninput=rNL()><textarea id=nt rows=3 placeholder="Write a note"></textarea><button class=btn onclick=addN()>Save note</button><div id=nl></div>`;
+ if(st=='cards')b=`<input id=cf placeholder="Front (question)"><input id=cb placeholder="Back (answer)"><button class=btn onclick=addC()>Add card</button>`+S.cards.map(c=>`<div class="card row"><span class=g>${esc(c.f)}<br><small>${esc(c.b)}</small></span><button class=x onclick="del('cards',${c.id})">🗑</button></div>`).join('');
+ if(st=='quiz'){if(!S.cards.length)b='<p class=mu>Add flashcards first, then quiz yourself here.</p>';else{if(!S.cards.find(c=>c.id==qc))qc=S.cards[Math.random()*S.cards.length|0].id;const c=S.cards.find(c=>c.id==qc);
+  b=`<div class="card flip" onclick="qf=!qf;rStudy()"><h2>${esc(qf?c.b:c.f)}</h2><small>Tap to flip</small></div><div class=row><button class="btn o g" onclick="qa(0)">Again</button><button class="btn g" onclick="qa(1)">Got it</button></div><p>Score: ${qs.r} right, ${qs.w} again</p>`}}
+ $('#study').innerHTML='<h1>📚 Study</h1>'+tabs+b;if(st=='notes')rNL()}
+function addT(){const x=$('#ti').value.trim();if(!x)return;S.tasks.push({id:id(),x,p:+$('#tp').value,d:0});save();rAll()}
+function tog(i){const t=S.tasks.find(t=>t.id==i);t.d=t.d?0:1;if(t.d)boom();save();rAll()}
+function del(k,i){S[k]=S[k].filter(x=>x.id!=i);save();rAll()}
+function addN(){const x=$('#nt').value.trim();if(!x)return;S.notes.unshift({id:id(),x});save();rStudy()}
+function rNL(){const q=($('#ns').value||'').toLowerCase();$('#nl').innerHTML=S.notes.filter(n=>n.x.toLowerCase().includes(q)).map(n=>`<div class="card row"><span class=g>${esc(n.x)}</span><button class=x onclick="del('notes',${n.id})">🗑</button></div>`).join('')}
+function addC(){const f=$('#cf').value.trim(),b=$('#cb').value.trim();if(!f||!b)return;S.cards.push({id:id(),f,b});save();rAll()}
+function qa(ok){ok?qs.r++:qs.w++;qc=null;qf=0;rStudy()}
 
-/* ===== feedback: toast, confetti, sound, haptic ===== */
-let toastT;
-function toast(m){const e=$('toast');e.textContent=m;e.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>e.classList.remove('show'),2600)}
-function confetti(){
-  const cols=['#8b7bff','#22d3ee','#fbbf24','#fb7185','#4ade80'];
-  for(let i=0;i<26;i++){const e=document.createElement('i');e.className='cf';e.style.left=(30+Math.random()*40)+'%';e.style.background=cols[i%5];
-    e.style.setProperty('--x',(Math.random()*240-120)+'px');e.style.setProperty('--y',(120+Math.random()*220)+'px');e.style.setProperty('--r',(Math.random()*720-360)+'deg');
-    document.body.appendChild(e);setTimeout(()=>e.remove(),1200)}
-}
-let AC=null;
-function actx(){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume()}catch(e){}return AC}
-function tone(f,d,t0){
-  if(!S.sound)return;const c=actx();if(!c)return;
-  const o=c.createOscillator(),g=c.createGain(),t=c.currentTime+t0;
-  o.frequency.value=f;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.2,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+d);
-  o.connect(g);g.connect(c.destination);o.start(t);o.stop(t+d+.05);
-}
-const pop=()=>tone(660,.15,0);
-const chime=()=>{tone(523,.25,0);tone(659,.25,.25);tone(784,.4,.5)};
-const buzz=p=>{if(S.haptic&&navigator.vibrate)navigator.vibrate(p)};
-function setRing(el,r,p){const c=2*Math.PI*r;el.style.strokeDasharray=c;el.style.strokeDashoffset=c*(1-Math.min(1,Math.max(0,p)))}
+/* ---------- focus ---------- */
+let mode='f',left=S.focus*60,end=0,cyc=0,timer=null;
+function rFocus(){const m=Math.floor(left/60),s=left%60;$('#tm').textContent=m+':'+String(s).padStart(2,'0');$('#fm').textContent=mode=='f'?'Stay focused':'Take a break';$('#cy').textContent='Session '+(cyc%4+1)+' of 4';$('#bf').classList.toggle('on',mode=='f');$('#bb').classList.toggle('on',mode=='b')}
+function setMode(m){pauseT();mode=m;left=(m=='f'?S.focus:S.brk)*60;rFocus()}
+function startT(){if(timer)return;end=Date.now()+left*1000;timer=setInterval(()=>{left=Math.max(0,Math.round((end-Date.now())/1000));rFocus();if(!left)fin()},500)}
+function pauseT(){clearInterval(timer);timer=null}
+function resetT(){setMode(mode)}
+function fin(){pauseT();beep();if(mode=='f'){S.log[D()]=(S.log[D()]||0)+S.focus;cyc++;save();mode='b';left=(cyc%4==0?15:S.brk)*60;boom();toast('Session done!')}else{mode='f';left=S.focus*60}rAll()}
 
-/* ===== language ===== */
-function applyLang(){
-  document.documentElement.lang=S.lang;
-  document.querySelectorAll('[data-i]').forEach(el=>{if(el.dataset.en===undefined)el.dataset.en=el.textContent;el.textContent=(S.lang==='ta'&&TA[el.dataset.i])||el.dataset.en});
-  document.querySelectorAll('[data-p]').forEach(el=>{if(el.dataset.pen===undefined)el.dataset.pen=el.placeholder;el.placeholder=(S.lang==='ta'&&TA[el.dataset.p])||el.dataset.pen});
-  document.querySelectorAll('.lg').forEach(b=>b.classList.toggle('on',b.dataset.l===S.lang));
-  buildDays();
-}
-function setLang(l){S.lang=l;save();applyLang();obShow();render()}
+/* ---------- progress ---------- */
+function rProg(){const ds=last(7),mx=Math.max(30,...ds.map(([k])=>S.log[k]||0)),wk=ds.reduce((a,[k])=>a+(S.log[k]||0),0);
+ $('#prog').innerHTML=`<h1>📊 Progress</h1><div class=grid><div class=card><b>${S.log[D()]||0}</b><small>Min today</small></div><div class=card><b>${wk}</b><small>Min this week</small></div><div class=card><b>${S.tasks.filter(t=>t.d).length}</b><small>Tasks done</small></div><div class=card><b>${streak()}</b><small>Day streak</small></div></div>
+ <h3>Last 7 days</h3><div class="card bars">${ds.map(([k,l])=>`<div><i style="height:${(S.log[k]||0)/mx*100}%"></i><small>${l}</small></div>`).join('')}</div>
+ <h3>Study habit (last 6 weeks)</h3><div class="card heat">${last(42).map(([k])=>`<i style="opacity:${S.log[k]?Math.min(1,.3+S.log[k]/S.goal*.7):.12}"></i>`).join('')}</div>`}
 
-/* ===== themes ===== */
-function applyTheme(){
-  document.documentElement.dataset.theme=S.theme;
-  const tc=getComputedStyle(document.documentElement).getPropertyValue('--tc').trim();
-  $('tc').content=tc||'#04040f';
-  document.querySelectorAll('.sw').forEach(b=>b.classList.toggle('on',b.dataset.th===S.theme));
-}
-function setTheme(t){S.theme=t;save();applyTheme()}
-function buildThemes(){$('themes').innerHTML=THEMES.map(t=>`<button class="sw" data-th="${t[0]}" onclick="setTheme('${t[0]}')"><i style="background:linear-gradient(135deg,${t[2]},${t[3]})"></i>${t[1]}</button>`).join('')}
+/* ---------- Quran (text + audio from alquran.cloud / islamic.network) ---------- */
+let surahs=null,cur=null;
+async function rQ(){const el=$('#quran');if(cur)return;
+ if(!surahs){el.innerHTML='<h1>🕌 Quran</h1><p class=mu>Loading…</p>';try{surahs=(await(await fetch('https://api.alquran.cloud/v1/surah')).json()).data}catch(e){el.innerHTML='<h1>🕌 Quran</h1><p>Internet connection needed to load the Quran.</p>';return}}
+ el.innerHTML='<h1>🕌 Quran</h1>'+(S.q.last?`<div class=card onclick="openS(${S.q.last})">▶ Continue: Surah ${S.q.last}</div>`:'')+'<input id=qsr placeholder="Search surah name or number" oninput=fq()><div id=ql></div>';fq()}
+function fq(){const v=($('#qsr').value||'').toLowerCase();$('#ql').innerHTML=surahs.filter(s=>(s.englishName+s.name+s.number).toLowerCase().includes(v)).map(s=>`<div class="card row" onclick="openS(${s.number})"><b>${s.number}</b><span class=g>${s.englishName}<br><small>${s.englishNameTranslation}, ${s.numberOfAyahs} verses</small></span><span class=ar>${s.name}</span></div>`).join('')}
+async function openS(n){S.q.last=n;save();show('quran');$('#quran').innerHTML='<p class=mu>Loading…</p>';
+ try{const[a,e]=await Promise.all([`quran-uthmani`,`en.sahih`].map(ed=>fetch(`https://api.alquran.cloud/v1/surah/${n}/${ed}`).then(r=>r.json())));cur={n,a:a.data,e:e.data};drawS()}catch(x){cur=null;$('#quran').innerHTML='<p>Could not load. Check your internet.</p>'}}
+function drawS(){const{n,a,e}=cur;$('#quran').innerHTML=`<button class="btn o" onclick="cur=null;rQ()">← All surahs</button><h1 class=ar style="text-align:center">${a.name}</h1><p style="text-align:center">${a.englishName}</p><audio controls style="width:100%;margin:10px 0" src="https://cdn.islamic.network/quran/audio-surah/128/ar.alafasy/${n}.mp3"></audio>`
+ +a.ayahs.map((y,i)=>{const k=n+':'+y.numberInSurah,m=S.q.marks.includes(k);return`<div class=ay><div class=row><small class=g>${y.numberInSurah}</small><button class=x onclick="mark('${k}')">${m?'★':'☆'}</button></div><div class=ar>${y.text}</div><p class=mu>${esc(e.ayahs[i].text)}</p></div>`}).join('')}
+function mark(k){const m=S.q.marks;m.includes(k)?m.splice(m.indexOf(k),1):m.push(k);save();drawS()}
 
-/* ===== navigation ===== */
-const IC={
-home:'<path d="M3 11l9-8 9 8v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/>',
-book:'<path d="M4 4h12a3 3 0 0 1 3 3v13H7a3 3 0 0 1-3-3z"/><path d="M4 17a3 3 0 0 1 3-3h12"/>',
-timer:'<circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2M9 2h6"/>',
-chart:'<path d="M4 20V10M10 20V4M16 20v-7M21 20H3"/>',
-spark:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 16l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z"/>',
-gear:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/>'};
-const svg=n=>`<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">${IC[n]}</svg>`;
-const NAV=[['home','Home','home'],['study','Study','book'],['focus','Focus','timer'],['progress','Progress','chart'],['ai','AI','spark'],['settings','Settings','gear']];
-function buildNav(){$('nav').innerHTML=NAV.map(n=>`<button data-t="${n[0]}" onclick="go('${n[0]}')">${svg(n[2])}<span data-i="nav_${n[0]}">${n[1]}</span></button>`).join('')}
-function go(id){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('on',s.id===id));
-  document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===id));
-  render();window.scrollTo(0,0);
-}
-function sub(id){
-  ['tasks','notes','cards','quiz','plan','papers'].forEach(v=>$('v-'+v).hidden=v!==id);
-  document.querySelectorAll('#spills button').forEach(b=>b.classList.toggle('on',b.dataset.s===id));
-  render();
-}
+/* ---------- me / settings ---------- */
+function rSet(){const A=user?`<p>Signed in as <b>${esc(user.email)}</b></p><button class=btn onclick=push()>Sync now</button> <button class="btn o" onclick=logout()>Log out</button>`:`<p class=mu>${sb?'Sign in to keep your data safe and sync devices.':'Cloud accounts are off. Add Supabase keys (see SETUP.md).'}</p><input id=em type=email placeholder="Email"><input id=pw type=password placeholder="Password (6+ characters)"><div class=row><button class="btn g" onclick="auth('in')">Log in</button><button class="btn o g" onclick="auth('up')">Sign up</button></div>`;
+ const W=(k,l)=>`<label class=row style="margin-bottom:8px"><input type=checkbox ${S.w[k]?'checked':''} onchange="S.w.${k}=this.checked?1:0;save();rHome()"><span>${l}</span></label>`;
+ $('#set').innerHTML=`<h1>⚙️ Me</h1><div class=card><h3 style="margin-top:0">Account</h3>${A}</div>
+ <div class=card><h3 style="margin-top:0">Profile</h3><input placeholder="Your name" value="${esc(S.name)}" oninput="S.name=this.value;save()"><textarea rows=2 placeholder="Short bio or goal" oninput="S.bio=this.value;save()">${esc(S.bio)}</textarea></div>
+ <div class=card><h3 style="margin-top:0">Look</h3>${T.map(t=>`<button class="chip ${S.theme==t?'on':''}" onclick="S.theme='${t}';S.accent='';save();applyAll()">${t}</button>`).join('')}
+ <p class=mu>Custom accent color</p><input type=color value="${S.accent||'#7c5cff'}" onchange="S.accent=this.value;save();applyAll()"><p class=mu>Text size</p><input type=range min=14 max=20 value="${S.fs}" onchange="S.fs=+this.value;save();applyAll()"></div>
+ <div class=card><h3 style="margin-top:0">Home screen</h3>${W('ring','Progress ring')}${W('stats','Stats')}${W('exam','Exam countdown')}${W('quran','Continue Quran')}</div>
+ <div class=card><h3 style="margin-top:0">Goals</h3><small>Daily goal (min)</small><input type=number value="${S.goal}" onchange="S.goal=+this.value||60;save();rHome()"><small>Focus length (min)</small><input type=number value="${S.focus}" onchange="S.focus=+this.value||25;save();resetT()"><small>Break length (min)</small><input type=number value="${S.brk}" onchange="S.brk=+this.value||5;save()"><small>Exam name and date</small><input placeholder="Exam name" value="${esc(S.exam.n)}" onchange="S.exam.n=this.value;save();rHome()"><input type=date value="${S.exam.d}" onchange="S.exam.d=this.value;save();rHome()"></div>
+ <div class=card><h3 style="margin-top:0">Backup</h3><button class=btn onclick=exp()>Export</button> <button class="btn o" onclick="$('#imp').click()">Import</button> <button class="btn o" onclick=clr()>Clear all</button><input id=imp type=file accept=.json hidden onchange=imp(this)></div>
+ <details class=card><summary>Privacy Policy and Terms</summary><p class=mu>Guests: data stays on this device. Signed-in users: your study data is stored in your private account, visible only to you, and never sold or shared. Delete it any time with Clear all. The app is provided as is, free of charge. Contact: add your email here.</p></details>
+ <p class=mu style="text-align:center">StudyPilot 3.0</p>`}
+function exp(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(S)]));a.download='studypilot-backup.json';a.click()}
+function imp(i){const f=i.files[0];if(!f)return;f.text().then(t=>{try{S=Object.assign({},def,JSON.parse(t));save();applyAll();toast('Imported ✓')}catch(e){toast('Invalid file')}})}
+function clr(){if(confirm('Delete all data on this device'+(user?' and in your account':'')+'?')){S=Object.assign({},def);save();applyAll();rOnb(0)}}
 
-/* ===== stats ===== */
-const minsOn=d=>S.sessions.filter(s=>s.date===d).reduce((a,s)=>a+s.min,0);
-function streak(){let n=0,d=day();if(!minsOn(d))d=addDays(d,-1);while(minsOn(d)){n++;d=addDays(d,-1)}return n}
-const sortedTasks=l=>l.slice().sort((a,b)=>(a.done-b.done)||(ORDER[a.pri]-ORDER[b.pri])||(a.due||'9').localeCompare(b.due||'9'));
+/* ---------- onboarding ---------- */
+const SL=[['📚','Plan','Organise tasks, notes and flashcards in one place.'],['⏱','Focus','Use the timer to build a daily streak.'],['📊','Track','Watch your progress, habits and goals grow.']];
+function rOnb(i){const o=$('#onb');o.hidden=false;o.style.opacity=1;
+ o.innerHTML=i<3?`<div class=em>${SL[i][0]}</div><h1>${SL[i][1]}</h1><p class=mu>${SL[i][2]}</p><br><button class=btn onclick="rOnb(${i+1})">Next</button>`
+ :`<div class=em>👋</div><h1>What should we call you?</h1><input id=on placeholder="Your name" style="max-width:300px;text-align:center"><button class=btn onclick="fin2()">Start studying</button>`}
+function fin2(){S.name=$('#on').value.trim();S.onb=true;save();$('#onb').style.opacity=0;setTimeout(()=>$('#onb').hidden=true,500);applyAll()}
 
-/* ===== tasks ===== */
-function addTask(){
-  const t=$('tTitle').value.trim();if(!t)return $('tTitle').focus();
-  S.tasks.push({id:uid(),t,sub:$('tSub').value.trim()||'General',due:$('tDue').value,pri:$('tPri').value,done:false});
-  $('tTitle').value='';save();render();
-}
-function toggleTask(id){
-  const t=S.tasks.find(x=>x.id===id);if(!t)return;
-  t.done=!t.done;t.doneOn=t.done?day():null;
-  if(t.done){confetti();pop();buzz(30)}
-  save();render();
-}
-function delTask(id){S.tasks=S.tasks.filter(x=>x.id!==id);save();render()}
-function taskHTML(t){
-  return `<div class="item ${t.done?'done':''}"><button class="ib" onclick="toggleTask('${t.id}')">${t.done?'✅':'⬜'}</button>
-  <div class="grow"><b>${esc(t.t)}</b><small>${PR[t.pri]} ${esc(t.sub)}${t.due?' • 📅 '+esc(t.due):''}</small></div>
-  <button class="ib" onclick="delTask('${t.id}')">🗑</button></div>`;
-}
-function renderTasks(){
-  const q=$('tSearch').value.toLowerCase(),f=$('tFilter').value;
-  const l=sortedTasks(S.tasks).filter(t=>(f==='all'||(f==='done')===t.done)&&(t.t+' '+t.sub).toLowerCase().includes(q));
-  $('taskList').innerHTML=l.map(taskHTML).join('')||`<div class="empty">${tr('empty_tasks','No tasks yet ✨')}</div>`;
-}
-
-/* ===== notes ===== */
-let editN=null;
-function saveNote(){
-  const t=$('nTitle').value.trim(),b=$('nBody').value.trim();if(!t&&!b)return;
-  if(editN){const n=S.notes.find(x=>x.id===editN);if(n){n.t=t||'Untitled';n.b=b}editN=null}
-  else S.notes.unshift({id:uid(),t:t||'Untitled',b,date:day(),pin:false});
-  $('nTitle').value='';$('nBody').value='';$('nSave').textContent=tr('save_note','＋ Save note');save();render();
-}
-function editNote(id){
-  const n=S.notes.find(x=>x.id===id);if(!n)return;
-  editN=id;$('nTitle').value=n.t;$('nBody').value=n.b;$('nSave').textContent=tr('update_note','💾 Update note');
-  $('nTitle').scrollIntoView({behavior:'smooth',block:'center'});
-}
-function pinNote(id){const n=S.notes.find(x=>x.id===id);if(n){n.pin=!n.pin;save();render()}}
-function delNote(id){S.notes=S.notes.filter(n=>n.id!==id);save();render()}
-function renderNotes(){
-  const q=$('nSearch').value.toLowerCase();
-  const l=S.notes.filter(n=>(n.t+' '+n.b).toLowerCase().includes(q)).sort((a,b)=>(b.pin?1:0)-(a.pin?1:0));
-  $('noteList').innerHTML=l.map(n=>`<div class="item"><div class="grow"><b>${n.pin?'📌 ':''}${esc(n.t)}</b><small>${esc(n.date)}</small><p>${esc(n.b)}</p></div>
-  <div><button class="ib" onclick="editNote('${n.id}')">✏️</button><button class="ib" onclick="pinNote('${n.id}')">📌</button><button class="ib" onclick="delNote('${n.id}')">🗑</button></div></div>`).join('')||`<div class="empty">${tr('empty_notes','No notes yet 📝')}</div>`;
-}
-
-/* ===== flashcards with spaced repetition ===== */
-let RQ=[],showA=false;
-function buildQ(){RQ=S.cards.filter(c=>(c.due||'0')<=day()).map(c=>c.id);showA=false}
-function addCard(){
-  const q=$('cQ').value.trim(),a=$('cA').value.trim();if(!q||!a)return;
-  const c={id:uid(),q,a,box:0,due:day()};S.cards.push(c);RQ.push(c.id);
-  $('cQ').value='';$('cA').value='';save();render();
-}
-function delCard(id){S.cards=S.cards.filter(c=>c.id!==id);RQ=RQ.filter(x=>x!==id);showA=false;save();render()}
-function reveal(){showA=true;drawCards()}
-function grade(g){
-  const c=S.cards.find(x=>x.id===RQ[0]);if(!c){RQ.shift();showA=false;return drawCards()}
-  const INT=[0,1,2,4,8,16,32];
-  if(g==='again'){c.box=0;c.due=day();RQ.push(RQ.shift())}
-  else{c.box=Math.min(6,(c.box||0)+(g==='easy'?2:1));c.due=addDays(day(),INT[c.box]);RQ.shift()}
-  showA=false;if(g!=='again')pop();save();render();
-}
-function drawCards(){
-  const dueN=S.cards.filter(c=>(c.due||'0')<=day()).length;
-  $('cStat').textContent=dueN+' '+tr('due_w','due today')+' • '+S.cards.length+' '+tr('total_w','total');
-  RQ=RQ.filter(id=>S.cards.some(c=>c.id===id));
-  const fc=$('fc');
-  if(!S.cards.length){fc.textContent=tr('empty_cards','Add a card to start revising 🧠');$('cReveal').hidden=true;$('cBtns').hidden=true}
-  else if(!RQ.length){fc.textContent=tr('caught_up','🎉 All caught up for today!');$('cReveal').hidden=true;$('cBtns').hidden=true}
-  else{const c=S.cards.find(x=>x.id===RQ[0]);fc.textContent=showA?'💡 '+c.a:'❓ '+c.q;$('cReveal').hidden=showA;$('cBtns').hidden=!showA}
-  $('cList').innerHTML=S.cards.map(c=>`<div class="item"><div class="grow"><b>${esc(c.q)}</b><small>${esc(c.a)}</small></div><button class="ib" onclick="delCard('${c.id}')">🗑</button></div>`).join('');
-}
-
-/* ===== quiz ===== */
-let QZ=null,qLock=false;
-function quizHome(){QZ=null;$('qHome').hidden=false;$('qRun').hidden=true;$('qEnd').hidden=true}
-function startQuiz(){
-  if(S.cards.length<4||new Set(S.cards.map(c=>c.a)).size<4)return toast(tr('need4','Add at least 4 cards with different answers'));
-  const pool=shuffle(S.cards.slice()).slice(0,10);
-  QZ={i:0,score:0,qs:pool.map(c=>{const others=[...new Set(S.cards.filter(x=>x.a!==c.a).map(x=>x.a))];return{q:c.q,a:c.a,o:shuffle([c.a,...shuffle(others).slice(0,3)])}})};
-  $('qHome').hidden=true;$('qEnd').hidden=true;$('qRun').hidden=false;drawQuiz();
-}
-function drawQuiz(){
-  const q=QZ.qs[QZ.i];qLock=false;
-  $('qProg').textContent=(QZ.i+1)+' / '+QZ.qs.length;
-  $('qQ').textContent=q.q;
-  $('qOpts').innerHTML=q.o.map((o,i)=>`<button class="opt" onclick="pickQ(${i})">${esc(o)}</button>`).join('');
-}
-function pickQ(i){
-  if(qLock||!QZ)return;qLock=true;
-  const q=QZ.qs[QZ.i],btns=document.querySelectorAll('#qOpts .opt');
-  btns.forEach((b,j)=>{if(q.o[j]===q.a)b.classList.add('ok')});
-  if(q.o[i]===q.a){QZ.score++;pop();buzz(20)}else{btns[i].classList.add('bad');buzz([60,40,60])}
-  setTimeout(()=>{if(!QZ)return;QZ.i++;if(QZ.i>=QZ.qs.length)endQuiz();else drawQuiz()},900);
-}
-function endQuiz(){
-  const n=QZ.qs.length,sc=QZ.score;
-  S.quizzes.push({date:day(),score:sc,total:n});S.quizzes=S.quizzes.slice(-30);save();
-  $('qRun').hidden=true;$('qEnd').hidden=false;$('qScore').textContent=sc+' / '+n;
-  $('qEmoji').textContent=sc/n>=.8?'🏆':sc/n>=.5?'👍':'💪';
-  if(sc/n>=.8){confetti();chime()}
-}
-
-/* ===== exams, timetable, papers ===== */
-function addExam(){
-  const n=$('xName').value.trim(),d=$('xDate').value;if(!n||!d)return toast('Enter exam name and date');
-  S.exams.push({id:uid(),name:n,date:d,sub:$('xSub').value.trim()});$('xName').value='';save();render();
-}
-function delExam(id){S.exams=S.exams.filter(x=>x.id!==id);save();render()}
-function renderExams(){
-  const l=S.exams.slice().sort((a,b)=>a.date.localeCompare(b.date));
-  $('examList').innerHTML=l.map(x=>{const n=dleft(x.date);const w=n>0?n+' '+tr('days','days'):n===0?tr('today','TODAY'):tr('passed','passed');
-    return `<div class="item"><div class="grow"><b>${esc(x.name)}</b><small>${esc(x.sub||'')} ${esc(x.date)}</small></div><b style="color:var(--a)">${w}</b><button class="ib" onclick="delExam('${x.id}')">🗑</button></div>`}).join('')||`<div class="empty">${tr('no_exam','No exams yet')}</div>`;
-}
-function buildDays(){
-  const cur=$('ttDay').value||String(new Date().getDay());
-  $('ttDay').innerHTML=[1,2,3,4,5,6,0].map(d=>`<option value="${d}">${weekday(d)}</option>`).join('');$('ttDay').value=cur;
-}
-function addTT(){
-  const t=$('ttT').value.trim();if(!t)return toast('Enter a class name');
-  S.tt.push({id:uid(),d:+$('ttDay').value,s:$('ttS').value||'09:00',e:$('ttE').value||'10:00',t});$('ttT').value='';save();render();
-}
-function delTT(id){S.tt=S.tt.filter(x=>x.id!==id);save();render()}
-function renderTT(){
-  let h='';
-  [1,2,3,4,5,6,0].forEach(d=>{
-    const l=S.tt.filter(x=>x.d===d).sort((a,b)=>a.s.localeCompare(b.s));if(!l.length)return;
-    h+=`<div class="lbl" style="margin:12px 0 6px">${weekday(d)}</div>`+l.map(x=>`<div class="item"><div class="grow"><b>${esc(x.t)}</b><small>${esc(x.s)} – ${esc(x.e)}</small></div><button class="ib" onclick="delTT('${x.id}')">🗑</button></div>`).join('');
-  });
-  $('ttList').innerHTML=h||`<div class="empty">${tr('no_tt','Your timetable is empty')}</div>`;
-}
-function addPaper(){
-  const n=$('pName').value.trim(),m=parseFloat($('pM').value),t=parseFloat($('pT').value);
-  if(!n||isNaN(m)||!(t>0))return toast('Enter paper name and marks');
-  S.papers.push({id:uid(),sub:$('pSub').value.trim()||'General',name:n,m,t,date:day()});$('pName').value='';$('pM').value='';save();render();
-}
-function delPaper(id){S.papers=S.papers.filter(x=>x.id!==id);save();render()}
-function renderPapers(){
-  const avg=S.papers.length?Math.round(S.papers.reduce((a,p)=>a+p.m/p.t*100,0)/S.papers.length):0;
-  $('pAvg').textContent=S.papers.length?'📊 Average: '+avg+'%':'';
-  $('paperList').innerHTML=S.papers.slice().reverse().map(p=>{const pc=Math.round(p.m/p.t*100);
-    return `<div class="item"><div class="grow"><b>${esc(p.name)}</b><small>${esc(p.sub)} • ${esc(p.date)}</small></div><b style="color:var(--a)">${p.m}/${p.t} (${pc}%)</b><button class="ib" onclick="delPaper('${p.id}')">🗑</button></div>`}).join('')||'<div class="empty">📝</div>';
-}
-
-/* ===== focus timer (pomodoro cycles) ===== */
-let T={left:1500,total:1500,end:0,run:false,mode:'focus',id:null};
-function setMode(m,len){
-  clearInterval(T.id);T.mode=m;T.run=false;
-  T.total=(len||(m==='focus'?S.focus:S.brk))*60;T.left=T.total;
-  $('mF').classList.toggle('on',m==='focus');$('mB').classList.toggle('on',m==='break');
-  drawT();
-}
-function startT(){if(T.run||T.left<=0)return;actx();T.run=true;T.end=Date.now()+T.left*1000;T.id=setInterval(tick,500);drawT()}
-function pauseT(){if(!T.run)return;T.left=Math.max(0,Math.round((T.end-Date.now())/1000));T.run=false;clearInterval(T.id);drawT()}
-function resetT(){setMode(T.mode)}
-function tick(){T.left=Math.max(0,Math.round((T.end-Date.now())/1000));drawT();if(T.left<=0){clearInterval(T.id);T.run=false;finish()}}
-function drawT(){
-  const t=pad(Math.floor(T.left/60))+':'+pad(T.left%60);
-  $('time').textContent=t;
-  $('tState').textContent=T.run?(T.mode==='focus'?tr('focusing','🎯 Stay focused...'):tr('relax','☕ Relax...')):tr('ready','Ready');
-  $('fToday').textContent=tr('focused_today','Focused today')+': '+minsOn(day())+' '+tr('min','min');
-  setRing($('fRing'),112,(T.total-T.left)/T.total);
-  const k=(S.cyc||0)%4,filled=(k===0&&S.cyc>0&&T.mode==='break')?4:k;
-  $('cyc').innerHTML=[0,1,2,3].map(i=>`<i class="${i<filled?'f':''}"></i>`).join('');
-  document.title=T.run?t+' • StudyPilot':'StudyPilot';
-  document.querySelectorAll('#chips button').forEach(b=>b.classList.toggle('on',+b.dataset.m===S.focus));
-}
-function setFocusLen(m){S.focus=m;$('sFocus').value=m;save();if(!T.run&&T.mode==='focus')setMode('focus');else drawT()}
-function finish(){
-  if(T.mode==='focus'){
-    S.sessions.push({id:uid(),date:day(),min:Math.max(1,Math.round(T.total/60)),sub:$('fSub').value.trim()||'General'});
-    S.cyc=(S.cyc||0)+1;save();chime();buzz([300,150,300]);confetti();toast(tr('done_focus','🎉 Focus session complete!'));
-    setMode('break',S.cyc%4===0?S.lbrk:S.brk);
-  }else{chime();buzz([200,100,200]);toast(tr('done_break','⏰ Break over!'));setMode('focus')}
-  render();
-}
-document.addEventListener('visibilitychange',()=>{if(!document.hidden&&T.run)tick()});
-
-/* ===== home ===== */
-function renderHome(){
-  const h=new Date().getHours();
-  $('greet').textContent=(h<12?tr('g_m','Good morning'):h<17?tr('g_a','Good afternoon'):tr('g_e','Good evening'))+(S.name?', '+S.name:'')+'.';
-  $('date').textContent=new Date().toLocaleDateString(S.lang==='ta'?'ta-IN':'en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-  const m=minsOn(day()),p=Math.min(1,m/S.goal);
-  setRing($('hRing'),50,p);$('hPct').textContent=Math.round(p*100)+'%';
-  $('hMin').textContent=m+' '+tr('min','min');
-  $('hGoal').textContent=tr('goal','Goal')+': '+S.goal+' '+tr('min','min');
-  const total=S.tasks.length,done=S.tasks.filter(t=>t.done).length;
-  $('pcount').textContent=done+' / '+total+' '+tr('tasks_w','tasks done');
-  $('tLeft').textContent=total-done;$('fMin').textContent=m;$('hStreak').textContent=streak();
-  const dueN=S.cards.filter(c=>(c.due||'0')<=day()).length;$('hDue').textContent=dueN;
-  const nx=sortedTasks(S.tasks.filter(t=>!t.done))[0];
-  $('nextTxt').textContent=nx?'▶ '+nx.t:dueN?'🧠 '+dueN+' '+tr('due_w','cards due today'):'Turn your study goals into small, achievable tasks.';
-  const cl=S.tt.filter(x=>x.d===new Date().getDay()).sort((a,b)=>a.s.localeCompare(b.s));
-  $('hClassCard').hidden=!cl.length;
-  $('hClasses').innerHTML=cl.map(x=>`<div class="item"><div class="grow"><b>${esc(x.t)}</b><small>${esc(x.s)} – ${esc(x.e)}</small></div></div>`).join('');
-  const ex=S.exams.filter(x=>dleft(x.date)>=0).sort((a,b)=>a.date.localeCompare(b.date))[0];
-  $('hExamCard').hidden=!ex;
-  if(ex){const n=dleft(ex.date);$('hExam').textContent=ex.name+' — '+(n===0?tr('today','TODAY'):n+' '+tr('days','days'))}
-}
-
-/* ===== progress ===== */
-function renderProgress(){
-  const today=day(),days=[];
-  for(let i=83;i>=0;i--)days.push(addDays(today,-i));
-  const last7=days.slice(-7),prev7=days.slice(-14,-7),mm=minsOn;
-  const wk=last7.reduce((a,d)=>a+mm(d),0),pw=prev7.reduce((a,d)=>a+mm(d),0);
-  $('pToday').textContent=mm(today);$('pWeek').textContent=wk;
-  $('pDone').textContent=S.tasks.filter(t=>t.done).length;$('pStreak').textContent=streak();
-  const best=last7.reduce((b,d)=>mm(d)>mm(b)?d:b,last7[0]);
-  const subs={};S.sessions.filter(s=>last7.includes(s.date)).forEach(s=>subs[s.sub]=(subs[s.sub]||0)+s.min);
-  const top=Object.keys(subs).sort((a,b)=>subs[b]-subs[a])[0];
-  const tdone=S.tasks.filter(t=>t.doneOn&&last7.includes(t.doneOn)).length;
-  const diff=pw?Math.round((wk-pw)/pw*100):null;
-  $('wReport').innerHTML=`<p>⏱ <b>${wk}</b> min • avg <b>${Math.round(wk/7)}</b>/day${diff!==null?' • '+(diff>=0?'▲ ':'▼ ')+Math.abs(diff)+'% vs last week':''}</p>`+
-    (mm(best)>0?`<p>🏅 Best day: <b>${weekday(new Date(best+'T00:00').getDay())}</b> (${mm(best)} min)</p>`:'')+
-    (top?`<p>📚 Top subject: <b>${esc(top)}</b></p>`:'')+`<p>✅ <b>${tdone}</b> tasks completed</p>`;
-  let mx=1;const L=last7.map(d=>{const m=mm(d);mx=Math.max(mx,m);return[weekday(new Date(d+'T00:00').getDay(),'short').slice(0,3),m]});
-  $('bars').innerHTML=L.map(([l,m])=>`<div class="b"><div class="col"><i style="height:${Math.round(m/mx*100)}%"></i></div><small>${m}</small><em>${l}</em></div>`).join('');
-  $('heat').innerHTML=days.map(d=>{const m=mm(d),lv=!m?0:m<S.goal*.34?1:m<S.goal*.67?2:m<S.goal?3:4;
-    return lv?`<i style="background:var(--a);opacity:${[0,.3,.5,.75,1][lv]}" title="${d}: ${m} min"></i>`:'<i></i>'}).join('');
-  const sb2={};S.tasks.forEach(t=>{sb2[t.sub]=sb2[t.sub]||{d:0,n:0};sb2[t.sub].n++;if(t.done)sb2[t.sub].d++});
-  $('subProg').innerHTML=Object.keys(sb2).map(k=>{const p=Math.round(sb2[k].d/sb2[k].n*100);
-    return `<div><b>${esc(k)}</b> <span class="mut">${sb2[k].d}/${sb2[k].n}</span><div class="bar"><i style="width:${p}%"></i></div></div>`}).join('')||'<div class="empty">—</div>';
-  const pavg=S.papers.length?Math.round(S.papers.reduce((a,p)=>a+p.m/p.t*100,0)/S.papers.length):null;
-  $('hist').innerHTML=(pavg!==null?`<p>📝 Papers average: <b>${pavg}%</b></p>`:'')+
-    S.quizzes.slice(-3).reverse().map(x=>`<div class="item"><div class="grow"><b>🎯 ${x.score}/${x.total}</b><small>${esc(x.date)}</small></div></div>`).join('')||'<div class="empty">—</div>';
-  $('recent').innerHTML=S.sessions.slice(-5).reverse().map(s=>`<div class="item"><div class="grow"><b>${esc(s.sub)}</b><small>${esc(s.date)}</small></div><b>${s.min} min</b></div>`).join('')||'<div class="empty">—</div>';
-}
-
-/* ===== AI tutor ===== */
-let aiM='explain',aiCards=[];
-function aiMode(m){aiM=m;document.querySelectorAll('#aiModes button').forEach(b=>b.classList.toggle('on',b.dataset.m===m))}
-function renderAI(){$('aiGate').hidden=!!user;$('aiBox').hidden=!user}
-function parseCards(txt){
-  try{const s=txt.trim().replace(/^```(?:json)?/i,'').replace(/```$/,'').trim();const a=JSON.parse(s);
-    if(Array.isArray(a))return a.filter(x=>x&&x.q&&x.a).map(x=>({q:String(x.q),a:String(x.a)}))}catch(e){}
-  return[];
-}
-function showAI(txt){
-  aiCards=aiM==='cards'?parseCards(txt):[];
-  $('aiOut').textContent=aiCards.length?aiCards.map((c,i)=>(i+1)+'. '+c.q+'\n   → '+c.a).join('\n\n'):txt;
-  $('aiAdd').hidden=!aiCards.length;if(aiCards.length)$('aiAdd').textContent='➕ Add '+aiCards.length+' cards';
-  $('aiOutCard').hidden=false;
-}
-async function askAI(){
-  if(!sb||!user)return toast(tr('need_login','Please log in first'));
-  let text=$('aiIn').value.trim();
-  if(aiM==='plan'){
-    const ex=S.exams.map(x=>x.name+' on '+x.date).join('; '),tk=S.tasks.filter(x=>!x.done).slice(0,15).map(x=>x.t+(x.due?' (due '+x.due+')':'')).join('; ');
-    text=(text||'Make me a study plan.')+'\nToday: '+day()+'\nExams: '+(ex||'none')+'\nPending tasks: '+(tk||'none')+'\nDaily focus goal: '+S.goal+' minutes';
-  }
-  if(!text)return toast(tr('type_first','Type something first'));
-  const btn=$('aiGo');btn.disabled=true;btn.textContent='⏳ ...';
-  try{
-    const r=await sb.functions.invoke(AI_FN,{body:{mode:aiM,text,lang:S.lang}});
-    if(r.error){let m=r.error.message;try{const j=await r.error.context.json();if(j&&j.error)m=j.error}catch(e){}throw new Error(m)}
-    if(r.data&&r.data.error)throw new Error(r.data.error);
-    showAI(r.data.text);
-    if(typeof r.data.left==='number')$('aiLeft').textContent=r.data.left+' '+tr('left_today','AI uses left today');
-  }catch(e){toast('⚠️ '+e.message)}
-  btn.disabled=false;btn.textContent=tr('ai_ask','✨ Ask AI');
-}
-function copyAI(){
-  const t=$('aiOut').textContent;
-  (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>toast(tr('copied','Copied'))).catch(()=>toast('Press and hold the text to copy'));
-}
-function addAICards(){
-  aiCards.forEach(c=>{const x={id:uid(),q:c.q,a:c.a,box:0,due:day()};S.cards.push(x);RQ.push(x.id)});
-  toast('✅ '+aiCards.length+' cards added');aiCards=[];$('aiAdd').hidden=true;save();render();
-}
-
-/* ===== settings & data ===== */
-function initFields(){$('sName').value=S.name;$('sGoal').value=S.goal;$('sFocus').value=S.focus;$('sBrk').value=S.brk;$('sLbrk').value=S.lbrk}
-function saveSettings(){
-  S.name=$('sName').value.trim();S.goal=Math.max(1,+$('sGoal').value||60);
-  S.focus=Math.min(180,Math.max(1,+$('sFocus').value||25));S.brk=Math.min(60,Math.max(1,+$('sBrk').value||5));S.lbrk=Math.min(90,Math.max(1,+$('sLbrk').value||15));
-  save();if(!T.run)setMode(T.mode);render();
-}
-function toggle(k){S[k]=!S[k];save();drawToggles()}
-function drawToggles(){$('tgSound').classList.toggle('on',!!S.sound);$('tgHaptic').classList.toggle('on',!!S.haptic)}
-function exportData(){
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(new Blob([JSON.stringify(S,null,2)],{type:'application/json'}));
-  a.download='studypilot-backup-'+day()+'.json';document.body.appendChild(a);a.click();a.remove();
-}
-function importData(e){
-  const f=e.target.files[0];if(!f)return;const r=new FileReader();
-  r.onload=()=>{try{const d=JSON.parse(r.result);if(!d||typeof d!=='object')throw 0;S=Object.assign({},def,d);fix();save();reloadAll();toast('✅ Data restored')}catch(x){toast('❌ Invalid backup file')}};
-  r.readAsText(f);e.target.value='';
-}
-function clearData(){
-  if(confirm('Delete ALL your StudyPilot data? This cannot be undone.')){
-    S=Object.assign({},def,{theme:S.theme,lang:S.lang,onboarded:true});save();reloadAll();
-  }
-}
-function reloadAll(){initFields();applyTheme();applyLang();buildQ();setMode('focus');render()}
-
-/* ===== onboarding ===== */
-let obN=0;
-function obShow(){document.querySelectorAll('.slide').forEach(s=>s.classList.toggle('on',+s.dataset.n===obN));$('obNext').textContent=obN===2?tr('go','Get started'):tr('next','Next')}
-function obNext(){if(obN<2){obN++;obShow()}else obDone()}
-function obDone(){const n=$('obName').value.trim();if(n)S.name=n;S.onboarded=true;save();$('onb').hidden=true;initFields();render()}
-
-/* ===== cloud account (Supabase) ===== */
-function showAcc(){$('accOut').hidden=!!user;$('accIn').hidden=!user;if(user)$('aWho').textContent=user.email||'';renderAI()}
-const setMsg=t=>{$('aSync').textContent=t};
-function authInit(){
-  if(!window.supabase||SB_URL.indexOf('PASTE')===0){
-    $('accOut').innerHTML='<p class="mut">☁️ Accounts need an internet connection, or are not set up yet.</p>';return;
-  }
-  sb=window.supabase.createClient(SB_URL,SB_KEY);
-  sb.auth.onAuthStateChange((ev,ses)=>{
-    setTimeout(()=>{
-      const u=ses&&ses.user?ses.user:null;
-      if(ev==='PASSWORD_RECOVERY'){
-        const p=prompt('Enter your new password (at least 6 characters)');
-        if(p&&p.length>=6)sb.auth.updateUser({password:p}).then(r=>toast(r.error?'❌ '+r.error.message:'✅ Password changed'));
-      }
-      if(u&&(!user||user.id!==u.id)){user=u;showAcc();pull()}
-      else if(!u&&user){user=null;showAcc()}
-    },0);
-  });
-}
-async function signUp(){
-  if(!sb)return toast('Cloud is not ready. Check your internet.');
-  const email=$('aMail').value.trim(),password=$('aPass').value;
-  if(!email||password.length<6)return toast('Enter your email and a password of at least 6 characters');
-  const r=await sb.auth.signUp({email,password});
-  if(r.error)return toast('❌ '+r.error.message);
-  if(!r.data.session)toast('✅ Account created! Check your email to confirm, then log in.');
-}
-async function signIn(){
-  if(!sb)return toast('Cloud is not ready. Check your internet.');
-  const r=await sb.auth.signInWithPassword({email:$('aMail').value.trim(),password:$('aPass').value});
-  if(r.error)toast('❌ '+r.error.message);else $('aPass').value='';
-}
-async function signOut(){if(sb)await sb.auth.signOut()}
-async function resetPw(){
-  if(!sb)return toast('Cloud is not ready. Check your internet.');
-  const email=$('aMail').value.trim();if(!email)return toast('Type your email first');
-  const r=await sb.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname});
-  toast(r.error?'❌ '+r.error.message:'📧 Check your email for the reset link');
-}
-function schedulePush(){clearTimeout(pushT);pushT=setTimeout(push,2000)}
-async function push(){
-  if(!sb||!user)return;persist();
-  const r=await sb.from('user_data').upsert({user_id:user.id,data:S,updated_at:new Date().toISOString()});
-  setMsg(r.error?'⚠️ Sync failed: '+r.error.message:'✅ Synced '+new Date().toLocaleTimeString());
-}
-function applyCloud(c){S=Object.assign({},def,c);fix();persist();reloadAll()}
-async function pull(){
-  if(!sb||!user)return;setMsg('Syncing...');
-  const r=await sb.from('user_data').select('data').eq('user_id',user.id).maybeSingle();
-  if(r.error)return setMsg('⚠️ '+r.error.message);
-  const first=S.acct!==user.id;
-  const hasLocal=S.tasks.length+S.notes.length+S.cards.length+S.sessions.length>0;
-  if(!r.data){S.acct=user.id;return push()}
-  const c=r.data.data||{};
-  if((c.updated||0)>(S.updated||0)){
-    if(first&&hasLocal&&!confirm("Your account already has saved data.\n\nOK = use the account data on this phone\nCancel = replace the account data with this phone's data")){S.acct=user.id;return push()}
-    c.acct=user.id;applyCloud(c);setMsg('✅ Loaded from cloud');
-  }else if((S.updated||0)>(c.updated||0)){S.acct=user.id;return push()}
-  else{S.acct=user.id;persist();setMsg('✅ Up to date')}
-}
-const syncNow=()=>pull();
-window.addEventListener('online',()=>{if(user)push()});
-
-/* ===== render + start ===== */
-function render(){renderHome();renderTasks();renderNotes();drawCards();renderExams();renderTT();renderPapers();renderProgress();renderAI();drawT();drawToggles()}
-buildThemes();buildNav();buildQ();initFields();applyTheme();applyLang();setMode('focus');render();authInit();
-if(!S.onboarded){$('onb').hidden=false;obShow()}
-{const h=location.hash.slice(1);if(['home','study','focus','progress','ai','settings'].includes(h))go(h)}
-setTimeout(()=>$('splash').classList.add('hide'),900);
-if('serviceWorker' in navigator){
-  const had=navigator.serviceWorker.controller;
-  navigator.serviceWorker.register('sw.js').catch(()=>{});
-  navigator.serviceWorker.addEventListener('controllerchange',()=>{if(had&&!window._r){window._r=1;location.reload()}});
-}
-</script>
-</body>
-</html>
+applyAll();
+setTimeout(()=>{$('#splash').style.opacity=0;setTimeout(()=>$('#splash').remove(),500);if(!S.onb)rOnb(0)},1200);
+</script></body></html>
