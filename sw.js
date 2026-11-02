@@ -1,4 +1,4 @@
-const V = 'studypilot-v3';
+const V = 'studypilot-v5';
 const FILES = ['./', 'index.html', 'manifest.json', 'icon-192.png', 'icon-512.png'];
 
 self.addEventListener('install', e => {
@@ -16,6 +16,8 @@ self.addEventListener('activate', e => {
 
 self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
+  const u = new URL(e.request.url);
+  if (u.origin !== location.origin && !u.hostname.endsWith('jsdelivr.net')) return;
   e.respondWith(
     fetch(e.request)
       .then(res => {
