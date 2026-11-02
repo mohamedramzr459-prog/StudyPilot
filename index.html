@@ -1,1072 +1,474 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="midnight">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0B1020">
-  <meta name="description" content="StudyPilot — plan your studies, focus and track your progress.">
-  <title>StudyPilot — Your Study Companion</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#04040f" id="tc">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="StudyPilot">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>StudyPilot</title>
+<script>
+try{var d=JSON.parse(localStorage.getItem('studypilot_v1'));if(d&&d.theme)document.documentElement.dataset.theme=d.theme}catch(e){}
+</script>
+<style>
+:root,[data-theme=midnight]{--bg:#04040f;--card:#08081c;--line:#1b1b3d;--text:#f4f4ff;--mut:#8f93b5;--a:#8b7bff;--a2:#22d3ee;--btn:#4a35c9;--nav:#06061a;--tc:#04040f;color-scheme:dark}
+[data-theme=amoled]{--bg:#000;--card:#0b0b0b;--line:#222;--text:#fff;--mut:#9a9a9a;--a:#00e5a0;--a2:#38bdf8;--btn:#009e70;--nav:#000;--tc:#000000;color-scheme:dark}
+[data-theme=aurora]{--bg:#041016;--card:#0a1d28;--line:#143546;--text:#eafcff;--mut:#7fa6b5;--a:#2dd4bf;--a2:#a78bfa;--btn:#0f8f82;--nav:#06161e;--tc:#041016;color-scheme:dark}
+[data-theme=sunset]{--bg:#130708;--card:#1f0c11;--line:#3d1922;--text:#fff1f0;--mut:#b58a90;--a:#fb7185;--a2:#fbbf24;--btn:#be3a52;--nav:#190a0d;--tc:#130708;color-scheme:dark}
+[data-theme=forest]{--bg:#030f08;--card:#09190f;--line:#143321;--text:#ecfff2;--mut:#80a98c;--a:#4ade80;--a2:#facc15;--btn:#1f9b4d;--nav:#06140c;--tc:#030f08;color-scheme:dark}
+[data-theme=ocean]{--bg:#020f1d;--card:#06192c;--line:#0f3153;--text:#eaf6ff;--mut:#7f9fbd;--a:#38bdf8;--a2:#818cf8;--btn:#1673b0;--nav:#04152a;--tc:#020f1d;color-scheme:dark}
+[data-theme=gold]{--bg:#0c0904;--card:#16100a;--line:#382a12;--text:#fff8e6;--mut:#b09a6e;--a:#fbbf24;--a2:#f97316;--btn:#a8730a;--nav:#120d06;--tc:#0c0904;color-scheme:dark}
+[data-theme=pearl]{--bg:#f4f5fb;--card:#ffffff;--line:#e2e5f1;--text:#14142b;--mut:#6a6f92;--a:#6c4cff;--a2:#0ea5e9;--btn:#6c4cff;--nav:#ffffff;--tc:#f4f5fb;color-scheme:light}
 
-  <style>
-    :root {
-      color-scheme: dark;
-      --bg: #0B1020;
-      --card: #151C2E;
-      --card2: #1C2540;
-      --purple: #9B87F5;
-      --cyan: #67DCE8;
-      --text: #F5F6FF;
-      --muted: #A6ADC5;
-      --border: #29324A;
-      --danger: #FF8C9A;
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      font-family: system-ui, -apple-system, sans-serif;
-      padding: 22px 16px 105px;
-      min-height: 100vh;
-    }
-
-    button, input, select {
-      font: inherit;
-    }
-
-    button {
-      cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    button:focus-visible, input:focus-visible, select:focus-visible {
-      outline: 2px solid var(--cyan);
-      outline-offset: 3px;
-    }
-
-    header { margin: 8px 0 25px; }
-
-    .brand {
-      color: var(--purple);
-      font-weight: 850;
-      font-size: 15px;
-      letter-spacing: 2px;
-    }
-
-    h1 { font-size: 29px; margin: 13px 0 6px; }
-    h2 { font-size: 19px; margin: 0 0 15px; }
-    h3 { font-size: 16px; margin: 0 0 8px; }
-
-    p {
-      color: var(--muted);
-      line-height: 1.6;
-    }
-
-    .muted { color: var(--muted); }
-    .small { font-size: 12px; }
-    .accent { color: var(--purple); }
-    .cyan { color: var(--cyan); }
-
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 19px;
-      padding: 17px;
-      margin: 13px 0;
-      min-width: 0;
-    }
-
-    .label {
-      color: var(--muted);
-      font-size: 11px;
-      font-weight: 750;
-      letter-spacing: 1.2px;
-    }
-
-    .big {
-      font-size: 27px;
-      font-weight: 800;
-      margin: 8px 0;
-    }
-
-    .row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .between { justify-content: space-between; }
-    .wrap { flex-wrap: wrap; }
-
-    .btn {
-      border: 0;
-      border-radius: 12px;
-      background: var(--purple);
-      color: #111020;
-      padding: 12px 16px;
-      font-weight: 750;
-    }
-
-    .btn.secondary {
-      background: var(--card2);
-      border: 1px solid var(--border);
-      color: var(--text);
-    }
-
-    .btn.danger {
-      background: transparent;
-      color: var(--danger);
-      border: 1px solid var(--danger);
-    }
-
-    .btn:disabled {
-      opacity: .5;
-      cursor: not-allowed;
-    }
-
-    input, select {
-      width: 100%;
-      min-width: 0;
-      padding: 12px;
-      border-radius: 12px;
-      border: 1px solid #39415A;
-      background: var(--bg);
-      color: var(--text);
-      margin: 7px 0 12px;
-    }
-
-    label {
-      display: block;
-      color: var(--muted);
-      font-size: 13px;
-      margin-top: 10px;
-    }
-
-    .form-actions {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .form-actions .btn { flex: 1; }
-
-    .screen[hidden] { display: none !important; }
-
-    .progress-track {
-      width: 100%;
-      height: 9px;
-      background: var(--card2);
-      border-radius: 20px;
-      overflow: hidden;
-      margin: 12px 0;
-    }
-
-    .progress-fill {
-      width: 0%;
-      height: 100%;
-      background: linear-gradient(90deg, var(--purple), var(--cyan));
-      border-radius: inherit;
-      transition: width .25s ease;
-    }
-
-    .task-list {
-      display: grid;
-      gap: 9px;
-      margin-top: 14px;
-    }
-
-    .task-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 13px;
-      padding: 11px;
-    }
-
-    .task-item input {
-      width: 20px;
-      height: 20px;
-      margin: 0;
-      flex-shrink: 0;
-      accent-color: var(--purple);
-    }
-
-    .task-text {
-      flex: 1;
-      overflow-wrap: anywhere;
-    }
-
-    .task-text.done {
-      text-decoration: line-through;
-      color: var(--muted);
-    }
-
-    .delete-task {
-      border: 0;
-      color: var(--danger);
-      background: transparent;
-      font-size: 21px;
-      padding: 4px 8px;
-    }
-
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-    }
-
-    .stat {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 13px;
-      min-width: 0;
-    }
-
-    .stat-number {
-      font-size: 23px;
-      font-weight: 800;
-      margin-top: 6px;
-      overflow-wrap: anywhere;
-    }
-
-    .timer {
-      text-align: center;
-      padding: 20px 5px;
-    }
-
-    .timer-number {
-      font-size: clamp(48px, 15vw, 68px);
-      letter-spacing: 2px;
-      font-weight: 800;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .timer-actions {
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-top: 18px;
-    }
-
-    .empty {
-      color: var(--muted);
-      text-align: center;
-      padding: 20px 8px;
-      font-size: 14px;
-    }
-
-    .setting-row {
-      padding: 12px 0;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .setting-row:last-child { border-bottom: 0; }
-
-    .credit {
-      text-align: right;
-      color: var(--purple);
-      font-size: 10px;
-      letter-spacing: 1px;
-      line-height: 1.8;
-      margin: 27px 2px 0;
-    }
-
-    .credit strong {
-      font-size: 12px;
-      letter-spacing: .3px;
-    }
-
-    .nav {
-      position: fixed;
-      z-index: 10;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      padding: 9px 4px max(9px, env(safe-area-inset-bottom));
-      background: #11182A;
-      border-top: 1px solid var(--border);
-    }
-
-    .nav button {
-      background: transparent;
-      border: 0;
-      color: var(--muted);
-      font-size: 11px;
-      padding: 8px 1px;
-      border-radius: 10px;
-      font-weight: 650;
-    }
-
-    .nav button .nav-icon {
-      display: block;
-      font-size: 19px;
-      margin-bottom: 3px;
-    }
-
-    .nav button.active {
-      color: var(--purple);
-      background: #24203F;
-    }
-
-    body.light {
-      color-scheme: light;
-      --bg: #F4F5FC;
-      --card: #FFFFFF;
-      --card2: #E8E9F6;
-      --text: #17182A;
-      --muted: #626780;
-      --border: #D8DBE9;
-    }
-
-    body.light .nav { background: #FFFFFF; }
-    body.light .task-item,
-    body.light .stat { background: #F4F5FC; }
-    body.light input,
-    body.light select { background: #FFFFFF; }
-
-    @media (min-width: 700px) {
-      body {
-        max-width: 760px;
-        margin: 0 auto;
-        padding-top: 35px;
-      }
-    }
-  </style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:Roboto,system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:560px;margin:auto;padding:calc(22px + env(safe-area-inset-top)) 18px calc(112px + env(safe-area-inset-bottom))}
+.eyebrow{color:var(--a);font-weight:800;letter-spacing:4px;font-size:15px}
+h1{font-size:40px;line-height:1.1;margin:14px 0 8px;font-weight:800}
+h2{font-size:28px;margin:6px 0 16px}
+h3{margin:0 0 10px;font-size:20px}
+.mut,.date{color:var(--mut)}
+.center{text-align:center}
+.screen{display:none}
+.screen.on{display:block;animation:in .3s}
+@keyframes in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:28px;padding:22px;margin-bottom:14px}
+.lbl{color:var(--mut);font-size:12.5px;font-weight:700;letter-spacing:2px;text-transform:uppercase}
+.big{font-size:34px;font-weight:800;margin:8px 0 10px}
+.bar{height:10px;border-radius:10px;background:rgba(128,128,160,.2);overflow:hidden;margin:10px 0}
+.bar i{display:block;height:100%;width:0;border-radius:10px;background:linear-gradient(90deg,var(--a),var(--a2));transition:width .5s}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.grid .card{margin:0;padding:18px;border-radius:24px}
+.num{font-size:34px;font-weight:800;margin-top:8px}
+.btn{display:inline-block;border:0;border-radius:18px;padding:15px 22px;background:var(--btn);color:#fff;font-size:16px;font-weight:700;font-family:inherit;cursor:pointer;text-align:center}
+.btn:active{transform:scale(.97)}
+.btn.block{display:block;width:100%;margin-top:10px}
+.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--text)}
+.btn.red{background:#dc2626}
+.row{display:flex;gap:10px}
+.row>*{flex:1;min-width:0}
+input,select,textarea{width:100%;padding:14px;margin:0 0 10px;background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:14px;font-size:16px;font-family:inherit}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--a);border-color:transparent}
+label{display:block;color:var(--mut);font-size:13px;margin:6px 0}
+.tabs{display:flex;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:4px;margin-bottom:14px}
+.tabs button{flex:1;padding:12px;border:0;border-radius:14px;background:none;color:var(--mut);font-weight:700;font-size:15px;font-family:inherit}
+.tabs button.on{background:var(--btn);color:#fff}
+.item{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:14px;margin-bottom:10px}
+.item.done b{text-decoration:line-through;opacity:.5}
+.grow{flex:1;min-width:0}
+.grow b{display:block;word-break:break-word}
+.grow small{color:var(--mut)}
+.grow p{margin:6px 0 0;white-space:pre-wrap;word-break:break-word;font-size:14px;color:var(--mut)}
+.ib{background:none;border:0;font-size:22px;padding:4px;color:var(--text)}
+.empty{text-align:center;color:var(--mut);padding:18px}
+.flash{min-height:160px;display:grid;place-items:center;text-align:center;padding:22px;margin-bottom:12px;font-size:21px;font-weight:700;border-radius:28px;background:linear-gradient(135deg,var(--btn),var(--a2));color:#fff;cursor:pointer;word-break:break-word}
+.timer{text-align:center;padding:34px 10px}
+#time{font-size:80px;font-weight:800;letter-spacing:2px;font-variant-numeric:tabular-nums;background:linear-gradient(135deg,var(--a),var(--a2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.chips{display:flex;gap:8px;margin-bottom:12px}
+.chips button{flex:1;padding:11px 0;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--text);font-weight:700;font-family:inherit}
+.chips button.on{border-color:var(--a);color:var(--a)}
+.bars{display:flex;gap:6px;height:170px}
+.b{flex:1;display:flex;flex-direction:column;align-items:center}
+.col{flex:1;width:100%;display:flex;align-items:flex-end}
+.col i{display:block;width:100%;min-height:3px;border-radius:8px 8px 3px 3px;background:linear-gradient(var(--a2),var(--a))}
+.b small{font-size:11px;color:var(--a);margin-top:4px}
+.b em{font-size:11px;color:var(--mut);font-style:normal}
+.themes{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.sw{border:2px solid var(--line);border-radius:16px;padding:10px 2px;background:var(--bg);color:var(--text);font-size:11px;font-weight:700;font-family:inherit;text-align:center}
+.sw i{display:block;width:34px;height:34px;border-radius:50%;margin:0 auto 6px}
+.sw.on{border-color:var(--a)}
+nav{position:fixed;left:0;right:0;bottom:0;display:flex;gap:4px;background:var(--nav);border-top:1px solid var(--line);padding:8px 8px calc(8px + env(safe-area-inset-bottom));z-index:9}
+nav button{flex:1;border:0;background:none;color:var(--mut);border-radius:18px;padding:8px 0;font-size:12px;font-weight:700;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:3px}
+nav button i{font-style:normal;font-size:20px}
+nav button.on{background:rgba(128,128,160,.18);color:var(--a)}
+</style>
 </head>
-
 <body>
-  <header>
-    <div class="brand">STUDYPILOT ✦</div>
-    <h1 id="greeting">Make today count.</h1>
-    <p id="todayDate">Your personal space to plan, focus and grow.</p>
-  </header>
+<main>
 
-  <main>
-    <!-- HOME -->
-    <section class="screen" id="homeScreen">
-      <div class="card">
-        <div class="label">TODAY'S PROGRESS</div>
-        <div class="big" id="homeProgress">0% complete</div>
-        <div class="progress-track">
-          <div class="progress-fill" id="homeProgressBar"></div>
-        </div>
-        <p id="homeTaskCount">Your study journey starts here.</p>
-      </div>
+<!-- HOME -->
+<section id="home" class="screen on">
+  <div class="eyebrow">STUDYPILOT ✦</div>
+  <h1 id="greet">Good afternoon.</h1>
+  <p class="date" id="date"></p>
 
-      <div class="stats">
-        <div class="stat">
-          <div class="label">TASKS LEFT</div>
-          <div class="stat-number" id="homePending">0</div>
-        </div>
-        <div class="stat">
-          <div class="label">FOCUS MINUTES</div>
-          <div class="stat-number" id="homeFocus">0</div>
-        </div>
-      </div>
-
-      <div class="card">
-        <h2>Your next step</h2>
-        <p>Turn your study goals into small, achievable tasks.</p>
-        <button class="btn" data-go="study">Open study planner →</button>
-        <button class="btn secondary" data-go="focus">Start focusing</button>
-      </div>
-
-      <div class="card">
-        <div class="label">STUDY TIP</div>
-        <h2>Small steps build progress.</h2>
-        <p>Choose one clear task, focus on it, then take a short break.</p>
-      </div>
-    </section>
-
-    <!-- STUDY -->
-    <section class="screen" id="studyScreen" hidden>
-      <h2>Your study planner</h2>
-      <p>Create tasks, track completion and organise your next study session.</p>
-
-      <div class="card">
-        <form id="taskForm">
-          <label for="taskInput">Task or topic</label>
-          <input id="taskInput" maxlength="120"
-            placeholder="e.g. Revise cell structure" required>
-
-          <label for="subjectInput">Subject (optional)</label>
-          <input id="subjectInput" maxlength="60"
-            placeholder="e.g. Biology">
-
-          <div class="form-actions">
-            <button class="btn" type="submit">+ Add task</button>
-          </div>
-        </form>
-      </div>
-
-      <div class="card">
-        <div class="row between wrap">
-          <h2>My tasks</h2>
-          <span class="small muted" id="studyTaskCount">0 tasks</span>
-        </div>
-        <div id="taskList" class="task-list"></div>
-      </div>
-    </section>
-
-    <!-- FOCUS -->
-    <section class="screen" id="focusScreen" hidden>
-      <h2>Focus mode</h2>
-      <p>Give one task your full attention.</p>
-
-      <div class="card timer">
-        <div class="label" id="timerMode">FOCUS SESSION</div>
-        <div class="timer-number" id="timerDisplay">25:00</div>
-        <p id="timerStatus">Ready when you are.</p>
-
-        <div class="timer-actions">
-          <button class="btn" id="startPauseBtn">Start focus</button>
-          <button class="btn secondary" id="resetTimerBtn">Reset</button>
-        </div>
-      </div>
-
-      <div class="card">
-        <h2>Session settings</h2>
-        <label for="focusMinutes">Focus duration (minutes)</label>
-        <select id="focusMinutes">
-          <option value="15">15 minutes</option>
-          <option value="25" selected>25 minutes</option>
-          <option value="30">30 minutes</option>
-          <option value="45">45 minutes</option>
-          <option value="60">60 minutes</option>
-        </select>
-
-        <label for="breakMinutes">Break duration (minutes)</label>
-        <select id="breakMinutes">
-          <option value="5" selected>5 minutes</option>
-          <option value="10">10 minutes</option>
-          <option value="15">15 minutes</option>
-        </select>
-        <p class="small">Keep the page open for the most reliable timer behavior. Background browser timers may be delayed by Android.</p>
-      </div>
-    </section>
-
-    <!-- PROGRESS -->
-    <section class="screen" id="progressScreen" hidden>
-      <h2>Your progress</h2>
-      <p>Review your completed tasks and recorded focus time.</p>
-
-      <div class="stats">
-        <div class="stat">
-          <div class="label">TOTAL TASKS</div>
-          <div class="stat-number" id="totalTasks">0</div>
-        </div>
-        <div class="stat">
-          <div class="label">COMPLETED</div>
-          <div class="stat-number" id="completedTasks">0</div>
-        </div>
-        <div class="stat">
-          <div class="label">COMPLETION</div>
-          <div class="stat-number" id="completionRate">0%</div>
-        </div>
-        <div class="stat">
-          <div class="label">FOCUS MINUTES</div>
-          <div class="stat-number" id="totalFocus">0</div>
-        </div>
-      </div>
-
-      <div class="card">
-        <h2>Task completion</h2>
-        <div class="progress-track">
-          <div class="progress-fill" id="progressBar"></div>
-        </div>
-        <p id="progressMessage">Add your first task to begin tracking.</p>
-      </div>
-
-      <div class="card">
-        <h2>Recent focus sessions</h2>
-        <div id="sessionList"></div>
-      </div>
-    </section>
-
-    <!-- SETTINGS -->
-    <section class="screen" id="settingsScreen" hidden>
-      <h2>Settings</h2>
-      <p>Personalise your StudyPilot experience.</p>
-
-      <div class="card">
-        <div class="setting-row">
-          <h3>Appearance</h3>
-          <p class="small">Choose the interface theme.</p>
-          <button class="btn secondary" id="themeBtn">Switch to light mode</button>
-        </div>
-
-        <div class="setting-row">
-          <h3>Data backup</h3>
-          <p class="small">Export your tasks and focus history to a JSON file.</p>
-          <button class="btn" id="exportBtn">Export my data</button>
-          <label for="importFile">Restore a previous StudyPilot backup</label>
-          <input id="importFile" type="file" accept=".json,application/json">
-        </div>
-
-        <div class="setting-row">
-          <h3>Privacy</h3>
-          <p class="small">This prototype stores tasks and settings in this browser on this device. It does not sync them to a cloud account.</p>
-        </div>
-
-        <div class="setting-row">
-          <h3>Clear local data</h3>
-          <p class="small">Permanently remove this prototype's saved tasks, focus history and settings from this browser.</p>
-          <button class="btn danger" id="clearDataBtn">Clear my data</button>
-        </div>
-      </div>
-
-      <div class="card" id="about">
-        <div class="label">ABOUT</div>
-        <h2>StudyPilot</h2>
-        <p>Your personal study companion for planning, focus, revision and progress tracking.</p>
-        <p class="small">Version 1.0 prototype · Under development</p>
-        <div class="credit">
-          FOUNDER &amp; CREATOR<br>
-          <strong>Asjadh Rilwan</strong>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <div class="credit">
-    FOUNDER &amp; CREATOR<br>
-    <strong>Asjadh Rilwan</strong>
+  <div class="card">
+    <div class="lbl">Today's progress</div>
+    <div class="big" id="pct">0% complete</div>
+    <div class="bar"><i id="pbar"></i></div>
+    <p class="mut" id="pcount"></p>
   </div>
 
-  <nav class="nav" aria-label="Main navigation">
-    <button class="active" data-go="home" aria-current="page">
-      <span class="nav-icon">⌂</span>Home
-    </button>
-    <button data-go="study">
-      <span class="nav-icon">▤</span>Study
-    </button>
-    <button data-go="focus">
-      <span class="nav-icon">◷</span>Focus
-    </button>
-    <button data-go="progress">
-      <span class="nav-icon">▥</span>Progress
-    </button>
-    <button data-go="settings">
-      <span class="nav-icon">⚙</span>Settings
-    </button>
-  </nav>
-
-  <script>
-    (() => {
-      'use strict';
-
-      const DATA_KEY = 'studypilot-data-v1';
-      const THEME_KEY = 'studypilot-theme-v1';
-
-      const $ = id => document.getElementById(id);
-
-      function makeId() {
-        return Date.now().toString(36) +
-          Math.random().toString(36).slice(2, 8);
-      }
-
-      function emptyData() {
-        return { tasks: [], sessions: [] };
-      }
-
-      function validData(value) {
-        if (!value || typeof value !== 'object') return false;
-        if (!Array.isArray(value.tasks) ||
-            !Array.isArray(value.sessions)) return false;
-
-        return value.tasks.every(t =>
-          t && typeof t.text === 'string' &&
-          typeof t.done === 'boolean' &&
-          typeof t.subject === 'string'
-        ) && value.sessions.every(s =>
-          s && Number.isFinite(s.minutes) &&
-          s.minutes >= 0 &&
-          typeof s.date === 'string'
-        );
-      }
-
-      function loadData() {
-        try {
-          const raw = localStorage.getItem(DATA_KEY);
-          if (!raw) return emptyData();
-
-          const parsed = JSON.parse(raw);
-          if (validData(parsed)) return parsed;
-
-          console.warn('StudyPilot data was not in the expected format.');
-        } catch (error) {
-          console.warn('StudyPilot could not load saved data.', error);
-        }
-
-        return emptyData();
-      }
-
-      let data = loadData();
-
-      function saveData() {
-        try {
-          localStorage.setItem(DATA_KEY, JSON.stringify(data));
-          return true;
-        } catch (error) {
-          alert('StudyPilot could not save data. Check your browser storage.');
-          console.error(error);
-          return false;
-        }
-      }
-
-      function showScreen(name) {
-        const allowed = ['home', 'study', 'focus', 'progress', 'settings'];
-        if (!allowed.includes(name)) name = 'home';
-
-        document.querySelectorAll('.screen').forEach(screen => {
-          screen.hidden = screen.id !== name + 'Screen';
-        });
-
-        document.querySelectorAll('.nav [data-go]').forEach(button => {
-          const active = button.dataset.go === name;
-          button.classList.toggle('active', active);
-
-          if (active) button.setAttribute('aria-current', 'page');
-          else button.removeAttribute('aria-current');
-        });
-
-        window.scrollTo({ top: 0, behavior: 'auto' });
-
-        if (name === 'settings') renderThemeButton();
-      }
-
-      document.querySelectorAll('[data-go]').forEach(button => {
-        button.addEventListener('click', () => {
-          showScreen(button.dataset.go);
-        });
-      });
-
-      // Date and greeting
-      function updateDate() {
-        const now = new Date();
-        const hour = now.getHours();
-
-        $('greeting').textContent =
-          hour < 12 ? 'Good morning.' :
-          hour < 17 ? 'Good afternoon.' : 'Good evening.';
-
-        $('todayDate').textContent = now.toLocaleDateString(undefined, {
-          weekday: 'long',
-          month: 'long',
-          day: 'numeric',
-          year: 'numeric'
-        });
-      }
-
-      // Study tasks
-      function renderTasks() {
-        const list = $('taskList');
-        list.replaceChildren();
-
-        if (data.tasks.length === 0) {
-          const empty = document.createElement('div');
-          empty.className = 'empty';
-          empty.textContent = 'No tasks yet. Add your first study task above.';
-          list.append(empty);
-        }
-
-        data.tasks.forEach(task => {
-          const row = document.createElement('div');
-          row.className = 'task-item';
-
-          const checkbox = document.createElement('input');
-          checkbox.type = 'checkbox';
-          checkbox.checked = task.done;
-          checkbox.setAttribute('aria-label', 'Mark task completed');
-
-          checkbox.addEventListener('change', () => {
-            task.done = checkbox.checked;
-            saveData();
-            renderAll();
-          });
-
-          const textWrap = document.createElement('div');
-          textWrap.className = 'task-text' + (task.done ? ' done' : '');
-
-          const title = document.createElement('div');
-          title.textContent = task.text;
-          textWrap.append(title);
-
-          if (task.subject) {
-            const subject = document.createElement('div');
-            subject.className = 'small muted';
-            subject.textContent = task.subject;
-            textWrap.append(subject);
-          }
-
-          const remove = document.createElement('button');
-          remove.className = 'delete-task';
-          remove.type = 'button';
-          remove.textContent = '×';
-          remove.setAttribute('aria-label', 'Delete task');
-
-          remove.addEventListener('click', () => {
-            if (!confirm('Delete this task?')) return;
-            data.tasks = data.tasks.filter(t => t.id !== task.id);
-            saveData();
-            renderAll();
-          });
-
-          row.append(checkbox, textWrap, remove);
-          list.append(row);
-        });
-
-        $('studyTaskCount').textContent =
-          data.tasks.length + (data.tasks.length === 1 ? ' task' : ' tasks');
-      }
-
-      $('taskForm').addEventListener('submit', event => {
-        event.preventDefault();
-
-        const text = $('taskInput').value.trim();
-        const subject = $('subjectInput').value.trim();
-
-        if (!text) return;
-
-        data.tasks.push({
-          id: makeId(),
-          text,
-          subject,
-          done: false,
-          createdAt: new Date().toISOString()
-        });
-
-        if (saveData()) {
-          $('taskInput').value = '';
-          $('subjectInput').value = '';
-          renderAll();
-        } else {
-          data.tasks.pop();
-          renderAll();
-        }
-      });
-
-      // Focus timer: deadline-based to reduce timer drift
-      let remainingSeconds = 25 * 60;
-      let timerInterval = null;
-      let deadline = null;
-      let timerRunning = false;
-      let currentMode = 'focus';
-
-      function selectedDuration() {
-        const id = currentMode === 'focus' ? 'focusMinutes' : 'breakMinutes';
-        return Number($(id).value) * 60;
-      }
-
-      function formatTime(seconds) {
-        const mins = Math.floor(seconds / 60);
-        const secs = seconds % 60;
-
-        return String(mins).padStart(2, '0') + ':' +
-          String(secs).padStart(2, '0');
-      }
-
-      function updateTimerDisplay() {
-        $('timerDisplay').textContent = formatTime(remainingSeconds);
-        $('timerMode').textContent =
-          currentMode === 'focus' ? 'FOCUS SESSION' : 'BREAK TIME';
-        $('startPauseBtn').textContent =
-          timerRunning ? 'Pause' :
-          remainingSeconds < selectedDuration() ? 'Resume' :
-          currentMode === 'focus' ? 'Start focus' : 'Start break';
-      }
-
-      function stopTimerInterval() {
-        if (timerInterval !== null) {
-          clearInterval(timerInterval);
-          timerInterval = null;
-        }
-      }
-
-      function finishTimer() {
-        stopTimerInterval();
-        timerRunning = false;
-        deadline = null;
-
-        if (currentMode === 'focus') {
-          const today = new Date().toISOString().slice(0, 10);
-
-          data.sessions.unshift({
-            id: makeId(),
-            minutes: Number($('focusMinutes').value),
-            date: today
-          });
-
-          data.sessions = data.sessions.slice(0, 100);
-          saveData();
-
-          $('timerStatus').textContent = 'Focus session complete. Well done!';
-          renderAll();
-          alert('Focus session complete! Take a short break.');
-        } else {
-          $('timerStatus').textContent = 'Break complete. Ready to focus again?';
-          alert('Break complete. Ready for another focus session?');
-        }
-
-        remainingSeconds = selectedDuration();
-        updateTimerDisplay();
-      }
-
-      function tickTimer() {
-        if (!timerRunning || deadline === null) return;
-
-        remainingSeconds = Math.max(
-          0, Math.ceil((deadline - Date.now()) / 1000)
-        );
-
-        updateTimerDisplay();
-
-        if (remainingSeconds <= 0) finishTimer();
-      }
-
-      function pauseTimer() {
-        if (timerRunning && deadline !== null) {
-          remainingSeconds = Math.max(
-            0, Math.ceil((deadline - Date.now()) / 1000)
-          );
-        }
-
-        stopTimerInterval();
-        timerRunning = false;
-        deadline = null;
-        updateTimerDisplay();
-        $('timerStatus').textContent = 'Timer paused.';
-      }
-
-      function startTimer() {
-        if (timerRunning) {
-          pauseTimer();
-          return;
-        }
-
-        if (remainingSeconds <= 0) remainingSeconds = selectedDuration();
-
-        timerRunning = true;
-        deadline = Date.now() + remainingSeconds * 1000;
-        $('timerStatus').textContent = 'Stay focused. You can do this.';
-        updateTimerDisplay();
-
-        stopTimerInterval();
-        timerInterval = setInterval(tickTimer, 250);
-      }
-
-      function resetTimer() {
-        stopTimerInterval();
-        timerRunning = false;
-        deadline = null;
-        remainingSeconds = selectedDuration();
-        $('timerStatus').textContent = 'Timer reset. Ready when you are.';
-        updateTimerDisplay();
-      }
-
-      $('startPauseBtn').addEventListener('click', startTimer);
-      $('resetTimerBtn').addEventListener('click', resetTimer);
-
-      ['focusMinutes', 'breakMinutes'].forEach(id => {
-        $(id).addEventListener('change', () => {
-          if (!timerRunning) resetTimer();
-        });
-      });
-
-      // Progress dashboard
-      function renderProgress() {
-        const total = data.tasks.length;
-        const done = data.tasks.filter(task => task.done).length;
-        const percent = total ? Math.round(done / total * 100) : 0;
-        const minutes = data.sessions.reduce((sum, s) => sum + s.minutes, 0);
-
-        $('totalTasks').textContent = total;
-        $('completedTasks').textContent = done;
-        $('completionRate').textContent = percent + '%';
-        $('totalFocus').textContent = minutes;
-
-        $('progressBar').style.width = percent + '%';
-        $('progressMessage').textContent = total
-          ? done + ' of ' + total + ' tasks completed.'
-          : 'Add your first task to begin tracking.';
-
-        const sessionList = $('sessionList');
-        sessionList.replaceChildren();
-
-        if (data.sessions.length === 0) {
-          const empty = document.createElement('div');
-          empty.className = 'empty';
-          empty.textContent = 'Completed focus sessions will appear here.';
-          sessionList.append(empty);
-          return;
-        }
-
-        data.sessions.slice(0, 10).forEach(session => {
-          const item = document.createElement('div');
-          item.className = 'setting-row row between wrap';
-
-          const date = document.createElement('span');
-          date.textContent = session.date;
-
-          const duration = document.createElement('strong');
-          duration.textContent = session.minutes + ' min';
-
-          item.append(date, duration);
-          sessionList.append(item);
-        });
-      }
-
-      // Home summary
-      function renderHome() {
-        const total = data.tasks.length;
-        const done = data.tasks.filter(task => task.done).length;
-        const pending = total - done;
-        const percent = total ? Math.round(done / total * 100) : 0;
-
-        $('homeProgress').textContent = percent + '% complete';
-        $('homeProgressBar').style.width = percent + '%';
-        $('homeTaskCount').textContent =
-          done + ' of ' + total + ' tasks completed';
-        $('homePending').textContent = pending;
-        $('homeFocus').textContent = data.sessions.reduce(
-          (sum, s) => sum + s.minutes, 0
-        );
-      }
-
-      // Theme preference
-      function applyTheme() {
-        let theme = 'dark';
-
-        try {
-          theme = localStorage.getItem(THEME_KEY) || 'dark';
-        } catch {}
-
-        document.body.classList.toggle('light', theme === 'light');
-        renderThemeButton();
-      }
-
-      function renderThemeButton() {
-        const light = document.body.classList.contains('light');
-        $('themeBtn').textContent =
-          light ? 'Switch to dark mode' : 'Switch to light mode';
-      }
-
-      $('themeBtn').addEventListener('click', () => {
-        const light = document.body.classList.toggle('light');
-
-        try {
-          localStorage.setItem(THEME_KEY, light ? 'light' : 'dark');
-        } catch {}
-
-        renderThemeButton();
-      });
-
-      // Export data backup
-      $('exportBtn').addEventListener('click', () => {
-        try {
-          const backup = {
-            app: 'StudyPilot',
-            version: 1,
-            exportedAt: new Date().toISOString(),
-            data
-          };
-
-          const blob = new Blob(
-            [JSON.stringify(backup, null, 2)],
-            { type: 'application/json' }
-          );
-
-          const url = URL.createObjectURL(blob);
-          const link = document.createElement('a');
-          link.href = url;
-          link.download = 'studypilot-backup.json';
-          document.body.append(link);
-          link.click();
-          link.remove();
-          URL.revokeObjectURL(url);
-        } catch (error) {
-          alert('Could not export your backup in this browser.');
-          console.error(error);
-        }
-      });
-
-      // Import backup
-      $('importFile').addEventListener('change', async event => {
-        const file = event.target.files[0];
-        if (!file) return;
-
-        try {
-          const parsed = JSON.parse(await file.text());
-          const imported = parsed && parsed.app === 'StudyPilot'
-            ? parsed.data : parsed;
-
-          if (!validData(imported)) {
-            throw new Error('Invalid StudyPilot backup.');
-          }
-
-          if (!confirm('Import this backup and replace current tasks and sessions?')) {
-            event.target.value = '';
-            return;
-          }
-
-          const previous = data;
-          data = imported;
-
-          if (saveData()) {
-            renderAll();
-            alert('StudyPilot backup imported successfully.');
-          } else {
-            data = previous;
-            renderAll();
-          }
-        } catch (error) {
-          alert('This backup file is invalid or cannot be read.');
-          console.error(error);
-        }
-
-        event.target.value = '';
-      });
-
-      // Clear only StudyPilot data
-      $('clearDataBtn').addEventListener('click', () => {
-        if (!confirm('Delete all StudyPilot tasks and focus history from this browser? This cannot be undone unless you have a backup.')) {
-          return;
-        }
-
-        const previous = data;
-        data = emptyData();
-
-        if (saveData()) {
-          renderAll();
-          resetTimer();
-          alert('StudyPilot data cleared.');
-        } else {
-          data = previous;
-          renderAll();
-        }
-      });
-
-      function renderAll() {
-        renderTasks();
-        renderHome();
-        renderProgress();
-      }
-
-      // Initialise
-      updateDate();
-      applyTheme();
-      renderAll();
-      resetTimer();
-      showScreen('home');
-    })();
-  </script>
+  <div class="grid">
+    <div class="card"><div class="lbl">Tasks left</div><div class="num" id="tLeft">0</div></div>
+    <div class="card"><div class="lbl">Focus minutes</div><div class="num" id="fMin">0</div><small class="mut" id="fGoal"></small></div>
+    <div class="card"><div class="lbl">🔥 Streak</div><div class="num" id="hStreak">0</div></div>
+    <div class="card"><div class="lbl">Flashcards</div><div class="num" id="hCards">0</div></div>
+  </div>
+
+  <div class="card">
+    <h3>Your next step</h3>
+    <p class="mut" id="nextTxt"></p>
+    <div class="row">
+      <button class="btn" onclick="go('study')">Open study planner →</button>
+      <button class="btn ghost" onclick="go('focus')">Start focus</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="lbl">⏳ Exam countdown</div>
+    <p class="mut" id="examTxt"></p>
+    <div class="row"><input id="examName" placeholder="Exam name"><input id="examDate" type="date"></div>
+    <button class="btn block" onclick="saveExam()">Save exam</button>
+  </div>
+</section>
+
+<!-- STUDY -->
+<section id="study" class="screen">
+  <h2>📚 Study</h2>
+  <div class="tabs">
+    <button data-s="tasksV" class="on" onclick="sub('tasksV')">Tasks</button>
+    <button data-s="notesV" onclick="sub('notesV')">Notes</button>
+    <button data-s="cardsV" onclick="sub('cardsV')">Cards</button>
+  </div>
+
+  <div id="tasksV">
+    <div class="card">
+      <input id="tTitle" placeholder="New task (e.g. Read chapter 3)">
+      <div class="row"><input id="tSub" placeholder="Subject"><input id="tDue" type="date"></div>
+      <select id="tPri">
+        <option value="high">🔴 High priority</option>
+        <option value="med" selected>🟡 Medium priority</option>
+        <option value="low">🟢 Low priority</option>
+      </select>
+      <button class="btn block" onclick="addTask()">＋ Add task</button>
+    </div>
+    <div class="row">
+      <input id="tSearch" placeholder="🔍 Search" oninput="renderTasks()">
+      <select id="tFilter" onchange="renderTasks()">
+        <option value="all">All</option><option value="pending">Pending</option><option value="done">Done</option>
+      </select>
+    </div>
+    <div id="taskList"></div>
+  </div>
+
+  <div id="notesV" hidden>
+    <div class="card">
+      <input id="nTitle" placeholder="Note title">
+      <textarea id="nBody" rows="4" placeholder="Write your note..."></textarea>
+      <button class="btn block" onclick="addNote()">＋ Save note</button>
+    </div>
+    <div id="noteList"></div>
+  </div>
+
+  <div id="cardsV" hidden>
+    <div class="card">
+      <input id="cQ" placeholder="Question">
+      <input id="cA" placeholder="Answer">
+      <button class="btn block" onclick="addCard()">＋ Add flashcard</button>
+    </div>
+    <div class="flash" id="fc" onclick="flipC()"></div>
+    <div class="row">
+      <button class="btn" onclick="nextC()">Next ➜</button>
+      <button class="btn ghost" onclick="delCard()">🗑 Delete</button>
+    </div>
+    <p class="mut center" id="cCount"></p>
+  </div>
+</section>
+
+<!-- FOCUS -->
+<section id="focus" class="screen">
+  <h2>⏱ Focus</h2>
+  <div class="tabs">
+    <button id="mF" class="on" onclick="setMode('focus')">Focus</button>
+    <button id="mB" onclick="setMode('break')">Break</button>
+  </div>
+  <div class="chips" id="chips">
+    <button data-m="15" onclick="setFocusLen(15)">15</button>
+    <button data-m="25" onclick="setFocusLen(25)">25</button>
+    <button data-m="45" onclick="setFocusLen(45)">45</button>
+    <button data-m="60" onclick="setFocusLen(60)">60</button>
+  </div>
+  <div class="card timer">
+    <div id="time">25:00</div>
+    <p class="mut" id="tState">Ready</p>
+  </div>
+  <input id="fSub" placeholder="Subject (optional)">
+  <div class="row">
+    <button class="btn" onclick="startT()">▶ Start</button>
+    <button class="btn ghost" onclick="pauseT()">⏸ Pause</button>
+    <button class="btn ghost" onclick="resetT()">↺</button>
+  </div>
+  <p class="mut center" id="fToday"></p>
+</section>
+
+<!-- PROGRESS -->
+<section id="progress" class="screen">
+  <h2>📊 Progress</h2>
+  <div class="grid">
+    <div class="card"><div class="lbl">Min today</div><div class="num" id="pToday">0</div></div>
+    <div class="card"><div class="lbl">Min this week</div><div class="num" id="pWeek">0</div></div>
+    <div class="card"><div class="lbl">Tasks done</div><div class="num" id="pDone">0</div></div>
+    <div class="card"><div class="lbl">Day streak</div><div class="num" id="pStreak">0</div></div>
+  </div>
+  <div class="card"><h3>Last 7 days</h3><div class="bars" id="bars"></div></div>
+  <div class="card"><h3>Subjects</h3><div id="subProg"></div></div>
+  <div class="card"><h3>Recent sessions</h3><div id="recent"></div></div>
+</section>
+
+<!-- SETTINGS -->
+<section id="settings" class="screen">
+  <h2>⚙️ Settings</h2>
+  <div class="card">
+    <h3>🎨 Theme</h3>
+    <div class="themes" id="themes"></div>
+  </div>
+  <div class="card">
+    <label>Your name</label>
+    <input id="sName" onchange="saveSettings()" placeholder="Name">
+    <label>Daily focus goal (minutes)</label>
+    <input id="sGoal" type="number" min="1" onchange="saveSettings()">
+    <label>Focus length (minutes)</label>
+    <input id="sFocus" type="number" min="1" max="180" onchange="saveSettings()">
+    <label>Break length (minutes)</label>
+    <input id="sBrk" type="number" min="1" max="60" onchange="saveSettings()">
+  </div>
+  <div class="card">
+    <h3>💾 Backup</h3>
+    <button class="btn block" onclick="exportData()">⬇ Export data</button>
+    <label class="btn ghost block">⬆ Import data
+      <input type="file" accept="application/json" onchange="importData(event)" hidden>
+    </label>
+    <button class="btn red block" onclick="clearData()">🗑 Clear all data</button>
+  </div>
+  <div class="card center">
+    <h3>About StudyPilot</h3>
+    <p class="mut">Version 2.0<br>Your data stays on this device.<br><br>Founder &amp; Creator<br><b style="color:var(--text)">Asjadh Rilwan</b></p>
+  </div>
+</section>
+
+</main>
+
+<nav>
+  <button data-t="home" class="on" onclick="go('home')"><i>🏠</i>Home</button>
+  <button data-t="study" onclick="go('study')"><i>📚</i>Study</button>
+  <button data-t="focus" onclick="go('focus')"><i>⏱</i>Focus</button>
+  <button data-t="progress" onclick="go('progress')"><i>📊</i>Progress</button>
+  <button data-t="settings" onclick="go('settings')"><i>⚙️</i>Settings</button>
+</nav>
+
+<script>
+const KEY='studypilot_v1';
+const THEMES=[['midnight','Midnight','#8b7bff','#22d3ee'],['amoled','AMOLED','#00e5a0','#38bdf8'],['aurora','Aurora','#2dd4bf','#a78bfa'],['sunset','Sunset','#fb7185','#fbbf24'],['forest','Forest','#4ade80','#facc15'],['ocean','Ocean','#38bdf8','#818cf8'],['gold','Royal Gold','#fbbf24','#f97316'],['pearl','Pearl Light','#6c4cff','#0ea5e9']];
+const def={name:'',goal:60,focus:25,brk:5,theme:'midnight',tasks:[],notes:[],cards:[],sessions:[],exam:null};
+let S;
+try{S=Object.assign({},def,JSON.parse(localStorage.getItem(KEY)||'{}'))}catch(e){S=Object.assign({},def)}
+['tasks','notes','cards','sessions'].forEach(k=>{if(!Array.isArray(S[k]))S[k]=[]});
+if(!THEMES.some(t=>t[0]===S.theme))S.theme='midnight';
+
+const $=id=>document.getElementById(id);
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pad=n=>String(n).padStart(2,'0');
+const day=d=>{d=d||new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())};
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const PR={high:'🔴',med:'🟡',low:'🟢'},ORDER={high:0,med:1,low:2};
+
+/* Themes */
+function applyTheme(){
+  document.documentElement.dataset.theme=S.theme;
+  const tc=getComputedStyle(document.documentElement).getPropertyValue('--tc').trim();
+  $('tc').content=tc||'#04040f';
+  document.querySelectorAll('.sw').forEach(b=>b.classList.toggle('on',b.dataset.th===S.theme));
+}
+function setTheme(t){S.theme=t;save();applyTheme()}
+$('themes').innerHTML=THEMES.map(t=>`<button class="sw" data-th="${t[0]}" onclick="setTheme('${t[0]}')"><i style="background:linear-gradient(135deg,${t[2]},${t[3]})"></i>${t[1]}</button>`).join('');
+
+/* Navigation */
+function go(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('on',s.id===id));
+  document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===id));
+  render();window.scrollTo(0,0);
+}
+function sub(id){
+  ['tasksV','notesV','cardsV'].forEach(v=>$(v).hidden=v!==id);
+  document.querySelectorAll('.tabs button[data-s]').forEach(b=>b.classList.toggle('on',b.dataset.s===id));
+  render();
+}
+
+/* Stats */
+const minsOn=d=>S.sessions.filter(s=>s.date===d).reduce((a,s)=>a+s.min,0);
+function streak(){let n=0,d=new Date();if(!minsOn(day(d)))d.setDate(d.getDate()-1);while(minsOn(day(d))){n++;d.setDate(d.getDate()-1)}return n}
+
+/* Tasks */
+function addTask(){
+  const t=$('tTitle').value.trim();if(!t)return $('tTitle').focus();
+  S.tasks.push({id:uid(),t,sub:$('tSub').value.trim()||'General',due:$('tDue').value,pri:$('tPri').value,done:false});
+  $('tTitle').value='';save();render();
+}
+function toggleTask(id){const t=S.tasks.find(x=>x.id===id);if(t){t.done=!t.done;save();render()}}
+function delTask(id){S.tasks=S.tasks.filter(x=>x.id!==id);save();render()}
+function taskHTML(t){
+  return `<div class="item ${t.done?'done':''}"><button class="ib" onclick="toggleTask('${t.id}')">${t.done?'✅':'⬜'}</button>
+  <div class="grow"><b>${esc(t.t)}</b><small>${PR[t.pri]} ${esc(t.sub)}${t.due?' • 📅 '+esc(t.due):''}</small></div>
+  <button class="ib" onclick="delTask('${t.id}')">🗑</button></div>`;
+}
+const sortedTasks=l=>l.slice().sort((a,b)=>(a.done-b.done)||(ORDER[a.pri]-ORDER[b.pri])||(a.due||'9').localeCompare(b.due||'9'));
+function renderTasks(){
+  const q=$('tSearch').value.toLowerCase(),f=$('tFilter').value;
+  const l=sortedTasks(S.tasks).filter(t=>(f==='all'||(f==='done')===t.done)&&(t.t+' '+t.sub).toLowerCase().includes(q));
+  $('taskList').innerHTML=l.map(taskHTML).join('')||'<div class="empty">No tasks yet ✨</div>';
+}
+
+/* Notes */
+function addNote(){
+  const t=$('nTitle').value.trim(),b=$('nBody').value.trim();if(!t&&!b)return;
+  S.notes.unshift({id:uid(),t:t||'Untitled',b,date:day()});
+  $('nTitle').value='';$('nBody').value='';save();render();
+}
+function delNote(id){S.notes=S.notes.filter(n=>n.id!==id);save();render()}
+function renderNotes(){
+  $('noteList').innerHTML=S.notes.map(n=>`<div class="item"><div class="grow"><b>${esc(n.t)}</b><small>${esc(n.date)}</small><p>${esc(n.b)}</p></div><button class="ib" onclick="delNote('${n.id}')">🗑</button></div>`).join('')||'<div class="empty">No notes yet 📝</div>';
+}
+
+/* Flashcards */
+let ci=0,flip=false;
+function addCard(){
+  const q=$('cQ').value.trim(),a=$('cA').value.trim();if(!q||!a)return;
+  S.cards.push({id:uid(),q,a});$('cQ').value='';$('cA').value='';ci=S.cards.length-1;flip=false;save();render();
+}
+function drawCard(){
+  const c=S.cards;
+  if(!c.length){$('fc').textContent='Add a card to start revising 🧠';$('cCount').textContent='';return}
+  ci=ci%c.length;
+  $('fc').textContent=flip?'💡 '+c[ci].a:'❓ '+c[ci].q;
+  $('cCount').textContent='Card '+(ci+1)+' of '+c.length+' • tap card to flip';
+}
+function flipC(){flip=!flip;drawCard()}
+function nextC(){ci++;flip=false;drawCard()}
+function delCard(){if(!S.cards.length)return;S.cards.splice(ci,1);flip=false;save();render()}
+
+/* Timer */
+let T={left:0,end:0,run:false,mode:'focus',id:null};
+function setMode(m){
+  clearInterval(T.id);T.mode=m;T.run=false;
+  T.left=(m==='focus'?S.focus:S.brk)*60;
+  $('mF').classList.toggle('on',m==='focus');$('mB').classList.toggle('on',m==='break');
+  drawT();
+}
+function startT(){if(T.run||T.left<=0)return;T.run=true;T.end=Date.now()+T.left*1000;T.id=setInterval(tick,500);drawT()}
+function pauseT(){if(!T.run)return;T.left=Math.max(0,Math.round((T.end-Date.now())/1000));T.run=false;clearInterval(T.id);drawT()}
+function resetT(){setMode(T.mode)}
+function tick(){T.left=Math.max(0,Math.round((T.end-Date.now())/1000));drawT();if(T.left<=0){clearInterval(T.id);T.run=false;finish()}}
+function drawT(){
+  const t=pad(Math.floor(T.left/60))+':'+pad(T.left%60);
+  $('time').textContent=t;
+  $('tState').textContent=T.run?(T.mode==='focus'?'🎯 Stay focused...':'☕ Relax...'):'Ready';
+  $('fToday').textContent='Focused today: '+minsOn(day())+' min';
+  document.title=T.run?t+' • StudyPilot':'StudyPilot';
+  document.querySelectorAll('#chips button').forEach(b=>b.classList.toggle('on',+b.dataset.m===S.focus));
+}
+function setFocusLen(m){S.focus=m;$('sFocus').value=m;save();if(!T.run&&T.mode==='focus')setMode('focus');else drawT()}
+function finish(){
+  if(T.mode==='focus'){S.sessions.push({id:uid(),date:day(),min:S.focus,sub:$('fSub').value.trim()||'General'});save()}
+  if(navigator.vibrate)navigator.vibrate([300,150,300]);
+  alert(T.mode==='focus'?'🎉 Focus session complete! Take a break.':'⏰ Break over. Ready to focus?');
+  setMode(T.mode==='focus'?'break':'focus');render();
+}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&T.run)tick()});
+
+/* Exam */
+function saveExam(){const n=$('examName').value.trim(),d=$('examDate').value;S.exam=(n&&d)?{name:n,date:d}:null;save();render()}
+
+/* Home */
+function renderHome(){
+  const h=new Date().getHours();
+  $('greet').textContent=(h<12?'Good morning':h<17?'Good afternoon':'Good evening')+(S.name?', '+S.name:'')+'.';
+  $('date').textContent=new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  const total=S.tasks.length,done=S.tasks.filter(t=>t.done).length,pct=total?Math.round(done/total*100):0;
+  $('pct').textContent=pct+'% complete';$('pbar').style.width=pct+'%';
+  $('pcount').textContent=done+' of '+total+' tasks completed';
+  $('tLeft').textContent=total-done;
+  $('fMin').textContent=minsOn(day());
+  $('fGoal').textContent='goal: '+S.goal+' min';
+  $('hStreak').textContent=streak();
+  $('hCards').textContent=S.cards.length;
+  const nx=sortedTasks(S.tasks.filter(t=>!t.done))[0];
+  $('nextTxt').textContent=nx?'Up next: '+nx.t:'Turn your study goals into small, achievable tasks.';
+  if(S.exam){
+    const left=Math.ceil((new Date(S.exam.date+'T00:00')-new Date(day()+'T00:00'))/864e5);
+    $('examTxt').textContent=left>0?S.exam.name+' in '+left+' day'+(left===1?'':'s'):left===0?'🔥 '+S.exam.name+' is TODAY. Good luck!':S.exam.name+' has passed.';
+  }else $('examTxt').textContent='No exam set yet.';
+}
+
+/* Progress */
+function renderProgress(){
+  let wk=0,mx=1,html='';const L=[];
+  for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);const m=minsOn(day(d));wk+=m;mx=Math.max(mx,m);L.push([d.toLocaleDateString('en-GB',{weekday:'short'}).slice(0,3),m])}
+  L.forEach(([l,m])=>html+=`<div class="b"><div class="col"><i style="height:${Math.round(m/mx*100)}%"></i></div><small>${m}</small><em>${l}</em></div>`);
+  $('bars').innerHTML=html;
+  $('pToday').textContent=minsOn(day());$('pWeek').textContent=wk;
+  $('pDone').textContent=S.tasks.filter(t=>t.done).length;$('pStreak').textContent=streak();
+  const subs={};
+  S.tasks.forEach(t=>{subs[t.sub]=subs[t.sub]||{d:0,n:0};subs[t.sub].n++;if(t.done)subs[t.sub].d++});
+  $('subProg').innerHTML=Object.keys(subs).map(k=>{const p=Math.round(subs[k].d/subs[k].n*100);
+    return `<div><b>${esc(k)}</b> <span class="mut">${subs[k].d}/${subs[k].n}</span><div class="bar"><i style="width:${p}%"></i></div></div>`}).join('')||'<div class="empty">Add tasks to see subject progress</div>';
+  $('recent').innerHTML=S.sessions.slice(-5).reverse().map(s=>`<div class="item"><div class="grow"><b>${esc(s.sub)}</b><small>${esc(s.date)}</small></div><b>${s.min} min</b></div>`).join('')||'<div class="empty">No sessions yet. Start a focus timer ⏱</div>';
+}
+
+/* Settings & data */
+function initFields(){
+  $('sName').value=S.name;$('sGoal').value=S.goal;$('sFocus').value=S.focus;$('sBrk').value=S.brk;
+  if(S.exam){$('examName').value=S.exam.name;$('examDate').value=S.exam.date}
+}
+function saveSettings(){
+  S.name=$('sName').value.trim();
+  S.goal=Math.max(1,+$('sGoal').value||60);
+  S.focus=Math.min(180,Math.max(1,+$('sFocus').value||25));
+  S.brk=Math.min(60,Math.max(1,+$('sBrk').value||5));
+  save();if(!T.run)setMode(T.mode);render();
+}
+function exportData(){
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([JSON.stringify(S,null,2)],{type:'application/json'}));
+  a.download='studypilot-backup-'+day()+'.json';
+  document.body.appendChild(a);a.click();a.remove();
+}
+function importData(e){
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>{
+    try{
+      const d=JSON.parse(r.result);if(!d||typeof d!=='object')throw 0;
+      S=Object.assign({},def,d);
+      ['tasks','notes','cards','sessions'].forEach(k=>{if(!Array.isArray(S[k]))S[k]=[]});
+      if(!THEMES.some(t=>t[0]===S.theme))S.theme='midnight';
+      save();initFields();applyTheme();setMode('focus');render();alert('✅ Data restored');
+    }catch(x){alert('❌ Invalid backup file')}
+  };
+  r.readAsText(f);e.target.value='';
+}
+function clearData(){
+  if(confirm('Delete ALL your StudyPilot data? This cannot be undone.')){
+    const th=S.theme;S=Object.assign({},def,{theme:th,tasks:[],notes:[],cards:[],sessions:[]});
+    save();initFields();setMode('focus');render();
+  }
+}
+
+/* Start */
+function render(){renderHome();renderTasks();renderNotes();drawCard();renderProgress();drawT()}
+initFields();applyTheme();setMode('focus');render();
+
+if('serviceWorker' in navigator){
+  const had=navigator.serviceWorker.controller;
+  navigator.serviceWorker.register('sw.js').catch(()=>{});
+  navigator.serviceWorker.addEventListener('controllerchange',()=>{if(had&&!window._r){window._r=1;location.reload()}});
+}
+</script>
 </body>
   </html>
