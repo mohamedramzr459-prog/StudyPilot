@@ -1,103 +1,61 @@
-<!DOCTYPE html>
-<html lang="en" data-t="gold">
+<!doctype html>
+<html lang="en" data-theme="dark" data-accent="indigo" data-glass="2" data-motion="full" data-density="cozy" data-font="sans">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#07070a">
-<meta name="description" content="StudyPilot — focus, revise, recite and grow with your personal study workspace.">
+<title>StudyPilot — Learn smarter. Prepare better. Grow every day.</title>
+<meta name="description" content="StudyPilot: study planner, notes, flashcards, quizzes, exam simulator, focus room and Quran reader. Built by Asjadh Rilwan.">
+<meta name="theme-color" content="#0b0d14">
 <meta name="color-scheme" content="dark light">
-<title>StudyPilot Premium Edition</title>
-
-<!-- PWA: manifest + icons (file names match your repo exactly) -->
-<link rel="manifest" href="manifest.json">
-<link rel="icon" type="image/png" href="icon-192.png">
-<link rel="apple-touch-icon" href="icon-192.png">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="StudyPilot">
-
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&family=Poppins:wght@400;600;800&family=Inter:wght@400;600;800&family=Space+Grotesk:wght@400;600;700&family=Playfair+Display:wght@400;600;800&family=Merriweather:wght@400;700;900&family=Amiri:wght@400&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.58.0/dist/umd/supabase.js"></script>
-
-<link rel="stylesheet" href="style.css">
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" href="./icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<link rel="stylesheet" href="./style.css">
 </head>
 <body>
-<svg width="0" height="0" style="position:absolute"><defs><filter id="goo"><feGaussianBlur in="SourceGraphic" stdDeviation="14"/><feColorMatrix values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -9"/></filter></defs></svg>
-<div class="blobs"><span></span><span></span><span></span></div>
+<a class="skip" href="#view">Skip to content</a>
 
-<div id="splash"><div class="goo"><u></u><u></u><u></u></div><div class="orbit"><i></i><span>🧭</span></div><div class="logo">StudyPilot</div><div class="tag">Focus. Revise. Recite. Grow.</div><div class="by">by Asjadh Rilwan</div><div class="bar"><u></u></div></div>
+<div id="splash" class="splash" aria-hidden="true">
+  <div class="splash-mark">🧭</div>
+  <div class="splash-name">StudyPilot</div>
+</div>
 
-<div id="auth" hidden><div class="card"><h1>Welcome 👋</h1><small>Sign in to save your progress, or continue as a guest.</small>
-<input id="nm" placeholder="Your name"><input id="em" type="email" placeholder="Email" autocomplete="email"><input id="pw" type="password" placeholder="Password (6+ characters)" autocomplete="current-password">
-<div class="row"><button class="p grow" onclick="doAuth('in')">Sign in</button><button class="grow" onclick="doAuth('up')">Create account</button></div>
-<button style="width:100%;margin-top:8px" onclick="guest()">Continue as guest</button><p id="amsg" class="mu" style="margin-top:8px;font-size:.8em"></p></div></div>
+<div id="netbar" class="netbar" hidden>You are offline — saved data still works.</div>
 
-<header><div class="row" style="gap:8px"><span class="gold" id="ttl">StudyPilot</span><span class="chip" style="font-size:.58em;letter-spacing:.08em">PREMIUM</span></div><button onclick="openS()" aria-label="Search">🔍</button></header>
+<header id="appbar" class="appbar" hidden>
+  <div class="appbar-in">
+    <button class="iconbtn" data-act="back" aria-label="Back" hidden>‹</button>
+    <div class="brand" data-act="go" data-to="home">
+      <span class="brand-mark" aria-hidden="true">🧭</span>
+      <span class="brand-txt"><b>StudyPilot</b><i>Learn smarter</i></span>
+    </div>
+    <div class="appbar-actions">
+      <button class="iconbtn" data-act="go" data-to="search" aria-label="Search">🔍</button>
+      <button class="iconbtn" data-act="install" id="installBtn" aria-label="Install app" hidden>⬇</button>
+      <button class="iconbtn" data-act="go" data-to="settings" aria-label="Settings">⚙</button>
+    </div>
+  </div>
+</header>
 
-<main>
-<section class="view on" id="v-home"></section>
-<section class="view" id="v-study">
- <h1>⏱ Study</h1>
- <div class="card"><div class="row c"><button id="mf" class="p" onclick="pmode('f')">Focus</button><button id="mb" onclick="pmode('b')">Break</button></div>
-  <div class="big" id="pomo">25:00</div>
-  <div class="row c"><button class="p" id="pbtn" onclick="pomoToggle()">Start</button><button onclick="pomoReset()">Reset</button></div><p class="mu c" id="psess" style="margin-top:6px"></p></div>
- <h3>Tasks</h3>
- <div class="row"><input class="grow" id="tin" placeholder="Add a task or homework" onkeydown="if(event.key=='Enter')addTask()"><button class="p" onclick="addTask()">Add</button></div>
- <div class="row"><select id="tp" class="grow"><option value="0">Low</option><option value="1" selected>Medium</option><option value="2">High</option></select><input type="date" id="td" class="grow"></div>
- <input id="tqi" placeholder="🔍 Search tasks" oninput="tq=this.value;tasks()" style="margin:10px 0"><div id="tasks"></div>
- <h3>Exams</h3>
- <div class="row"><input class="grow" id="en" placeholder="Exam name"><input type="date" id="ed" class="grow"><button class="p" onclick="addExam()">Add</button></div><div id="exams" style="margin-top:8px"></div>
-</section>
-<section class="view" id="v-revise">
- <h1>🃏 Revise</h1>
- <div class="card"><b class="h">Flashcard review</b><div id="rv" style="margin-top:8px"></div></div>
- <div class="card"><b class="h">New flashcard</b><input id="fq" placeholder="Question" style="margin:8px 0"><input id="fa" placeholder="Answer"><button class="p" style="width:100%;margin-top:8px" onclick="addCard()">Save card</button></div>
- <input id="cs" placeholder="🔍 Search cards" oninput="cq=this.value;cards()" style="margin-bottom:8px"><div id="clist"></div>
- <h3>Notes</h3>
- <button class="p" style="width:100%;margin-bottom:8px" onclick="S.notes.unshift({t:'',b:''});save();notes()">+ New note</button>
- <input placeholder="🔍 Search notes" oninput="nq=this.value;notes()" style="margin-bottom:8px"><div id="notes"></div>
- <h3>GPA calculator</h3>
- <div class="card"><div id="gpa"></div><div class="row" style="margin-top:8px"><button onclick="S.gpa.push({g:4,c:3});save();gpa()">+ Subject</button><b class="h grow c" style="font-size:1.6em">GPA <span id="gres">–</span></b></div></div>
-</section>
-<section class="view" id="v-quran"><div id="qhome"></div><div id="qread" hidden></div></section>
-<section class="view" id="v-web">
- <h1>🌐 Web</h1>
- <div class="card"><input id="wq" placeholder="What do you want to study?" onkeydown="if(event.key=='Enter')web(this.value)" style="margin-bottom:8px"><div class="g2" id="eng"></div><div id="recent" class="row" style="margin-top:8px"></div></div>
- <h3>Study resources</h3><input placeholder="🔍 Filter resources" oninput="rq=this.value;res()" style="margin-bottom:8px"><div id="res"></div>
-</section>
-<section class="view" id="v-set"></section>
-</main>
+<main id="view" tabindex="-1"></main>
 
-<div id="pbar" hidden><b class="h grow" id="ptitle" style="font-size:.9em"></b><button onclick="pskip(-1)">⏮</button><button class="p" id="pp" onclick="au.paused?au.play():au.pause()">⏸</button><button onclick="pskip(1)">⏭</button><button onclick="au.pause();P.l=[];pl()">✕</button></div>
-<nav id="nav" hidden><div id="pill"></div>
- <button class="on" data-v="home"><b>🏠</b>Home</button><button data-v="study"><b>⏱</b>Study</button><button data-v="revise"><b>🃏</b>Revise</button><button data-v="quran"><b>📖</b>Quran</button><button data-v="web"><b>🌐</b>Web</button><button data-v="set"><b>⚙️</b>Settings</button></nav>
-<div id="so" hidden><div class="sc"><div class="row"><input class="grow" id="sq" placeholder="Search tasks, notes, cards, surahs, web…" oninput="gs(this.value)"><button onclick="closeS()">✕</button></div><div id="sr" style="margin-top:10px"></div></div></div>
+<nav id="tabbar" class="tabbar" aria-label="Primary" hidden>
+  <div class="tabbar-in" id="tabbarIn"></div>
+</nav>
 
-<!-- Error catcher: if app.js crashes, the message shows on screen instead of a stuck splash -->
-<script>
-window.addEventListener('error', function (e) {
-  var s = document.getElementById('splash');
-  if (s && !s.classList.contains('out')) {
-    var m = document.createElement('div');
-    m.style.cssText = 'position:relative;z-index:5;margin-top:18px;padding:10px 14px;background:#000a;color:#fff;border-radius:12px;font:12px/1.4 monospace;max-width:90%;word-break:break-word';
-    m.textContent = 'Error: ' + (e.message || 'unknown') + ' (' + (e.filename || '').split('/').pop() + ':' + (e.lineno || '?') + ')';
-    s.appendChild(m);
-  }
-});
-</script>
+<div id="sheetRoot"></div>
+<div id="modalRoot"></div>
+<div id="toastRoot" class="toast-root" aria-live="polite" aria-atomic="false"></div>
+<div id="installBanner" class="installbar" hidden>
+  <span>Install StudyPilot for offline study.</span>
+  <button class="btn btn-sm btn-primary" data-act="install">Install</button>
+  <button class="iconbtn" data-act="dismiss-install" aria-label="Dismiss">✕</button>
+</div>
 
-<!-- Your app logic (must be plain JavaScript, no <script> tags inside) -->
-<script src="app.js"></script>
-
-<!-- Service worker registration (separate block) -->
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function () {
-    navigator.serviceWorker.register('sw.js').catch(function (err) {
-      console.warn('Service worker failed:', err);
-    });
-  });
-}
-</script>
+<script src="./app.js" defer></script>
 </body>
 </html>
