@@ -1,235 +1,328 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8">
+<html lang="en" data-t="gold"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#04040f"><title>StudyPilot</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Amiri:wght@400&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#07070a"><meta name="description" content="StudyPilot — focus, revise, recite and grow with your personal study workspace."><meta name="color-scheme" content="dark light"><title>StudyPilot Premium Edition</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&family=Poppins:wght@400;600;800&family=Inter:wght@400;600;800&family=Space+Grotesk:wght@400;600;700&family=Playfair+Display:wght@400;600;800&family=Merriweather:wght@400;700;900&family=Amiri:wght@400&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.58.0/dist/umd/supabase.js"></script>
 <style>
-:root{--bg:#04040f;--card:#11122a;--tx:#f1f1ff;--mu:#8e90b5;--ac:#7c5cff;--fs:16px}
-[data-t=ocean]{--bg:#03111a;--card:#0b2433;--ac:#22b8f0}
-[data-t=forest]{--bg:#04120a;--card:#0d2417;--ac:#3ddc84}
-[data-t=sunset]{--bg:#150808;--card:#2a1210;--ac:#ff7a45}
-[data-t=rose]{--bg:#150610;--card:#2b1022;--ac:#ff5fa2}
-[data-t=violet]{--bg:#0a0618;--card:#1b1236;--ac:#a66bff}
-[data-t=gold]{--bg:#100d03;--card:#241d08;--ac:#f5c542}
-[data-t=paper]{--bg:#f4f5fb;--card:#fff;--tx:#16172b;--mu:#667;--ac:#5b4bff}
+:root{--bg:#07070a;--card:#ffffff0d;--tx:#f5f3ea;--mu:#a09c8c;--ac:#e6b93c;--on:#15110a;--fs:16px;--fh:'Montserrat';--fb:'Poppins';--r:18px;--bl:18px;--ls:0px;--ar:30px;--ln:#ffffff18}
+[data-t=mono]{--bg:#050505;--ac:#fff;--on:#000;--mu:#999}
+[data-t=paper]{--bg:#f2f1ec;--card:#ffffffb0;--tx:#17171a;--mu:#6b6b70;--ac:#17171a;--on:#fff;--ln:#0002}
+[data-t=ocean]{--bg:#03101a;--ac:#2cc0f5;--on:#001018}
+[data-t=forest]{--bg:#041009;--ac:#3ddc84;--on:#02120a}
+[data-t=rose]{--bg:#150610;--ac:#ff5fa2;--on:#1a0210}
+[data-t=violet]{--bg:#0a0618;--ac:#a66bff;--on:#fff}
 [hidden]{display:none!important}
 *{box-sizing:border-box;margin:0}
-body{background:var(--bg);color:var(--tx);font:var(--fs)/1.5 Poppins,sans-serif;padding:env(safe-area-inset-top) 0 calc(84px + env(safe-area-inset-bottom))}
-main{max-width:560px;margin:auto;padding:16px}
-.view{display:none}.view.on{display:block;animation:in .25s}
-@keyframes in{from{opacity:0;transform:translateY(8px)}}
-h1{font-size:1.5em;margin:8px 0 14px}h3{margin:16px 0 8px}small,.mu{color:var(--mu)}
-.card{background:var(--card);border-radius:16px;padding:14px;margin:0 0 10px}
-.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.row>.grow{flex:1}
-button,select,input,textarea{font:inherit;color:var(--tx);background:#ffffff14;border:1px solid #ffffff1f;border-radius:12px;padding:10px 12px}
-[data-t=paper] button,[data-t=paper] select,[data-t=paper] input,[data-t=paper] textarea{background:#0000000a;border-color:#0002}
-input,textarea{width:100%}
-button{cursor:pointer;min-height:44px}button.p{background:var(--ac);border-color:var(--ac);color:#fff;font-weight:600}
-button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
-.big{font-size:2.6em;font-weight:700;text-align:center;letter-spacing:1px}
-.pt{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #ffffff12}.pt.nx{color:var(--ac);font-weight:600}
-.ar{font:1.7em/2.3 Amiri,serif;direction:rtl;text-align:right}
-.ay{padding:10px 0;border-bottom:1px solid #ffffff12}
-nav{position:fixed;bottom:0;left:0;right:0;background:var(--card);display:flex;justify-content:space-around;padding:6px 4px calc(6px + env(safe-area-inset-bottom));border-top:1px solid #ffffff14;z-index:5}
-nav button{flex:1;border:0;background:none;font-size:.7em;display:flex;flex-direction:column;align-items:center;gap:0;padding:4px;min-height:48px}
-nav button b{font-size:1.5em}nav button.on{color:var(--ac)}
-.chip{display:inline-block;background:var(--ac);color:#fff;border-radius:99px;padding:1px 10px;font-size:.75em}
-.done{text-decoration:line-through;opacity:.55}
-.lock{opacity:.5}
-.toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%);background:var(--ac);color:#fff;padding:10px 18px;border-radius:99px;z-index:30;animation:in .2s}
-/* splash + auth */
-#splash,#auth{position:fixed;inset:0;z-index:20;background:radial-gradient(circle at 50% 35%,#1b1646,var(--bg) 70%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center}
-#splash{transition:opacity .6s}#splash.out{opacity:0;pointer-events:none}
-.orbit{width:150px;height:150px;border-radius:50%;border:2px dashed #7c5cff66;position:relative;animation:spin 8s linear infinite;display:grid;place-items:center}
-.orbit i{position:absolute;top:-9px;left:50%;width:18px;height:18px;margin-left:-9px;border-radius:50%;background:var(--ac);box-shadow:0 0 18px var(--ac)}
-.orbit span{animation:spin 8s linear infinite reverse;font-size:3.4em}
-@keyframes spin{to{transform:rotate(360deg)}}
-.logo{font-size:2.2em;font-weight:700;margin-top:22px;animation:rise 1s .3s both}
-.tag{color:var(--mu);animation:rise 1s .7s both}.ar2{font:1.5em Amiri,serif;margin-top:14px;animation:rise 1s 1.1s both}
-@keyframes rise{from{opacity:0;transform:translateY(16px)}}
-.bar{width:160px;height:4px;background:#ffffff1a;border-radius:9px;margin-top:26px;overflow:hidden}.bar u{display:block;height:100%;background:var(--ac);animation:load 2.2s forwards}
-@keyframes load{from{width:0}to{width:100%}}
-#auth .card{width:100%;max-width:380px;text-align:left;animation:rise .6s both}
-#auth input{margin:6px 0}
-@media(prefers-reduced-motion:reduce){*{animation-duration:.01s!important}}
-body.elder{--fs:20px}body.elder button{min-height:56px}body.elder nav button{font-size:.8em}
+body{background:var(--bg);color:var(--tx);font:var(--fs)/1.5 var(--fb),sans-serif;letter-spacing:var(--ls);padding:calc(64px + env(safe-area-inset-top)) 0 calc(96px + env(safe-area-inset-bottom));transition:background .5s}
+main{max-width:600px;margin:auto;padding:12px 16px}
+h1,h3,.h,.big{font-family:var(--fh),sans-serif;font-weight:800}
+h1{font-size:1.7em;margin:6px 0 14px}h3{margin:18px 0 8px;font-size:1.1em}small,.mu{color:var(--mu)}.c{text-align:center}
+.blobs{position:fixed;inset:0;z-index:-1;overflow:hidden;filter:blur(70px)}
+.blobs span{position:absolute;background:var(--ac);opacity:.2;width:55vmax;height:55vmax;animation:mo 16s ease-in-out infinite alternate}
+.blobs span:nth-child(1){top:-20vmax;left:-15vmax;border-radius:60% 40% 55% 45%}
+.blobs span:nth-child(2){bottom:-25vmax;right:-20vmax;border-radius:45% 55% 40% 60%;animation-delay:-6s;opacity:.14}
+.blobs span:nth-child(3){top:35%;left:40%;width:30vmax;height:30vmax;border-radius:50%;animation-delay:-11s;opacity:.1}
+@keyframes mo{50%{transform:translate(8vmax,6vmax) rotate(80deg) scale(1.15);border-radius:40% 60% 50% 50%}to{transform:translate(-6vmax,10vmax) rotate(160deg);border-radius:55% 45% 60% 40%}}
+body.noliq .blobs span,body.noliq .tank i{animation:none}
+.card,header,nav,#pbar,.sc{background:var(--card);-webkit-backdrop-filter:blur(var(--bl)) saturate(150%);backdrop-filter:blur(var(--bl)) saturate(150%);border:1px solid var(--ln)}
+.card{border-radius:var(--r);padding:14px;margin:0 0 10px}body.cmp .card{padding:9px;margin-bottom:6px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.row+.row,.row+select{margin-top:8px}.row>.grow,.grow{flex:1;min-width:0}.row.c{justify-content:center}
+button,select,input,textarea{font:inherit;color:var(--tx);background:#ffffff12;border:1px solid var(--ln);border-radius:calc(var(--r) - 5px);padding:10px 12px;letter-spacing:inherit}
+[data-t=paper] button,[data-t=paper] select,[data-t=paper] input,[data-t=paper] textarea{background:#0000000a}
+input,textarea,select{width:100%}input[type=checkbox]{width:22px;height:22px;accent-color:var(--ac);padding:0;flex:none}input[type=range]{padding:0;accent-color:var(--ac)}input[type=color]{height:42px;padding:3px}
+button{cursor:pointer;min-height:44px;position:relative;overflow:hidden;transition:transform .35s cubic-bezier(.34,1.56,.64,1),background .2s;font-weight:600}
+button:active{transform:scale(.93)}button.p{background:var(--ac);border-color:var(--ac);color:var(--on)}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
+.rp{position:absolute;width:10px;height:10px;margin:-5px;border-radius:50%;background:#fff6;animation:rp .6s forwards;pointer-events:none}@keyframes rp{to{transform:scale(30);opacity:0}}
+header{position:fixed;top:0;left:0;right:0;z-index:6;display:flex;align-items:center;justify-content:space-between;padding:calc(8px + env(safe-area-inset-top)) 16px 8px;border-width:0 0 1px}
+.gold{font:800 1.3em var(--fh);background:linear-gradient(90deg,var(--ac),#fff9,var(--ac));background-size:200%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sh 4s linear infinite}@keyframes sh{to{background-position:-200%}}
+header button{border-radius:50%;width:44px;padding:0}
+.view{display:none}.view.on{display:block}.view.on>*{animation:in .55s cubic-bezier(.2,.8,.2,1) both}.view.on>:nth-child(2){animation-delay:.05s}.view.on>:nth-child(3){animation-delay:.1s}.view.on>:nth-child(4){animation-delay:.15s}.view.on>:nth-child(n+5){animation-delay:.2s}
+@keyframes in{from{opacity:0;transform:translateY(14px) scale(.98)}}
+.big{font-size:3em;text-align:center}.chip{display:inline-block;background:var(--ac);color:var(--on);border-radius:99px;padding:1px 10px;font-size:.75em;font-weight:700}
+.done{text-decoration:line-through;opacity:.5}.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.g3 .card{margin:0;text-align:center}.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pt{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--ln)}.op{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--ln)}.op input[type=range],.op select,.op input[type=number]{width:55%}.op>span:first-child{flex:1}
+.ar{font:var(--ar)/2.2 Amiri,serif;direction:rtl;text-align:right;letter-spacing:0}
+.ay{transition:box-shadow .4s}.ay.pl{box-shadow:0 0 0 2px var(--ac),0 0 28px -4px var(--ac)}
+.tank{position:relative;width:104px;height:104px;border-radius:50%;overflow:hidden;border:2px solid var(--ac);flex:none;display:grid;place-items:center;background:#0003}
+.tank i{position:absolute;left:-50%;width:200%;height:200%;background:var(--ac);opacity:.8;border-radius:42%;animation:wv 7s linear infinite;transition:top 1.2s cubic-bezier(.3,1.4,.5,1)}@keyframes wv{to{transform:rotate(360deg)}}
+.tank b{position:relative;z-index:1;font-size:1.3em;text-shadow:0 1px 6px #000a;color:#fff}
+.wa{display:block;text-align:center;text-decoration:none;background:#25d366;color:#04210f;padding:13px;border-radius:calc(var(--r) - 5px);font-weight:800;margin-top:10px}
+a.res{display:block;color:var(--tx);text-decoration:none}
+nav{position:fixed;bottom:0;left:0;right:0;z-index:6;display:flex;padding:6px 6px calc(6px + env(safe-area-inset-bottom));border-width:1px 0 0}
+#pill{position:absolute;top:6px;bottom:calc(6px + env(safe-area-inset-bottom));left:0;background:var(--ac);opacity:.2;border-radius:99px;transition:transform .55s cubic-bezier(.34,1.56,.64,1),width .55s cubic-bezier(.34,1.56,.64,1)}
+nav button{flex:1;border:0;background:none;font-size:.68em;display:flex;flex-direction:column;align-items:center;padding:4px;min-height:50px;position:relative;font-weight:600}nav button b{font-size:1.5em}nav button.on{color:var(--ac)}
+#pbar{position:fixed;left:12px;right:12px;bottom:calc(78px + env(safe-area-inset-bottom));z-index:7;border-radius:99px;padding:6px 8px 6px 18px;display:flex;align-items:center;gap:4px;animation:in .4s}
+#pbar button{border-radius:50%;width:40px;min-height:40px;padding:0}
+.toast{position:fixed;left:50%;bottom:calc(140px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ac);color:var(--on);padding:10px 18px;border-radius:99px;z-index:40;font-weight:600;animation:in .25s}
+#so{position:fixed;inset:0;z-index:30;background:#000a;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);padding:calc(16px + env(safe-area-inset-top)) 14px 14px;overflow:auto}
+.sc{max-width:600px;margin:auto;border-radius:var(--r);padding:12px;animation:in .3s}.sr{cursor:pointer}
+#splash,#auth{position:fixed;inset:0;z-index:20;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center}
+#splash{background:linear-gradient(135deg,#fff1b8,#e6b93c 45%,#8a6212);color:#1a1204;transition:clip-path 1s cubic-bezier(.7,0,.2,1);clip-path:circle(150% at 50% 50%);overflow:hidden}
+#splash.out{clip-path:circle(0 at 50% 50%);pointer-events:none}
+.goo{position:absolute;inset:0;filter:url(#goo)}.goo u{position:absolute;border-radius:50%;background:#fff8;animation:fl 6s ease-in-out infinite alternate}
+.goo u:nth-child(1){width:200px;height:200px;left:-40px;top:10%}.goo u:nth-child(2){width:260px;height:260px;right:-60px;bottom:8%;animation-delay:-2s;background:#8a621255}.goo u:nth-child(3){width:140px;height:140px;left:55%;top:-30px;animation-delay:-4s}
+@keyframes fl{to{transform:translate(50px,70px) scale(1.3)}}
+.orbit{width:140px;height:140px;border-radius:50%;border:2px dashed #1a120466;position:relative;animation:spin 9s linear infinite;display:grid;place-items:center;z-index:1}
+.orbit i{position:absolute;top:-9px;left:50%;width:18px;height:18px;margin-left:-9px;border-radius:50%;background:#1a1204;box-shadow:0 0 18px #fff}.orbit span{animation:spin 9s linear infinite reverse;font-size:3.2em}@keyframes spin{to{transform:rotate(360deg)}}
+.logo{font:800 2.6em Montserrat,sans-serif;margin-top:22px;z-index:1;animation:rise 1s .3s both;letter-spacing:1px}.tag{font-weight:600;animation:rise 1s .7s both;z-index:1}.by{margin-top:10px;font-weight:800;animation:rise 1s 1.1s both;z-index:1}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}}
+.bar{width:170px;height:5px;background:#1a120433;border-radius:9px;margin-top:26px;overflow:hidden;z-index:1}.bar u{display:block;height:100%;background:#1a1204;animation:ld 2.2s forwards}@keyframes ld{from{width:0}}
+#auth{background:var(--bg)}#auth .card{width:100%;max-width:380px;animation:rise .6s both}#auth input{margin:6px 0}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01s!important;transition-duration:.01s!important}}
+
+/* ── StudyPilot Premium Edition polish (keeps the original feature set) ── */
+:root{--shadow:0 18px 50px #0002;--line-soft:color-mix(in srgb,var(--ac) 18%,transparent)}
+body{min-height:100dvh;-webkit-font-smoothing:antialiased}
+main{padding-top:18px;padding-bottom:24px}
+.card{box-shadow:0 8px 28px #00000012;transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease}
+.card:focus-within{border-color:var(--line-soft)}
+button{box-shadow:0 2px 8px #0000000a}
+button.p{background:linear-gradient(135deg,var(--ac),color-mix(in srgb,var(--ac) 72%,white));box-shadow:0 7px 20px color-mix(in srgb,var(--ac) 20%,transparent)}
+button:not(.p):hover{border-color:var(--line-soft);background:color-mix(in srgb,var(--card) 75%,var(--ac) 8%)}
+button.p:hover{filter:brightness(1.06)}
+input,textarea,select{transition:border-color .2s,box-shadow .2s}
+input:focus,textarea:focus,select:focus{border-color:var(--ac);box-shadow:0 0 0 3px color-mix(in srgb,var(--ac) 16%,transparent)}
+header{box-shadow:0 8px 28px #00000012}
+.gold{letter-spacing:.35px}
+h1{letter-spacing:-.035em}
+h3{letter-spacing:-.015em}
+.chip{box-shadow:0 3px 10px color-mix(in srgb,var(--ac) 16%,transparent)}
+nav{box-shadow:0 -10px 35px #00000018}
+nav button{gap:2px}
+nav button b{line-height:1.2}
+#auth .card{box-shadow:var(--shadow);border-color:var(--line-soft)}
+#splash .logo{text-shadow:0 5px 25px #4b310b22}
+.toast{box-shadow:0 10px 35px #0004}
+@media(min-width:700px){
+  main{padding-left:22px;padding-right:22px}
+  .card:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+}
+@media(max-width:380px){
+  nav button{font-size:.61em}
+  nav button b{font-size:1.35em}
+  h1{font-size:1.5em}
+  .g3{gap:5px}
+}
+@media(prefers-reduced-motion:reduce){
+  .card,button,input,textarea,select{transition:none!important}
+}
+
 </style></head><body>
+<svg width="0" height="0" style="position:absolute"><defs><filter id="goo"><feGaussianBlur in="SourceGraphic" stdDeviation="14"/><feColorMatrix values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -9"/></filter></defs></svg>
+<div class="blobs"><span></span><span></span><span></span></div>
 
-<div id="splash"><div class="orbit"><i></i><span>🧭</span></div><div class="logo">StudyPilot</div>
-<div class="tag">Study, prayer and daily care in one place</div><div class="ar2">بسم الله الرحمن الرحيم</div><div class="bar"><u></u></div></div>
+<div id="splash"><div class="goo"><u></u><u></u><u></u></div><div class="orbit"><i></i><span>🧭</span></div><div class="logo">StudyPilot</div><div class="tag">Focus. Revise. Recite. Grow.</div><div class="by">by Asjadh Rilwan</div><div class="bar"><u></u></div></div>
 
-<div id="auth" hidden><div class="card"><h1>Welcome 👋</h1>
-<small>Sign in to save your progress, or continue as a guest.</small>
-<input id="em" type="email" placeholder="Email" autocomplete="email">
-<input id="pw" type="password" placeholder="Password (6+ characters)" autocomplete="current-password">
-<div class="row" style="margin-top:8px"><button class="p grow" onclick="doAuth('in')">Sign in</button><button class="grow" onclick="doAuth('up')">Create account</button></div>
-<button style="width:100%;margin-top:8px" onclick="guest()">Continue as guest</button>
-<p id="amsg" class="mu" style="margin-top:8px;font-size:.8em"></p></div></div>
+<div id="auth" hidden><div class="card"><h1>Welcome 👋</h1><small>Sign in to save your progress, or continue as a guest.</small>
+<input id="nm" placeholder="Your name"><input id="em" type="email" placeholder="Email" autocomplete="email"><input id="pw" type="password" placeholder="Password (6+ characters)" autocomplete="current-password">
+<div class="row"><button class="p grow" onclick="doAuth('in')">Sign in</button><button class="grow" onclick="doAuth('up')">Create account</button></div>
+<button style="width:100%;margin-top:8px" onclick="guest()">Continue as guest</button><p id="amsg" class="mu" style="margin-top:8px;font-size:.8em"></p></div></div>
+
+<header><div class="row" style="gap:8px"><span class="gold" id="ttl">StudyPilot</span><span class="chip" style="font-size:.58em;letter-spacing:.08em">PREMIUM</span></div><button onclick="openS()" aria-label="Search">🔍</button></header>
 
 <main>
 <section class="view on" id="v-home"></section>
 <section class="view" id="v-study">
- <h1>📚 Study</h1>
- <div class="card"><div class="big" id="pomo">25:00</div>
-  <div class="row" style="justify-content:center;margin-top:8px"><button class="p" id="pbtn" onclick="pomoToggle()">Start</button><button onclick="pomoReset()">Reset</button>
-  <select id="pmin" onchange="pomoReset()"><option>15</option><option selected>25</option><option>45</option><option>60</option></select></div>
-  <p class="mu" style="text-align:center;margin-top:6px" id="psess"></p></div>
- <h3>Tasks</h3><div class="row"><input class="grow" id="tin" placeholder="Add a task or homework" onkeydown="if(event.key=='Enter')addTask()"><button class="p" onclick="addTask()">Add</button></div>
- <div id="tasks" style="margin-top:8px"></div>
- <h3>Quick notes</h3><textarea id="notes" rows="5" placeholder="Write anything…" oninput="S.notes=this.value;save()"></textarea>
+ <h1>⏱ Study</h1>
+ <div class="card"><div class="row c"><button id="mf" class="p" onclick="pmode('f')">Focus</button><button id="mb" onclick="pmode('b')">Break</button></div>
+  <div class="big" id="pomo">25:00</div>
+  <div class="row c"><button class="p" id="pbtn" onclick="pomoToggle()">Start</button><button onclick="pomoReset()">Reset</button></div><p class="mu c" id="psess" style="margin-top:6px"></p></div>
+ <h3>Tasks</h3>
+ <div class="row"><input class="grow" id="tin" placeholder="Add a task or homework" onkeydown="if(event.key=='Enter')addTask()"><button class="p" onclick="addTask()">Add</button></div>
+ <div class="row"><select id="tp" class="grow"><option value="0">Low</option><option value="1" selected>Medium</option><option value="2">High</option></select><input type="date" id="td" class="grow"></div>
+ <input id="tqi" placeholder="🔍 Search tasks" oninput="tq=this.value;tasks()" style="margin:10px 0"><div id="tasks"></div>
+ <h3>Exams</h3>
+ <div class="row"><input class="grow" id="en" placeholder="Exam name"><input type="date" id="ed" class="grow"><button class="p" onclick="addExam()">Add</button></div><div id="exams" style="margin-top:8px"></div>
 </section>
-<section class="view" id="v-prayer">
- <h1>🕌 Prayer</h1>
- <div class="card"><div class="row"><b class="grow" id="ploc">Locating…</b><small id="hij"></small></div>
-  <div class="row" style="margin:6px 0"><select id="meth" class="grow" onchange="S.meth=this.value;save();loadPT()">
-  <option value="1">Karachi (Univ. of Islamic Sciences)</option><option value="2">ISNA</option><option value="3">Muslim World League</option><option value="4">Umm al-Qura</option><option value="5">Egyptian</option><option value="13">Diyanet</option></select>
-  <select id="asr" onchange="S.asr=this.value;save();loadPT()"><option value="0">Asr: Shafi</option><option value="1">Asr: Hanafi</option></select></div>
-  <div id="ptimes"></div></div>
- <div class="card"><b>Today’s prayers</b> <span class="chip" id="streak"></span><div id="ptrack" class="row" style="margin-top:8px"></div></div>
- <div class="card"><b>Qibla</b><div class="row" style="justify-content:center"><div id="arrow" style="font-size:3em;transition:transform .3s">⬆️</div></div>
-  <p class="mu" id="qtxt" style="text-align:center"></p><button style="width:100%" onclick="compass()">Use phone compass</button></div>
- <div class="card"><b>Tasbih</b><div class="big" id="tc">0</div>
-  <div class="row"><button class="p grow" style="min-height:64px;font-size:1.2em" onclick="tas(1)">Tap</button><button onclick="tas(0)">Reset</button></div>
-  <select id="dhk" style="width:100%;margin-top:8px"><option>SubhanAllah</option><option>Alhamdulillah</option><option>Allahu Akbar</option><option>Astaghfirullah</option><option>La ilaha illallah</option></select></div>
- <div class="card"><b>Adhan reminders</b> <small>(works while the app is open)</small><div class="row" style="margin-top:6px"><label class="row"><input type="checkbox" style="width:auto" id="nrem" onchange="remTog(this.checked)"> Notify me at prayer time</label></div></div>
+<section class="view" id="v-revise">
+ <h1>🃏 Revise</h1>
+ <div class="card"><b class="h">Flashcard review</b><div id="rv" style="margin-top:8px"></div></div>
+ <div class="card"><b class="h">New flashcard</b><input id="fq" placeholder="Question" style="margin:8px 0"><input id="fa" placeholder="Answer"><button class="p" style="width:100%;margin-top:8px" onclick="addCard()">Save card</button></div>
+ <input id="cs" placeholder="🔍 Search cards" oninput="cq=this.value;cards()" style="margin-bottom:8px"><div id="clist"></div>
+ <h3>Notes</h3>
+ <button class="p" style="width:100%;margin-bottom:8px" onclick="S.notes.unshift({t:'',b:''});save();notes()">+ New note</button>
+ <input placeholder="🔍 Search notes" oninput="nq=this.value;notes()" style="margin-bottom:8px"><div id="notes"></div>
+ <h3>GPA calculator</h3>
+ <div class="card"><div id="gpa"></div><div class="row" style="margin-top:8px"><button onclick="S.gpa.push({g:4,c:3});gpa()">+ Subject</button><b class="h grow c" style="font-size:1.6em">GPA <span id="gres">–</span></b></div></div>
 </section>
-<section class="view" id="v-quran">
- <h1>📖 Quran</h1><div id="qlist"></div>
+<section class="view" id="v-quran"><div id="qhome"></div><div id="qread" hidden></div></section>
+<section class="view" id="v-web">
+ <h1>🌐 Web</h1>
+ <div class="card"><input id="wq" placeholder="What do you want to study?" onkeydown="if(event.key=='Enter')web(this.value)" style="margin-bottom:8px"><div class="g2" id="eng"></div><div id="recent" class="row" style="margin-top:8px"></div></div>
+ <h3>Study resources</h3><input placeholder="🔍 Filter resources" oninput="rq=this.value;res()" style="margin-bottom:8px"><div id="res"></div>
 </section>
-<section class="view" id="v-care">
- <h1>💊 Daily care</h1>
- <p class="mu" style="margin-bottom:10px">Simple tools for parents and elders: medicine reminders, routine checklist, read-aloud and emergency call.</p>
- <div class="card"><b>Medicine reminders</b>
-  <div class="row" style="margin-top:6px"><input class="grow" id="mn" placeholder="Medicine name"><input type="time" id="mt" style="width:130px"><button class="p" onclick="addMed()">Add</button></div><div id="meds"></div></div>
- <div class="card"><b>Daily routine</b><div id="routine"></div></div>
- <div class="card"><b>Emergency contact</b><div class="row" style="margin-top:6px"><input class="grow" id="ecn" placeholder="Name"><input class="grow" id="ecp" type="tel" placeholder="Phone" onchange="S.ec=[$('ecn').value,this.value];save();ecShow()"></div>
-  <a id="ecall" hidden style="display:block;margin-top:8px;text-align:center;text-decoration:none;background:#e5484d;color:#fff;padding:14px;border-radius:12px;font-weight:700"></a></div>
- <div class="card"><b>Read aloud</b><textarea id="tts" rows="3" placeholder="Paste or type text to hear it read"></textarea><div class="row" style="margin-top:6px"><button class="p" onclick="speak()">▶ Read</button><button onclick="speechSynthesis.cancel()">Stop</button></div></div>
-</section>
-<section class="view" id="v-more">
- <h1>⚙️ Settings</h1>
- <div class="card"><b>Profile</b><p class="mu" id="who"></p><button onclick="logout()">Sign out</button></div>
- <div class="card"><b>Theme</b><div class="row" id="themes" style="margin-top:6px"></div>
-  <b style="display:block;margin-top:12px">Text size</b><input type="range" min="14" max="26" id="fsz" oninput="S.fs=this.value;save();apply()">
-  <label class="row" style="margin-top:10px"><input type="checkbox" style="width:auto" id="eld" onchange="S.elder=this.checked;save();apply()"> Easy mode (large buttons and text)</label></div>
- <div class="card" id="premcard"></div>
- <div class="card"><b>Your data</b><div class="row" style="margin-top:6px"><button onclick="exp()">Export backup</button><button onclick="if(confirm('Erase all data on this device?')){localStorage.removeItem('sp');location.reload()}">Erase</button></div></div>
-</section>
+<section class="view" id="v-set"></section>
 </main>
 
-<nav id="nav" hidden>
- <button class="on" data-v="home"><b>🏠</b>Home</button><button data-v="study"><b>📚</b>Study</button><button data-v="prayer"><b>🕌</b>Prayer</button>
- <button data-v="quran"><b>📖</b>Quran</button><button data-v="care"><b>💊</b>Care</button><button data-v="more"><b>⚙️</b>More</button>
-</nav>
+<div id="pbar" hidden><b class="h grow" id="ptitle" style="font-size:.9em"></b><button onclick="pskip(-1)">⏮</button><button class="p" id="pp" onclick="au.paused?au.play():au.pause()">⏸</button><button onclick="pskip(1)">⏭</button><button onclick="au.pause();P.l=[];pl()">✕</button></div>
+<nav id="nav" hidden><div id="pill"></div>
+ <button class="on" data-v="home"><b>🏠</b>Home</button><button data-v="study"><b>⏱</b>Study</button><button data-v="revise"><b>🃏</b>Revise</button><button data-v="quran"><b>📖</b>Quran</button><button data-v="web"><b>🌐</b>Web</button><button data-v="set"><b>⚙️</b>Settings</button></nav>
+<div id="so" hidden><div class="sc"><div class="row"><input class="grow" id="sq" placeholder="Search tasks, notes, cards, surahs, web…" oninput="gs(this.value)"><button onclick="closeS()">✕</button></div><div id="sr" style="margin-top:10px"></div></div></div>
 
 <script>
-const SB_URL="",SB_KEY="";                       // paste your Supabase project URL + anon key to enable real accounts
+const SB_URL="",SB_KEY="";   // paste your Supabase URL + anon key to enable real accounts
 const sb=(SB_URL&&SB_KEY&&window.supabase)?supabase.createClient(SB_URL,SB_KEY):null;
 const $=id=>document.getElementById(id);
-const PR=["Fajr","Dhuhr","Asr","Maghrib","Isha"];
-const THEMES=["default","ocean","forest","sunset","rose","violet","gold","paper"],FREE_T=["default","ocean","paper"];
-const D={user:null,theme:"default",fs:16,elder:false,prem:false,tasks:[],notes:"",meth:"1",asr:"0",pr:{},tas:0,med:[],rt:{},ec:["",""],ses:0,last:null,rem:false,rec:"ar.alafasy",pos:null};
+const THEMES=["gold","mono","paper","ocean","forest","rose","violet"],FONTS=["Montserrat","Poppins","Inter","Space Grotesk","Playfair Display","Merriweather"];
+const WN={search:"Web search",goal:"Daily goal",stats:"Stats",quick:"Quick actions",tasks:"Tasks",exams:"Exams",quran:"Quran",cards:"Revise"};
+const D={user:null,name:"",theme:"gold",ac:"",fh:"Montserrat",fb:"Poppins",fs:16,ls:0,rad:18,bl:18,ar:30,liq:true,cmp:false,hap:true,snd:true,notif:false,tr:true,auto:true,rec:"ar.alafasy",
+ hw:Object.keys(WN),hoff:[],tasks:[],notes:[],cards:[],exams:[],gpa:[{g:4,c:3}],log:{},ses:0,fmin:25,bmin:5,goal:120,last:null,bk:[],rs:[]};
 let S=Object.assign({},D,JSON.parse(localStorage.getItem("sp")||"{}"));
+Object.keys(WN).forEach(k=>{if(!S.hw.includes(k))S.hw.push(k)});
 const save=()=>localStorage.setItem("sp",JSON.stringify(S));
-const today=()=>new Date().toISOString().slice(0,10);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const dk=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"),today=()=>dk(new Date());
 const toast=t=>{const e=document.createElement("div");e.className="toast";e.textContent=t;document.body.append(e);setTimeout(()=>e.remove(),2200)};
-function apply(){document.documentElement.dataset.t=S.theme;document.documentElement.style.setProperty("--fs",S.fs+"px");document.body.classList.toggle("elder",!!S.elder);$("fsz").value=S.fs;$("eld").checked=S.elder}
+const vib=()=>{if(S.hap&&navigator.vibrate)navigator.vibrate(10)};
+function apply(){const h=document.documentElement,r=h.style;h.dataset.t=S.theme;
+ r.setProperty("--fs",S.fs+"px");r.setProperty("--fh","'"+S.fh+"'");r.setProperty("--fb","'"+S.fb+"'");r.setProperty("--ls",S.ls+"px");r.setProperty("--r",S.rad+"px");r.setProperty("--bl",S.bl+"px");r.setProperty("--ar",S.ar+"px");
+ if(S.ac){const c=parseInt(S.ac.slice(1),16),l=((c>>16)*299+((c>>8&255)*587)+(c&255)*114)/1000;r.setProperty("--ac",S.ac);r.setProperty("--on",l>140?"#000":"#fff")}else{r.removeProperty("--ac");r.removeProperty("--on")}
+ document.body.classList.toggle("noliq",!S.liq);document.body.classList.toggle("cmp",!!S.cmp)}
+apply();
+document.addEventListener("pointerdown",e=>{const b=e.target.closest("button");if(!b||!S.liq)return;const r=b.getBoundingClientRect(),s=document.createElement("span");s.className="rp";s.style.cssText=`left:${e.clientX-r.left}px;top:${e.clientY-r.top}px`;b.append(s);setTimeout(()=>s.remove(),600);vib()});
 
-/* splash → auth → app */
-setTimeout(()=>{$("splash").classList.add("out");setTimeout(()=>$("splash").remove(),600);S.user?enter():$("auth").hidden=false},2400);
+/* splash, auth */
+setTimeout(()=>{$("splash").classList.add("out");setTimeout(()=>$("splash").remove(),1000);S.user?enter():$("auth").hidden=false},2500);
 async function doAuth(m){const e=$("em").value.trim(),p=$("pw").value;if(!e||p.length<6){$("amsg").textContent="Enter an email and a password of 6+ characters.";return}
  if(sb){const r=m=="in"?await sb.auth.signInWithPassword({email:e,password:p}):await sb.auth.signUp({email:e,password:p});
   if(r.error){$("amsg").textContent=r.error.message;return}if(m=="up"&&!r.data.session){$("amsg").textContent="Check your email to confirm, then sign in.";return}}
- S.user=e;save();enter()}
-function guest(){S.user="Guest";save();enter()}
+ S.user=e;S.name=$("nm").value.trim()||S.name||e.split("@")[0];save();enter()}
+function guest(){S.user="Guest";S.name=$("nm").value.trim()||"friend";save();enter()}
 function logout(){if(sb)sb.auth.signOut();S.user=null;save();location.reload()}
 function enter(){$("auth").hidden=true;$("nav").hidden=false;init()}
 
 /* navigation */
-document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("on",x==b));document.querySelectorAll(".view").forEach(v=>v.classList.toggle("on",v.id=="v-"+b.dataset.v));if(b.dataset.v=="home")home();scrollTo(0,0)});
+const TT={home:"StudyPilot",study:"Study",revise:"Revise",quran:"Quran",web:"Web",set:"Settings"};
+function go(v){document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("on",x.dataset.v==v));document.querySelectorAll(".view").forEach(x=>x.classList.toggle("on",x.id=="v-"+v));$("ttl").textContent=TT[v];if(v=="home")home();pill();scrollTo(0,0)}
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>go(b.dataset.v));
+function pill(){const b=document.querySelector("nav button.on");if(!b)return;$("pill").style.width=b.offsetWidth+"px";$("pill").style.transform=`translateX(${b.offsetLeft}px)`}
+addEventListener("resize",pill);
+function init(){home();tasks();exams();cards();notes();gpa();webInit();st();qh();pmode("f");setInterval(()=>{if(S.user)home2()},60000);setTimeout(pill,50)}
+function home2(){if($("v-home").classList.contains("on"))home()}
 
-function init(){apply();home();tasks();themes();prem();loadPT();qlist();meds();routine();
- $("notes").value=S.notes;$("meth").value=S.meth;$("asr").value=S.asr;$("tc").textContent=S.tas;$("nrem").checked=S.rem;
- $("who").textContent=S.user;$("ecn").value=S.ec[0];$("ecp").value=S.ec[1];ecShow();ptrack();pomoReset();setInterval(tick,30000)}
+/* web search */
+const E={g:["Google","https://www.google.com/search?q="],w:["Wikipedia","https://en.wikipedia.org/w/index.php?search="],y:["YouTube","https://www.youtube.com/results?search_query="],s:["Scholar","https://scholar.google.com/scholar?q="],k:["Khan Academy","https://www.khanacademy.org/search?page_slug=search&q="],q:["Quizlet","https://quizlet.com/search?query="],a:["WolframAlpha","https://www.wolframalpha.com/input?i="],t:["Translate","https://translate.google.com/?text="]};
+function web(q,e="g"){q=(q||"").trim();if(!q)return toast("Type something to search");S.rs=[q,...S.rs.filter(x=>x!=q)].slice(0,8);save();window.open(E[e][1]+encodeURIComponent(q),"_blank","noopener");if($("recent"))recent()}
+const R=[["Khan Academy","https://www.khanacademy.org","Lessons"],["Wikipedia","https://www.wikipedia.org","Reference"],["Google Scholar","https://scholar.google.com","Research"],["YouTube Education","https://www.youtube.com/education","Video"],["Quizlet","https://quizlet.com","Flashcards"],["Desmos","https://www.desmos.com/calculator","Graphing"],["WolframAlpha","https://www.wolframalpha.com","Maths"],["Coursera","https://www.coursera.org","Courses"],["edX","https://www.edx.org","Courses"],["MIT OpenCourseWare","https://ocw.mit.edu","Courses"],["PhET Simulations","https://phet.colorado.edu","Science"],["Project Gutenberg","https://www.gutenberg.org","Books"],["Merriam-Webster","https://www.merriam-webster.com","Dictionary"],["Google Translate","https://translate.google.com","Language"]];
+let rq="";
+function webInit(){$("eng").innerHTML=Object.keys(E).map(k=>`<button onclick="web($('wq').value,'${k}')">${E[k][0]}</button>`).join("");recent();res()}
+function recent(){$("recent").innerHTML=S.rs.map(x=>`<button class="chip" style="border:0;min-height:30px" onclick="$('wq').value=this.textContent">${esc(x)}</button>`).join("")}
+function res(){$("res").innerHTML=R.filter(r=>(r[0]+r[2]).toLowerCase().includes(rq.toLowerCase())).map(r=>`<a class="card row res" href="${r[1]}" target="_blank" rel="noopener"><b class="grow">${r[0]}</b><span class="chip">${r[2]}</span></a>`).join("")||'<p class="mu">No resources match.</p>'}
 
 /* home */
-let PT=null;
-function greet(){const h=new Date().getHours();return h<5?"Peaceful night":h<12?"Good morning":h<17?"Good afternoon":"Good evening"}
-function nextPrayer(){if(!PT)return null;const n=new Date(),m=n.getHours()*60+n.getMinutes();
- for(const k of PR){const[a,b]=PT[k].split(":");const t=+a*60+ +b;if(t>m)return[k,PT[k],t-m]}
- const[a,b]=PT.Fajr.split(":");return["Fajr",PT.Fajr,1440-m+ +a*60+ +b]}
-function home(){const n=nextPrayer(),open=S.tasks.filter(t=>!t.d).length,v=S.ayah;
- $("v-home").innerHTML=`<h1>${greet()}, ${S.user=="Guest"?"friend":S.user.split("@")[0]} ✨</h1>
- <div class="card" style="background:linear-gradient(135deg,var(--ac),var(--card));"><small style="color:#fffc">Next prayer</small>
-  <div style="font-size:1.6em;font-weight:700">${n?n[0]+" · "+n[1]:"Open Prayer to load times"}</div>${n?`<small style="color:#fffc">in ${Math.floor(n[2]/60)}h ${n[2]%60}m</small>`:""}</div>
- <div class="row"><div class="card grow"><b>${open}</b><br><small>tasks left</small></div><div class="card grow"><b>${S.ses}</b><br><small>focus sessions</small></div><div class="card grow"><b>${streak()}</b><br><small>day prayer streak</small></div></div>
- <div class="card" id="dayah"><small>Verse of the day</small><div class="ar" id="dar">…</div><p id="den" class="mu"></p></div>
- <div class="card"><b>Today’s medicine</b><div id="hmed" class="mu">${S.med.length?S.med.map(m=>m.t+" "+m.n).join(" · "):"None added"}</div></div>`;
- ayahDay()}
-async function ayahDay(){try{const d=Math.floor(Date.now()/864e5)%6236+1;const r=await(await fetch(`https://api.alquran.cloud/v1/ayah/${d}/editions/quran-uthmani,en.sahih`)).json();$("dar").textContent=r.data[0].text;$("den").textContent=r.data[1].text+" ("+r.data[1].surah.englishName+" "+r.data[1].numberInSurah+")"}catch(e){if($("den"))$("den").textContent="Connect to the internet to see today’s verse."}}
+const dl=d=>{const n=Math.ceil((new Date(d+"T00:00")-new Date(today()+"T00:00"))/864e5);return n<0?"passed":n==0?"today":n+" d"};
+function sstreak(){let n=0,d=new Date();for(;;){if((S.log[dk(d)]||0)>0)n++;else if(dk(d)!=today())break;d.setDate(d.getDate()-1)}return n}
+const W={
+ search:()=>`<div class="card"><div class="row"><input class="grow" id="hq" placeholder="Search the web…" onkeydown="if(event.key=='Enter')web(this.value)"><button class="p" onclick="web($('hq').value)">Search</button></div></div>`,
+ goal:()=>{const m=S.log[today()]||0,p=Math.min(100,Math.round(m/S.goal*100));return`<div class="card row"><div class="tank"><i style="top:${100-p}%"></i><b>${p}%</b></div><div class="grow"><b class="h">Daily goal</b><br><span class="mu">${m} of ${S.goal} min focused</span><br><button class="p" style="margin-top:8px" onclick="go('study')">Start focus</button></div></div>`},
+ stats:()=>`<div class="g3" style="margin-bottom:10px"><div class="card"><b class="h">${S.ses}</b><br><small>sessions</small></div><div class="card"><b class="h">${S.tasks.filter(t=>!t.d).length}</b><br><small>tasks left</small></div><div class="card"><b class="h">${sstreak()}</b><br><small>day streak</small></div></div>`,
+ quick:()=>`<div class="g2" style="margin-bottom:10px"><button onclick="go('study')">⏱ Focus timer</button><button onclick="go('revise')">🃏 Flashcards</button><button onclick="go('quran')">📖 Quran</button><button onclick="go('web')">🌐 Resources</button></div>`,
+ tasks:()=>{const L=S.tasks.filter(t=>!t.d).slice(0,4);return`<div class="card"><b class="h">Tasks</b>${L.map(t=>`<div class="pt"><span>${esc(t.t)}</span><span class="chip">${["Low","Med","High"][t.p]}</span></div>`).join("")||'<p class="mu">All clear. Add a task in Study.</p>'}</div>`},
+ exams:()=>{const L=[...S.exams].sort((a,b)=>a.d<b.d?-1:1).filter(e=>dl(e.d)!="passed").slice(0,3);return`<div class="card"><b class="h">Exams</b>${L.map(e=>`<div class="pt"><span>${esc(e.n)}</span><span class="chip">${dl(e.d)}</span></div>`).join("")||'<p class="mu">No upcoming exams.</p>'}</div>`},
+ quran:()=>{const s=surahs[S.last-1];return`<div class="card"><b class="h">Quran</b><p class="mu">${S.last?"Continue with "+(s?s.englishName:"Surah "+S.last):"Read and listen to all 114 surahs."}</p><div class="row"><button class="p grow" onclick="${S.last?`openS(${S.last})`:"go('quran')"}">${S.last?"Continue reading":"Open Quran"}</button>${S.last?`<button onclick="playSurah(${S.last})">▶ Listen</button>`:""}</div></div>`},
+ cards:()=>`<div class="card row"><div class="grow"><b class="h">Revise</b><br><span class="mu">${S.cards.length} flashcards · ${S.notes.length} notes</span></div><button class="p" onclick="go('revise')">Review</button></div>`};
+function home(){const h=new Date().getHours(),g=h<5?"Peaceful night":h<12?"Good morning":h<17?"Good afternoon":"Good evening";
+ $("v-home").innerHTML=`<h1>${g}, ${esc(S.name||"friend")}</h1>`+S.hw.filter(k=>!S.hoff.includes(k)).map(k=>W[k]()).join("")}
 
 /* study */
-function tasks(){$("tasks").innerHTML=S.tasks.map((t,i)=>`<div class="card row"><input type="checkbox" style="width:22px;height:22px" ${t.d?"checked":""} onchange="S.tasks[${i}].d=this.checked;save();tasks()"><span class="grow ${t.d?"done":""}">${esc(t.t)}</span><button onclick="S.tasks.splice(${i},1);save();tasks()">✕</button></div>`).join("")||'<p class="mu">No tasks yet. Add your first one above.</p>'}
-function addTask(){const v=$("tin").value.trim();if(!v)return;if(!S.prem&&S.tasks.length>=15){toast("Free plan: 15 tasks. See Premium in Settings.");return}S.tasks.unshift({t:v,d:false});$("tin").value="";save();tasks()}
-const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-let pt=null,left=0;
-function pomoReset(){clearInterval(pt);pt=null;left=$("pmin").value*60;$("pbtn").textContent="Start";pshow()}
-function pshow(){$("pomo").textContent=String(Math.floor(left/60)).padStart(2,"0")+":"+String(left%60).padStart(2,"0");$("psess").textContent=S.ses+" sessions completed"}
+let tq="",pt=null,left=0,mode="f";
+function tasks(){const L=S.tasks.map((t,i)=>[t,i]).filter(([t])=>t.t.toLowerCase().includes(tq.toLowerCase())).sort((a,b)=>(a[0].due||"9999-12-31").localeCompare(b[0].due||"9999-12-31")||b[0].p-a[0].p);
+ $("tasks").innerHTML=L.map(([t,i])=>`<div class="card row"><input type="checkbox" ${t.d?"checked":""} onchange="S.tasks[${i}].d=this.checked;save();tasks()"><span class="grow ${t.d?"done":""}">${esc(t.t)}${t.due?`<br><small class="mu">Due ${t.due}</small>`:""}</span><span class="chip">${["Low","Med","High"][t.p]}</span><button onclick="S.tasks.splice(${i},1);save();tasks()">✕</button></div>`).join("")||'<p class="mu">No tasks yet. Add your first one above.</p>'}
+function addTask(){const v=$("tin").value.trim();if(!v)return;S.tasks.unshift({t:v,d:false,p:+$("tp").value,due:$("td").value});$("tin").value="";save();tasks()}
+function exams(){const L=S.exams.map((e,i)=>[e,i]).sort((a,b)=>a[0].d<b[0].d?-1:1);$("exams").innerHTML=L.map(([e,i])=>`<div class="card row"><div class="grow"><b>${esc(e.n)}</b><br><small class="mu">${e.d}</small></div><span class="chip">${dl(e.d)}</span><button onclick="S.exams.splice(${i},1);save();exams()">✕</button></div>`).join("")||'<p class="mu">No exams added.</p>'}
+function addExam(){const n=$("en").value.trim(),d=$("ed").value;if(!n||!d)return toast("Enter a name and a date");S.exams.push({n,d});$("en").value="";save();exams()}
+function pmode(m){mode=m;$("mf").classList.toggle("p",m=="f");$("mb").classList.toggle("p",m=="b");pomoReset()}
+function pshow(){$("pomo").textContent=String(Math.floor(left/60)).padStart(2,"0")+":"+String(left%60).padStart(2,"0");$("psess").textContent=S.ses+" sessions · "+(S.log[today()]||0)+" min today"}
+function pomoReset(){clearInterval(pt);pt=null;left=(mode=="f"?S.fmin:S.bmin)*60;$("pbtn").textContent="Start";pshow()}
+function beep(){if(!S.snd)return;try{const c=new AudioContext(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=660;g.gain.setValueAtTime(.2,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+1.2);o.start();o.stop(c.currentTime+1.2)}catch(e){}}
+function notify(t,b){if(S.notif&&"Notification"in window&&Notification.permission=="granted")new Notification(t,{body:b})}
 function pomoToggle(){if(pt){clearInterval(pt);pt=null;$("pbtn").textContent="Resume";return}$("pbtn").textContent="Pause";
- pt=setInterval(()=>{left--;pshow();if(left<=0){clearInterval(pt);pt=null;S.ses++;save();pomoReset();notify("Focus session done","Take a short break.");toast("Session complete 🎉")}},1000)}
-function notify(t,b){if("Notification"in window&&Notification.permission=="granted")new Notification(t,{body:b})}
+ pt=setInterval(()=>{left--;pshow();if(left<=0){clearInterval(pt);pt=null;beep();if(mode=="f"){S.ses++;S.log[today()]=(S.log[today()]||0)+S.fmin;save();notify("Focus session done","Take a short break.");toast("Session complete 🎉");pmode("b")}else{notify("Break over","Back to focus.");toast("Break over");pmode("f")}}},1000)}
 
-/* prayer */
-function loc(cb){if(S.pos)cb(S.pos);navigator.geolocation?.getCurrentPosition(p=>{S.pos=[p.coords.latitude,p.coords.longitude];save();cb(S.pos)},()=>{if(!S.pos){S.pos=[6.58,79.96];cb(S.pos);toast("Location off. Using Kalutara; allow location for exact times.")}})}
-function loadPT(){loc(async p=>{try{const r=await(await fetch(`https://api.aladhan.com/v1/timings?latitude=${p[0]}&longitude=${p[1]}&method=${S.meth}&school=${S.asr}`)).json();PT=r.data.timings;const h=r.data.date.hijri;
- $("ploc").textContent=p[0].toFixed(2)+"°, "+p[1].toFixed(2)+"°";$("hij").textContent=h.day+" "+h.month.en+" "+h.year+" AH";ptimes();qibla(p);home()}catch(e){$("ploc").textContent="Offline: times need internet";}})}
-function ptimes(){const n=nextPrayer();$("ptimes").innerHTML=["Fajr","Sunrise","Dhuhr","Asr","Maghrib","Isha"].map(k=>`<div class="pt ${n&&n[0]==k?"nx":""}"><span>${k}</span><span>${PT[k]}</span></div>`).join("")}
-function ptrack(){const t=S.pr[today()]||[];$("ptrack").innerHTML=PR.map((k,i)=>`<button class="${t.includes(i)?"p":""}" onclick="mark(${i})">${k}</button>`).join("");$("streak").textContent=streak()+" day streak"}
-function mark(i){const d=today();S.pr[d]=S.pr[d]||[];const a=S.pr[d],x=a.indexOf(i);x<0?a.push(i):a.splice(x,1);save();ptrack()}
-function streak(){let n=0,d=new Date();for(;;){const k=d.toISOString().slice(0,10);if((S.pr[k]||[]).length==5)n++;else if(n||k!=today())break;d.setDate(d.getDate()-1)}return n}
-function tas(a){S.tas=a?S.tas+1:0;save();$("tc").textContent=S.tas;if(a&&navigator.vibrate)navigator.vibrate(15)}
-let qb=0;
-function qibla(p){const r=Math.PI/180,L=39.8262*r,l=21.4225*r,a=p[1]*r,b=p[0]*r;qb=(Math.atan2(Math.sin(L-a),Math.cos(b)*Math.tan(l)-Math.sin(b)*Math.cos(L-a))/r+360)%360;
- $("arrow").style.transform=`rotate(${qb}deg)`;$("qtxt").textContent="Qibla is "+qb.toFixed(0)+"° from true north"}
-async function compass(){try{if(DeviceOrientationEvent.requestPermission)await DeviceOrientationEvent.requestPermission();
- addEventListener("deviceorientationabsolute",o=>{if(o.alpha!=null)$("arrow").style.transform=`rotate(${qb-(360-o.alpha)}deg)`},true);toast("Point the top of your phone; the arrow shows Qibla")}catch(e){toast("Compass is not available on this device")}}
-function remTog(on){S.rem=on;save();if(on&&"Notification"in window)Notification.requestPermission()}
-let lastN="";function tick(){if(!PT)return;const n=new Date(),hm=String(n.getHours()).padStart(2,"0")+":"+String(n.getMinutes()).padStart(2,"0");
- if(S.rem)for(const k of PR)if(PT[k]==hm&&lastN!=k+hm){lastN=k+hm;notify(k+" time","It is time for "+k)}
- S.med.forEach(m=>{if(m.t==hm&&lastN!="m"+m.n+hm){lastN="m"+m.n+hm;notify("Medicine time",m.n);toast("💊 "+m.n)}})}
+/* revise */
+let cq="",nq="",rc=-1;
+function rvNext(){const L=S.cards;if(!L.length){$("rv").innerHTML='<p class="mu">Add a flashcard below to start revising.</p>';return}
+ const mk=Math.min(...L.map(c=>c.k));let P=L.map((c,i)=>i).filter(i=>L[i].k==mk);if(P.length>1)P=P.filter(i=>i!=rc);rc=P[Math.floor(Math.random()*P.length)];
+ $("rv").innerHTML=`<div class="h c" style="font-size:1.2em;margin:10px 0">${esc(L[rc].q)}</div><button class="p" style="width:100%" onclick="rvShow()">Show answer</button>`}
+function rvShow(){const c=S.cards[rc];$("rv").innerHTML=`<div class="h c" style="font-size:1.2em;margin:10px 0">${esc(c.q)}</div><p class="c" style="margin-bottom:10px">${esc(c.a)}</p><div class="row"><button class="grow" onclick="rvGrade(-1)">Again</button><button class="p grow" onclick="rvGrade(1)">Got it</button></div>`}
+function rvGrade(d){S.cards[rc].k=Math.max(0,S.cards[rc].k+d);save();rvNext()}
+function cards(){$("clist").innerHTML=S.cards.map((c,i)=>[c,i]).filter(([c])=>(c.q+c.a).toLowerCase().includes(cq.toLowerCase())).map(([c,i])=>`<div class="card row"><div class="grow"><b>${esc(c.q)}</b><br><small class="mu">${esc(c.a)}</small></div><button onclick="S.cards.splice(${i},1);save();cards()">✕</button></div>`).join("");rvNext()}
+function addCard(){const q=$("fq").value.trim(),a=$("fa").value.trim();if(!q||!a)return toast("Enter a question and an answer");S.cards.push({q,a,k:0});$("fq").value=$("fa").value="";save();cards()}
+function notes(){$("notes").innerHTML=S.notes.map((n,i)=>[n,i]).filter(([n])=>(n.t+n.b).toLowerCase().includes(nq.toLowerCase())).map(([n,i])=>`<div class="card"><input placeholder="Title" value="${esc(n.t)}" oninput="S.notes[${i}].t=this.value;save()" style="font-weight:700;margin-bottom:6px"><textarea rows="4" placeholder="Write your note…" oninput="S.notes[${i}].b=this.value;save()">${esc(n.b)}</textarea><button style="margin-top:6px" onclick="S.notes.splice(${i},1);save();notes()">Delete</button></div>`).join("")||'<p class="mu">No notes found.</p>'}
+const GR=[["A",4],["A-",3.7],["B+",3.3],["B",3],["B-",2.7],["C+",2.3],["C",2],["D",1],["F",0]];
+function gpa(){$("gpa").innerHTML=S.gpa.map((r,i)=>`<div class="row"><select class="grow" onchange="S.gpa[${i}].g=+this.value;gcalc()">${GR.map(g=>`<option value="${g[1]}" ${g[1]==r.g?"selected":""}>${g[0]} (${g[1]})</option>`).join("")}</select><input type="number" min="1" max="10" value="${r.c}" style="width:80px" oninput="S.gpa[${i}].c=+this.value;gcalc()"><button onclick="S.gpa.splice(${i},1);gpa()">✕</button></div>`).join("");gcalc()}
+function gcalc(){save();const c=S.gpa.reduce((a,r)=>a+r.c,0);$("gres").textContent=c?(S.gpa.reduce((a,r)=>a+r.g*r.c,0)/c).toFixed(2):"–"}
 
 /* quran */
-let surahs=[];
-async function qlist(){try{if(!surahs.length)surahs=(await(await fetch("https://api.alquran.cloud/v1/surah")).json()).data;
- $("qlist").innerHTML=(S.last?`<button class="p" style="width:100%;margin-bottom:10px" onclick="openS(${S.last})">Continue reading · Surah ${S.last}</button>`:"")+
- `<input id="qs" placeholder="Search surah" oninput="qfilter(this.value)" style="margin-bottom:8px"><div id="qrows"></div>`;qfilter("")}catch(e){$("qlist").innerHTML='<p class="mu">Connect to the internet to load the Quran.</p>'}}
-function qfilter(q){q=q.toLowerCase();$("qrows").innerHTML=surahs.filter(s=>s.englishName.toLowerCase().includes(q)||String(s.number)==q).map(s=>`<div class="card row" onclick="openS(${s.number})" style="cursor:pointer"><span class="chip">${s.number}</span><div class="grow"><b>${s.englishName}</b><br><small>${s.englishNameTranslation} · ${s.numberOfAyahs} verses</small></div><span class="ar" style="font-size:1.3em;line-height:1.4">${s.name.replace("سورة","")}</span></div>`).join("")}
-let au=new Audio();
-async function openS(n){S.last=n;save();$("qlist").innerHTML='<p class="mu">Loading…</p>';
+let surahs=[];try{surahs=JSON.parse(localStorage.getItem("spq")||"[]")}catch(e){}
+async function ensure(){if(surahs.length)return true;try{surahs=(await(await fetch("https://api.alquran.cloud/v1/surah")).json()).data.map(s=>({number:s.number,englishName:s.englishName,englishNameTranslation:s.englishNameTranslation,numberOfAyahs:s.numberOfAyahs,name:s.name}));localStorage.setItem("spq",JSON.stringify(surahs));return true}catch(e){return false}}
+const gstart=n=>surahs.slice(0,n-1).reduce((a,s)=>a+s.numberOfAyahs,0)+1;
+let au=new Audio(),P={l:[],i:0,s:0,t:""};
+function load(){au.src=`https://cdn.islamic.network/quran/audio/128/${S.rec}/${P.l[P.i]}.mp3`;au.play().catch(()=>toast("Audio needs an internet connection"));pl();hlt()}
+function playList(l,s,t,i=0){P={l,i,s,t};load()}
+function playSurah(n){const s=surahs[n-1];if(!s)return toast("Load the surah list first");S.last=n;save();playList(Array.from({length:s.numberOfAyahs},(_,k)=>gstart(n)+k),n,s.englishName)}
+function playFrom(n,k){const s=surahs[n-1],b=gstart(n);playList(Array.from({length:s.numberOfAyahs-k+1},(_,j)=>b+k-1+j),n,s.englishName,0)}
+function pskip(d){const j=P.i+d;if(j>=0&&j<P.l.length){P.i=j;load()}}
+au.onended=()=>{if(P.i<P.l.length-1){P.i++;load()}else if(P.s&&S.auto&&P.s<114)playSurah(P.s+1);else pl()};au.onplay=au.onpause=()=>pl();
+function pl(){$("pbar").hidden=!P.l.length;$("ptitle").textContent=P.t+(P.l.length>1?" · "+(P.i+1)+"/"+P.l.length:"");$("pp").textContent=au.paused?"▶":"⏸"}
+function hlt(){document.querySelectorAll(".ay.pl").forEach(x=>x.classList.remove("pl"));const e=$("a"+P.l[P.i]);if(e){e.classList.add("pl");e.scrollIntoView({block:"center",behavior:"smooth"})}}
+async function qh(){const ok=await ensure();
+ $("qhome").innerHTML=`<h1>📖 Quran</h1><div class="card"><small class="mu">Verse of the day</small><div class="ar" id="dar">…</div><p class="mu" id="den"></p><div class="row"><button id="vplay">▶ Listen</button><button id="vopen">Read surah</button></div></div>
+ ${S.last&&ok?`<div class="card row"><div class="grow"><b class="h">Continue</b><br><small class="mu">${surahs[S.last-1].englishName}</small></div><button class="p" onclick="openS(${S.last})">Read</button><button onclick="playSurah(${S.last})">▶</button></div>`:""}
+ ${S.bk.length?`<div class="card"><b class="h">Bookmarks</b>${S.bk.map(b=>`<div class="pt" onclick="openS(${b.s},${b.a})" style="cursor:pointer"><span>★ ${surahs[b.s-1]?surahs[b.s-1].englishName:"Surah "+b.s}, verse ${b.a}</span></div>`).join("")}</div>`:""}
+ <input id="qs" placeholder="🔍 Search surah by name or number" oninput="qf(this.value)" style="margin-bottom:8px"><div id="qrows">${ok?"":'<p class="mu">Connect to the internet to load the surah list.</p>'}</div>`;
+ if(ok)qf("");verse()}
+function qf(q){q=q.toLowerCase();$("qrows").innerHTML=surahs.filter(s=>(s.englishName+s.englishNameTranslation).toLowerCase().includes(q)||String(s.number)==q).map(s=>`<div class="card row"><span class="chip">${s.number}</span><div class="grow" onclick="openS(${s.number})" style="cursor:pointer"><b>${s.englishName}</b><br><small class="mu">${s.englishNameTranslation} · ${s.numberOfAyahs} verses</small></div><span class="ar" style="font-size:1.3em;line-height:1.4">${s.name.replace("سورة","")}</span><button class="p" onclick="playSurah(${s.number})" aria-label="Listen">▶</button></div>`).join("")||'<p class="mu">No surah found.</p>'}
+async function verse(){try{const d=Math.floor(Date.now()/864e5)%6236+1,r=(await(await fetch(`https://api.alquran.cloud/v1/ayah/${d}/editions/quran-uthmani,en.sahih`)).json()).data;
+ $("dar").textContent=r[0].text;$("den").textContent=r[1].text+" ("+r[1].surah.englishName+" "+r[1].numberInSurah+")";$("vplay").onclick=()=>playList([d],0,"Verse of the day");$("vopen").onclick=()=>openS(r[0].surah.number,r[0].numberInSurah)}catch(e){if($("den"))$("den").textContent="Connect to the internet to see today’s verse."}}
+async function openS(n,f){go("quran");await ensure();S.last=n;save();$("qhome").hidden=true;$("qread").hidden=false;$("qread").innerHTML='<p class="mu">Loading…</p>';
  try{const r=(await(await fetch(`https://api.alquran.cloud/v1/surah/${n}/editions/quran-uthmani,en.sahih`)).json()).data,a=r[0].ayahs,e=r[1].ayahs;
- $("qlist").innerHTML=`<div class="row" style="margin-bottom:8px"><button onclick="au.pause();qlist()">← Surahs</button><b class="grow" style="text-align:center">${r[0].englishName}</b><button onclick="playAll(${n},0)">▶ Play</button></div>
- <div class="row"><select id="rec" class="grow" onchange="S.rec=this.value;save()"><option value="ar.alafasy">Mishary Alafasy</option><option value="ar.husary" ${S.prem?"":"disabled"}>Al-Husary ${S.prem?"":"🔒"}</option><option value="ar.abdulbasitmurattal" ${S.prem?"":"disabled"}>Abdul Basit ${S.prem?"":"🔒"}</option><option value="ar.minshawi" ${S.prem?"":"disabled"}>Minshawi ${S.prem?"":"🔒"}</option></select>
- <label class="row"><input type="checkbox" id="tr" style="width:auto" checked onchange="document.querySelectorAll('.te').forEach(x=>x.hidden=!this.checked)"> English</label></div>`+
- (n!=1&&n!=9?'<div class="ar" style="text-align:center">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>':"")+
- a.map((x,i)=>`<div class="ay" id="a${x.number}"><div class="ar">${x.text.replace(/^بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ ?/,"")} ﴿${x.numberInSurah}﴾</div><p class="te mu">${e[i].text}</p><button onclick="playOne(${x.number})">▶</button></div>`).join("");$("rec").value=S.rec;window._ay=a.map(x=>x.number)}catch(e){$("qlist").innerHTML='<button onclick="qlist()">← Back</button><p class="mu">Could not load this surah. Check your connection.</p>'}}
-function playOne(num){au.pause();au=new Audio(`https://cdn.islamic.network/quran/audio/128/${S.rec}/${num}.mp3`);au.play();$("a"+num)?.scrollIntoView({block:"center",behavior:"smooth"})}
-function playAll(n,i){const l=window._ay;if(i>=l.length)return;au.pause();au=new Audio(`https://cdn.islamic.network/quran/audio/128/${S.rec}/${l[i]}.mp3`);au.onended=()=>playAll(n,i+1);au.play();$("a"+l[i])?.scrollIntoView({block:"center",behavior:"smooth"})}
+ $("qread").innerHTML=`<div class="row"><button onclick="closeR()">← Surahs</button><b class="h grow c">${n}. ${r[0].englishName}</b><button class="p" onclick="playSurah(${n})">▶ Play</button></div><p class="mu c" style="margin:6px 0">${r[0].englishNameTranslation} · ${r[0].revelationType} · ${a.length} verses</p>`+(n!=1&&n!=9?'<div class="ar c">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>':"")+
+ a.map((x,i)=>{const t=(i==0&&n!=1&&n!=9)?x.text.split(" ").slice(4).join(" "):x.text;return`<div class="card ay" id="a${x.number}"><div class="ar">${t} ﴿${x.numberInSurah}﴾</div>${S.tr?`<p class="mu">${esc(e[i].text)}</p>`:""}<div class="row"><button onclick="playFrom(${n},${x.numberInSurah})">▶</button><button onclick="bkm(${n},${x.numberInSurah},this)">${S.bk.some(b=>b.s==n&&b.a==x.numberInSurah)?"★":"☆"}</button></div></div>`}).join("");
+ scrollTo(0,0);if(f){const el=$("a"+(gstart(n)+f-1));el&&el.scrollIntoView({block:"center"})}hlt()}catch(e){$("qread").innerHTML='<button onclick="closeR()">← Back</button><p class="mu">Could not load this surah. Check your connection.</p>'}}
+function closeR(){$("qread").hidden=true;$("qhome").hidden=false;qh()}
+function bkm(n,a,b){const i=S.bk.findIndex(x=>x.s==n&&x.a==a);i<0?S.bk.push({s:n,a}):S.bk.splice(i,1);save();b.textContent=i<0?"★":"☆"}
 
-/* care */
-function meds(){$("meds").innerHTML=S.med.map((m,i)=>`<div class="pt"><span>${m.t} · ${esc(m.n)}</span><button onclick="S.med.splice(${i},1);save();meds()">✕</button></div>`).join("")||'<p class="mu">No reminders yet.</p>'}
-function addMed(){const n=$("mn").value.trim(),t=$("mt").value;if(!n||!t)return toast("Enter a name and a time");S.med.push({n,t});$("mn").value="";save();meds();if("Notification"in window)Notification.requestPermission()}
-const RT=["Morning walk or stretch","Take morning medicine","Drink water (8 glasses)","Call a family member","Read Quran or dhikr","Evening walk","Sleep before 10 pm"];
-function routine(){const d=today();S.rt[d]=S.rt[d]||[];$("routine").innerHTML=RT.map((r,i)=>`<label class="pt"><span>${r}</span><input type="checkbox" style="width:24px;height:24px" ${S.rt[d].includes(i)?"checked":""} onchange="rtog(${i})"></label>`).join("")}
-function rtog(i){const a=S.rt[today()],x=a.indexOf(i);x<0?a.push(i):a.splice(x,1);save()}
-function ecShow(){const[n,p]=S.ec,a=$("ecall");a.hidden=!p;if(p){a.href="tel:"+p;a.textContent="📞 Call "+(n||p)}}
-function speak(){const t=$("tts").value.trim();if(!t)return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.rate=.85;speechSynthesis.speak(u)}
+/* global search */
+let GQ="";
+const TOOLS=[["Focus timer","study"],["Tasks","study"],["Exams","study"],["Flashcards","revise"],["Notes","revise"],["GPA calculator","revise"],["Quran","quran"],["Web resources","web"],["Settings","set"]];
+function openSearch(){$("so").hidden=false;$("sq").value="";gs("");setTimeout(()=>$("sq").focus(),50)}
+function closeS(){$("so").hidden=true}
+document.querySelector("header button").onclick=openSearch;
+function gs(q){GQ=q=q.trim();const l=q.toLowerCase(),row=(i,t,s,a)=>`<div class="card row sr" onclick="${a}"><span>${i}</span><div class="grow"><b>${esc(t)}</b><br><small class="mu">${s}</small></div></div>`;let h="";
+ if(l){TOOLS.filter(t=>t[0].toLowerCase().includes(l)).forEach(t=>h+=row("➡️",t[0],"Open","closeS();go('"+t[1]+"')"));
+  S.tasks.filter(t=>t.t.toLowerCase().includes(l)).slice(0,5).forEach(t=>h+=row("✅",t.t,"Task","closeS();go('study')"));
+  S.notes.filter(n=>(n.t+n.b).toLowerCase().includes(l)).slice(0,5).forEach(n=>h+=row("📝",n.t||"Untitled note","Note","closeS();go('revise')"));
+  S.cards.filter(c=>(c.q+c.a).toLowerCase().includes(l)).slice(0,5).forEach(c=>h+=row("🃏",c.q,"Flashcard","closeS();go('revise')"));
+  S.exams.filter(e=>e.n.toLowerCase().includes(l)).forEach(e=>h+=row("🎓",e.n,e.d,"closeS();go('study')"));
+  surahs.filter(s=>(s.englishName+s.englishNameTranslation).toLowerCase().includes(l)||String(s.number)==l).slice(0,6).forEach(s=>h+=row("📖",s.englishName,"Surah "+s.number,`closeS();openS(${s.number})`));
+  h+=`<h3>Search the web for “${esc(q)}”</h3><div class="g2">`+Object.keys(E).map(k=>`<button onclick="web(GQ,'${k}')">${E[k][0]}</button>`).join("")+"</div>"}
+ else h=`<p class="mu">Type to search your tasks, notes, flashcards, exams, surahs and the web.</p>`+S.rs.map(x=>`<button class="chip" style="border:0;margin:3px" onclick="$('sq').value=this.textContent;gs(this.textContent)">${esc(x)}</button>`).join("");
+ $("sr").innerHTML=h}
+document.addEventListener("keydown",e=>{if(e.key=="Escape")closeS();if((e.ctrlKey||e.metaKey)&&e.key=="k"){e.preventDefault();openSearch()}});
 
-/* settings + premium */
-function themes(){$("themes").innerHTML=THEMES.map(t=>{const ok=S.prem||FREE_T.includes(t);return`<button class="${S.theme==t?"p":""} ${ok?"":"lock"}" onclick="setT('${t}')">${t}${ok?"":" 🔒"}</button>`}).join("")}
-function setT(t){if(!S.prem&&!FREE_T.includes(t))return toast("This theme is part of Premium");S.theme=t;save();apply();themes()}
-function prem(){$("premcard").innerHTML=S.prem?`<b>⭐ Premium active</b><p class="mu">All themes, extra reciters, unlimited tasks and backups are unlocked.</p><button onclick="S.prem=false;save();prem();themes()">Turn off preview</button>`:
- `<b>⭐ StudyPilot Premium</b><p class="mu">All 8 themes · 4 Quran reciters · unlimited tasks · cloud backup</p><button class="p" style="width:100%" onclick="S.prem=true;save();prem();themes();toast('Premium preview unlocked')">Try Premium preview</button><small class="mu">Payments are not connected yet. This switch is a local preview.</small>`}
+/* settings */
+const sl=(k,l,min,max,st=1)=>`<label class="op"><span>${l} <small id="v_${k}">${S[k]}</small></span><input type="range" min="${min}" max="${max}" step="${st}" value="${S[k]}" oninput="S['${k}']=+this.value;$('v_${k}').textContent=this.value;save();apply()"></label>`;
+const nu=(k,l,min,max)=>`<label class="op"><span>${l}</span><input type="number" min="${min}" max="${max}" value="${S[k]}" onchange="S['${k}']=Math.max(${min},Math.min(${max},+this.value||${min}));this.value=S['${k}'];save();pomoReset();home2()"></label>`;
+const tg=(k,l,f="")=>`<label class="op"><span>${l}</span><input type="checkbox" ${S[k]?"checked":""} onchange="S['${k}']=this.checked;save();apply();${f}"></label>`;
+const fsel=(k,l)=>`<label class="op"><span>${l}</span><select onchange="S['${k}']=this.value;save();apply()">${FONTS.map(f=>`<option ${S[k]==f?"selected":""}>${f}</option>`).join("")}</select></label>`;
+function st(){$("v-set").innerHTML=`<h1>⚙️ Settings</h1>
+ <div class="card"><b class="h">Profile</b><label class="op"><span>Name</span><input value="${esc(S.name)}" oninput="S.name=this.value;save()"></label><p class="mu" style="margin:6px 0">${esc(S.user||"")}</p><button onclick="logout()">Sign out</button></div>
+ <div class="card"><b class="h">Appearance</b><div class="row" id="themes" style="margin:8px 0"></div>
+  <label class="op"><span>Accent colour</span><span class="row" style="width:55%;flex-wrap:nowrap"><input type="color" value="${S.ac||"#e6b93c"}" oninput="S.ac=this.value;save();apply()"><button onclick="S.ac='';save();apply();st()">Reset</button></span></label>
+  ${fsel("fh","Heading font")}${fsel("fb","Body font")}${sl("fs","Text size",14,26)}${sl("ls","Letter spacing",0,3,.25)}${sl("ar","Arabic text size",22,52)}${sl("rad","Corner roundness",6,32)}${sl("bl","Glass blur",0,40)}
+  ${tg("liq","Liquid effects (blobs, ripples, waves)")}${tg("cmp","Compact layout")}</div>
+ <div class="card"><b class="h">Home screen</b><p class="mu">Show, hide and reorder what appears on Home.</p><div id="hlay"></div><button style="margin-top:8px" onclick="S.hw=Object.keys(WN);S.hoff=[];save();hlay()">Reset layout</button></div>
+ <div class="card"><b class="h">Study</b>${nu("fmin","Focus minutes",5,120)}${nu("bmin","Break minutes",1,60)}${nu("goal","Daily goal (minutes)",10,600)}${tg("snd","Timer sound")}${tg("hap","Vibration on tap")}${tg("notif","Notifications","if(this.checked&&'Notification' in window)Notification.requestPermission()")}</div>
+ <div class="card"><b class="h">Quran</b><label class="op"><span>Reciter</span><select onchange="S.rec=this.value;save()">${[["ar.alafasy","Mishary Alafasy"],["ar.husary","Al-Husary"],["ar.abdulbasitmurattal","Abdul Basit"],["ar.minshawi","Minshawi"]].map(r=>`<option value="${r[0]}" ${S.rec==r[0]?"selected":""}>${r[1]}</option>`).join("")}</select></label>${tg("tr","Show English translation")}${tg("auto","Play the next surah automatically")}</div>
+ <div class="card"><b class="h">Your data</b><div class="row" style="margin-top:6px"><button onclick="exp()">Export backup</button><button onclick="$('imp').click()">Import</button><button onclick="if(confirm('Erase all data on this device?')){localStorage.removeItem('sp');localStorage.removeItem('spq');location.reload()}">Erase</button></div><input type="file" id="imp" accept=".json" hidden onchange="imp(this.files[0])"></div>
+ <div class="card"><b class="h">About StudyPilot</b><p class="mu" style="margin-top:6px">Founder: <b style="color:var(--tx)">Asjadh Rilwan</b></p><a class="wa" href="https://wa.me/94774209718?text=Hi%20Asjadh%2C%20I%20am%20using%20StudyPilot" target="_blank" rel="noopener">💬 WhatsApp · 077 420 9718</a></div>`;themes();hlay()}
+function themes(){$("themes").innerHTML=THEMES.map(t=>`<button class="${S.theme==t?"p":""}" onclick="S.theme='${t}';save();apply();themes()">${t}</button>`).join("")}
+function hlay(){$("hlay").innerHTML=S.hw.map((k,i)=>`<div class="op"><span>${WN[k]}</span><span class="row" style="flex-wrap:nowrap"><button onclick="mv(${i},-1)">↑</button><button onclick="mv(${i},1)">↓</button><input type="checkbox" ${S.hoff.includes(k)?"":"checked"} onchange="hvis('${k}',this.checked)"></span></div>`).join("")}
+function mv(i,d){const j=i+d;if(j<0||j>=S.hw.length)return;[S.hw[i],S.hw[j]]=[S.hw[j],S.hw[i]];save();hlay()}
+function hvis(k,on){S.hoff=on?S.hoff.filter(x=>x!=k):[...S.hoff,k];save()}
 function exp(){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(S,null,1)],{type:"application/json"}));a.download="studypilot-backup.json";a.click()}
-apply();
+function imp(f){if(!f)return;const r=new FileReader();r.onload=()=>{try{Object.assign(S,JSON.parse(r.result));save();location.reload()}catch(e){toast("That file is not a valid backup")}};r.readAsText(f)}
 </script></body></html>
