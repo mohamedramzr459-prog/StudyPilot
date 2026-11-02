@@ -26,6 +26,7 @@ h1{font-size:1.5em;margin:8px 0 14px}h3{margin:16px 0 8px}small,.mu{color:var(--
 input,select,textarea{width:100%;background:var(--card);color:var(--tx);border:1px solid #8883;border-radius:12px;padding:10px;font:inherit;margin:0 0 8px}
 input[type=checkbox]{width:22px;height:22px;margin:0}input[type=color]{padding:2px;height:42px}
 .btn{background:var(--ac);color:#fff;border:0;border-radius:12px;padding:10px 16px;font:600 1em Poppins;cursor:pointer;margin-bottom:8px}
+a.btn{text-decoration:none;display:inline-block}
 .btn.o{background:none;border:1px solid var(--ac);color:var(--ac)}
 .chip{background:var(--card);color:var(--tx);border:1px solid #8883;border-radius:99px;padding:6px 14px;margin:0 6px 8px 0;font:inherit;text-transform:capitalize}
 .chip.on{background:var(--ac);color:#fff}
@@ -171,7 +172,8 @@ function rSet(){const A=user?`<p>Signed in as <b>${esc(user.email)}</b></p><butt
  <div class=card><h3 style="margin-top:0">Goals</h3><small>Daily goal (min)</small><input type=number value="${S.goal}" onchange="S.goal=+this.value||60;save();rHome()"><small>Focus length (min)</small><input type=number value="${S.focus}" onchange="S.focus=+this.value||25;save();resetT()"><small>Break length (min)</small><input type=number value="${S.brk}" onchange="S.brk=+this.value||5;save()"><small>Exam name and date</small><input placeholder="Exam name" value="${esc(S.exam.n)}" onchange="S.exam.n=this.value;save();rHome()"><input type=date value="${S.exam.d}" onchange="S.exam.d=this.value;save();rHome()"></div>
  <div class=card><h3 style="margin-top:0">Backup</h3><button class=btn onclick=exp()>Export</button> <button class="btn o" onclick="$('#imp').click()">Import</button> <button class="btn o" onclick=clr()>Clear all</button><input id=imp type=file accept=.json hidden onchange=imp(this)></div>
  <details class=card><summary>Privacy Policy and Terms</summary><p class=mu>Guests: data stays on this device. Signed-in users: your study data is stored in your private account, visible only to you, and never sold or shared. Delete it any time with Clear all. The app is provided as is, free of charge. Contact: add your email here.</p></details>
- <p class=mu style="text-align:center">StudyPilot 3.0</p>`}
+ <div class=card style="text-align:center"><h3 style="margin-top:0">About StudyPilot</h3><p class=mu>Version 3.0<br>${user?'Your data is saved to your account and synced.':'Your data stays on this device.'}</p><p class=mu style="margin-top:10px">Founder &amp; Creator</p><b>Asjadh Rilwan</b></div>
+ <div class=card style="text-align:center"><h3 style="margin-top:0">Contact us</h3><p class=mu>Questions, feedback or business inquiries? Message us any time.</p><a class=btn href="https://wa.me/94774209718?text=Hi%20StudyPilot%2C%20I%20have%20an%20inquiry." target=_blank rel=noopener style="background:#25d366">💬 WhatsApp</a> <a class="btn o" href="tel:+94774209718">📞 077 420 9718</a> <a class="btn o" href="mailto:mohamedramzr459@gmail.com">✉️ Email</a></div>`}
 function exp(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(S)]));a.download='studypilot-backup.json';a.click()}
 function imp(i){const f=i.files[0];if(!f)return;f.text().then(t=>{try{S=Object.assign({},def,JSON.parse(t));save();applyAll();toast('Imported ✓')}catch(e){toast('Invalid file')}})}
 function clr(){if(confirm('Delete all data on this device'+(user?' and in your account':'')+'?')){S=Object.assign({},def);save();applyAll();rOnb(0)}}
