@@ -2,6 +2,11 @@
 <html lang="en" data-t="gold"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#07070a"><meta name="description" content="StudyPilot — focus, revise, recite and grow with your personal study workspace."><meta name="color-scheme" content="dark light"><title>StudyPilot Premium Edition</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&family=Poppins:wght@400;600;800&family=Inter:wght@400;600;800&family=Space+Grotesk:wght@400;600;700&family=Playfair+Display:wght@400;600;800&family=Merriweather:wght@400;700;900&family=Amiri:wght@400&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.58.0/dist/umd/supabase.js"></script>
 <style>
@@ -70,9 +75,8 @@ nav button{flex:1;border:0;background:none;font-size:.68em;display:flex;flex-dir
 @keyframes rise{from{opacity:0;transform:translateY(18px)}}
 .bar{width:170px;height:5px;background:#1a120433;border-radius:9px;margin-top:26px;overflow:hidden;z-index:1}.bar u{display:block;height:100%;background:#1a1204;animation:ld 2.2s forwards}@keyframes ld{from{width:0}}
 #auth{background:var(--bg)}#auth .card{width:100%;max-width:380px;animation:rise .6s both}#auth input{margin:6px 0}
-@media(prefers-reduced-motion:reduce){*{animation-duration:.01s!important;transition-duration:.01s!important}}
 
-/* ── StudyPilot Premium Edition polish (keeps the original feature set) ── */
+/* Premium polish */
 :root{--shadow:0 18px 50px #0002;--line-soft:color-mix(in srgb,var(--ac) 18%,transparent)}
 body{min-height:100dvh;-webkit-font-smoothing:antialiased}
 main{padding-top:18px;padding-bottom:24px}
@@ -80,35 +84,29 @@ main{padding-top:18px;padding-bottom:24px}
 .card:focus-within{border-color:var(--line-soft)}
 button{box-shadow:0 2px 8px #0000000a}
 button.p{background:linear-gradient(135deg,var(--ac),color-mix(in srgb,var(--ac) 72%,white));box-shadow:0 7px 20px color-mix(in srgb,var(--ac) 20%,transparent)}
-button:not(.p):hover{border-color:var(--line-soft);background:color-mix(in srgb,var(--card) 75%,var(--ac) 8%)}
+button:not(.p):hover{border-color:var(--line-soft)}
 button.p:hover{filter:brightness(1.06)}
 input,textarea,select{transition:border-color .2s,box-shadow .2s}
 input:focus,textarea:focus,select:focus{border-color:var(--ac);box-shadow:0 0 0 3px color-mix(in srgb,var(--ac) 16%,transparent)}
-header{box-shadow:0 8px 28px #00000012}
-.gold{letter-spacing:.35px}
-h1{letter-spacing:-.035em}
-h3{letter-spacing:-.015em}
+.gold{letter-spacing:.35px}h1{letter-spacing:-.035em}h3{letter-spacing:-.015em}
 .chip{box-shadow:0 3px 10px color-mix(in srgb,var(--ac) 16%,transparent)}
-nav{box-shadow:0 -10px 35px #00000018}
-nav button{gap:2px}
-nav button b{line-height:1.2}
+nav button{gap:2px}nav button b{line-height:1.2}
 #auth .card{box-shadow:var(--shadow);border-color:var(--line-soft)}
 #splash .logo{text-shadow:0 5px 25px #4b310b22}
 .toast{box-shadow:0 10px 35px #0004}
-@media(min-width:700px){
-  main{padding-left:22px;padding-right:22px}
-  .card:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
-}
-@media(max-width:380px){
-  nav button{font-size:.61em}
-  nav button b{font-size:1.35em}
-  h1{font-size:1.5em}
-  .g3{gap:5px}
-}
-@media(prefers-reduced-motion:reduce){
-  .card,button,input,textarea,select{transition:none!important}
-}
+@media(min-width:700px){main{padding-left:22px;padding-right:22px}.card:hover{transform:translateY(-2px);box-shadow:var(--shadow)}}
+@media(max-width:380px){nav button{font-size:.61em}nav button b{font-size:1.35em}h1{font-size:1.5em}.g3{gap:5px}}
 
+/* Stronger liquid-glass layer */
+:root{--glass:linear-gradient(145deg,#ffffff28,#ffffff08);--hi:inset 0 1px 0 #ffffff45,inset 0 -1px 0 #ffffff0d}
+[data-t=paper]{--glass:linear-gradient(145deg,#ffffffd8,#ffffff85);--hi:inset 0 1px 0 #fff,inset 0 -1px 0 #0000000d}
+.card,header,nav,#pbar,.sc{background:var(--glass),var(--card);-webkit-backdrop-filter:blur(var(--bl)) saturate(180%) brightness(1.08);backdrop-filter:blur(var(--bl)) saturate(180%) brightness(1.08);border:1px solid color-mix(in srgb,var(--tx) 14%,transparent);box-shadow:var(--hi),0 10px 32px #0000002e}
+.card{position:relative}
+.card::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:radial-gradient(120% 60% at 0% 0%,#ffffff22,transparent 55%)}
+button:not(.p){background:var(--glass);box-shadow:var(--hi)}
+nav{border-radius:26px 26px 0 0}
+.blobs span{opacity:.32}.blobs span:nth-child(2){opacity:.22}.blobs span:nth-child(3){opacity:.16}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01s!important;transition-duration:.01s!important}}
 </style></head><body>
 <svg width="0" height="0" style="position:absolute"><defs><filter id="goo"><feGaussianBlur in="SourceGraphic" stdDeviation="14"/><feColorMatrix values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -9"/></filter></defs></svg>
 <div class="blobs"><span></span><span></span><span></span></div>
@@ -145,7 +143,7 @@ nav button b{line-height:1.2}
  <button class="p" style="width:100%;margin-bottom:8px" onclick="S.notes.unshift({t:'',b:''});save();notes()">+ New note</button>
  <input placeholder="🔍 Search notes" oninput="nq=this.value;notes()" style="margin-bottom:8px"><div id="notes"></div>
  <h3>GPA calculator</h3>
- <div class="card"><div id="gpa"></div><div class="row" style="margin-top:8px"><button onclick="S.gpa.push({g:4,c:3});gpa()">+ Subject</button><b class="h grow c" style="font-size:1.6em">GPA <span id="gres">–</span></b></div></div>
+ <div class="card"><div id="gpa"></div><div class="row" style="margin-top:8px"><button onclick="S.gpa.push({g:4,c:3});save();gpa()">+ Subject</button><b class="h grow c" style="font-size:1.6em">GPA <span id="gres">–</span></b></div></div>
 </section>
 <section class="view" id="v-quran"><div id="qhome"></div><div id="qread" hidden></div></section>
 <section class="view" id="v-web">
@@ -163,166 +161,19 @@ nav button b{line-height:1.2}
 
 <script>
 const SB_URL="",SB_KEY="";   // paste your Supabase URL + anon key to enable real accounts
-const sb=(SB_URL&&SB_KEY&&window.supabase)?supabase.createClient(SB_URL,SB_KEY):null;
+let sb=null;try{sb=(SB_URL&&SB_KEY&&window.supabase)?supabase.createClient(SB_URL,SB_KEY):null}catch(e){}
 const $=id=>document.getElementById(id);
 const THEMES=["gold","mono","paper","ocean","forest","rose","violet"],FONTS=["Montserrat","Poppins","Inter","Space Grotesk","Playfair Display","Merriweather"];
 const WN={search:"Web search",goal:"Daily goal",stats:"Stats",quick:"Quick actions",tasks:"Tasks",exams:"Exams",quran:"Quran",cards:"Revise"};
+const REC=[["ar.alafasy","Mishary Alafasy"],["ar.husary","Al-Husary"],["ar.minshawi","Al-Minshawi"],["ar.abdulbasitmurattal","Abdul Basit"]];
 const D={user:null,name:"",theme:"gold",ac:"",fh:"Montserrat",fb:"Poppins",fs:16,ls:0,rad:18,bl:18,ar:30,liq:true,cmp:false,hap:true,snd:true,notif:false,tr:true,auto:true,rec:"ar.alafasy",
  hw:Object.keys(WN),hoff:[],tasks:[],notes:[],cards:[],exams:[],gpa:[{g:4,c:3}],log:{},ses:0,fmin:25,bmin:5,goal:120,last:null,bk:[],rs:[]};
-let S=Object.assign({},D,JSON.parse(localStorage.getItem("sp")||"{}"));
+let S;try{S=Object.assign({},D,JSON.parse(localStorage.getItem("sp")||"{}"))}catch(e){S=Object.assign({},D)}
 Object.keys(WN).forEach(k=>{if(!S.hw.includes(k))S.hw.push(k)});
-const save=()=>localStorage.setItem("sp",JSON.stringify(S));
-const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const save=()=>{try{localStorage.setItem("sp",JSON.stringify(S))}catch(e){}};
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const dk=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"),today=()=>dk(new Date());
 const toast=t=>{const e=document.createElement("div");e.className="toast";e.textContent=t;document.body.append(e);setTimeout(()=>e.remove(),2200)};
 const vib=()=>{if(S.hap&&navigator.vibrate)navigator.vibrate(10)};
 function apply(){const h=document.documentElement,r=h.style;h.dataset.t=S.theme;
- r.setProperty("--fs",S.fs+"px");r.setProperty("--fh","'"+S.fh+"'");r.setProperty("--fb","'"+S.fb+"'");r.setProperty("--ls",S.ls+"px");r.setProperty("--r",S.rad+"px");r.setProperty("--bl",S.bl+"px");r.setProperty("--ar",S.ar+"px");
- if(S.ac){const c=parseInt(S.ac.slice(1),16),l=((c>>16)*299+((c>>8&255)*587)+(c&255)*114)/1000;r.setProperty("--ac",S.ac);r.setProperty("--on",l>140?"#000":"#fff")}else{r.removeProperty("--ac");r.removeProperty("--on")}
- document.body.classList.toggle("noliq",!S.liq);document.body.classList.toggle("cmp",!!S.cmp)}
-apply();
-document.addEventListener("pointerdown",e=>{const b=e.target.closest("button");if(!b||!S.liq)return;const r=b.getBoundingClientRect(),s=document.createElement("span");s.className="rp";s.style.cssText=`left:${e.clientX-r.left}px;top:${e.clientY-r.top}px`;b.append(s);setTimeout(()=>s.remove(),600);vib()});
-
-/* splash, auth */
-setTimeout(()=>{$("splash").classList.add("out");setTimeout(()=>$("splash").remove(),1000);S.user?enter():$("auth").hidden=false},2500);
-async function doAuth(m){const e=$("em").value.trim(),p=$("pw").value;if(!e||p.length<6){$("amsg").textContent="Enter an email and a password of 6+ characters.";return}
- if(sb){const r=m=="in"?await sb.auth.signInWithPassword({email:e,password:p}):await sb.auth.signUp({email:e,password:p});
-  if(r.error){$("amsg").textContent=r.error.message;return}if(m=="up"&&!r.data.session){$("amsg").textContent="Check your email to confirm, then sign in.";return}}
- S.user=e;S.name=$("nm").value.trim()||S.name||e.split("@")[0];save();enter()}
-function guest(){S.user="Guest";S.name=$("nm").value.trim()||"friend";save();enter()}
-function logout(){if(sb)sb.auth.signOut();S.user=null;save();location.reload()}
-function enter(){$("auth").hidden=true;$("nav").hidden=false;init()}
-
-/* navigation */
-const TT={home:"StudyPilot",study:"Study",revise:"Revise",quran:"Quran",web:"Web",set:"Settings"};
-function go(v){document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("on",x.dataset.v==v));document.querySelectorAll(".view").forEach(x=>x.classList.toggle("on",x.id=="v-"+v));$("ttl").textContent=TT[v];if(v=="home")home();pill();scrollTo(0,0)}
-document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>go(b.dataset.v));
-function pill(){const b=document.querySelector("nav button.on");if(!b)return;$("pill").style.width=b.offsetWidth+"px";$("pill").style.transform=`translateX(${b.offsetLeft}px)`}
-addEventListener("resize",pill);
-function init(){home();tasks();exams();cards();notes();gpa();webInit();st();qh();pmode("f");setInterval(()=>{if(S.user)home2()},60000);setTimeout(pill,50)}
-function home2(){if($("v-home").classList.contains("on"))home()}
-
-/* web search */
-const E={g:["Google","https://www.google.com/search?q="],w:["Wikipedia","https://en.wikipedia.org/w/index.php?search="],y:["YouTube","https://www.youtube.com/results?search_query="],s:["Scholar","https://scholar.google.com/scholar?q="],k:["Khan Academy","https://www.khanacademy.org/search?page_slug=search&q="],q:["Quizlet","https://quizlet.com/search?query="],a:["WolframAlpha","https://www.wolframalpha.com/input?i="],t:["Translate","https://translate.google.com/?text="]};
-function web(q,e="g"){q=(q||"").trim();if(!q)return toast("Type something to search");S.rs=[q,...S.rs.filter(x=>x!=q)].slice(0,8);save();window.open(E[e][1]+encodeURIComponent(q),"_blank","noopener");if($("recent"))recent()}
-const R=[["Khan Academy","https://www.khanacademy.org","Lessons"],["Wikipedia","https://www.wikipedia.org","Reference"],["Google Scholar","https://scholar.google.com","Research"],["YouTube Education","https://www.youtube.com/education","Video"],["Quizlet","https://quizlet.com","Flashcards"],["Desmos","https://www.desmos.com/calculator","Graphing"],["WolframAlpha","https://www.wolframalpha.com","Maths"],["Coursera","https://www.coursera.org","Courses"],["edX","https://www.edx.org","Courses"],["MIT OpenCourseWare","https://ocw.mit.edu","Courses"],["PhET Simulations","https://phet.colorado.edu","Science"],["Project Gutenberg","https://www.gutenberg.org","Books"],["Merriam-Webster","https://www.merriam-webster.com","Dictionary"],["Google Translate","https://translate.google.com","Language"]];
-let rq="";
-function webInit(){$("eng").innerHTML=Object.keys(E).map(k=>`<button onclick="web($('wq').value,'${k}')">${E[k][0]}</button>`).join("");recent();res()}
-function recent(){$("recent").innerHTML=S.rs.map(x=>`<button class="chip" style="border:0;min-height:30px" onclick="$('wq').value=this.textContent">${esc(x)}</button>`).join("")}
-function res(){$("res").innerHTML=R.filter(r=>(r[0]+r[2]).toLowerCase().includes(rq.toLowerCase())).map(r=>`<a class="card row res" href="${r[1]}" target="_blank" rel="noopener"><b class="grow">${r[0]}</b><span class="chip">${r[2]}</span></a>`).join("")||'<p class="mu">No resources match.</p>'}
-
-/* home */
-const dl=d=>{const n=Math.ceil((new Date(d+"T00:00")-new Date(today()+"T00:00"))/864e5);return n<0?"passed":n==0?"today":n+" d"};
-function sstreak(){let n=0,d=new Date();for(;;){if((S.log[dk(d)]||0)>0)n++;else if(dk(d)!=today())break;d.setDate(d.getDate()-1)}return n}
-const W={
- search:()=>`<div class="card"><div class="row"><input class="grow" id="hq" placeholder="Search the web…" onkeydown="if(event.key=='Enter')web(this.value)"><button class="p" onclick="web($('hq').value)">Search</button></div></div>`,
- goal:()=>{const m=S.log[today()]||0,p=Math.min(100,Math.round(m/S.goal*100));return`<div class="card row"><div class="tank"><i style="top:${100-p}%"></i><b>${p}%</b></div><div class="grow"><b class="h">Daily goal</b><br><span class="mu">${m} of ${S.goal} min focused</span><br><button class="p" style="margin-top:8px" onclick="go('study')">Start focus</button></div></div>`},
- stats:()=>`<div class="g3" style="margin-bottom:10px"><div class="card"><b class="h">${S.ses}</b><br><small>sessions</small></div><div class="card"><b class="h">${S.tasks.filter(t=>!t.d).length}</b><br><small>tasks left</small></div><div class="card"><b class="h">${sstreak()}</b><br><small>day streak</small></div></div>`,
- quick:()=>`<div class="g2" style="margin-bottom:10px"><button onclick="go('study')">⏱ Focus timer</button><button onclick="go('revise')">🃏 Flashcards</button><button onclick="go('quran')">📖 Quran</button><button onclick="go('web')">🌐 Resources</button></div>`,
- tasks:()=>{const L=S.tasks.filter(t=>!t.d).slice(0,4);return`<div class="card"><b class="h">Tasks</b>${L.map(t=>`<div class="pt"><span>${esc(t.t)}</span><span class="chip">${["Low","Med","High"][t.p]}</span></div>`).join("")||'<p class="mu">All clear. Add a task in Study.</p>'}</div>`},
- exams:()=>{const L=[...S.exams].sort((a,b)=>a.d<b.d?-1:1).filter(e=>dl(e.d)!="passed").slice(0,3);return`<div class="card"><b class="h">Exams</b>${L.map(e=>`<div class="pt"><span>${esc(e.n)}</span><span class="chip">${dl(e.d)}</span></div>`).join("")||'<p class="mu">No upcoming exams.</p>'}</div>`},
- quran:()=>{const s=surahs[S.last-1];return`<div class="card"><b class="h">Quran</b><p class="mu">${S.last?"Continue with "+(s?s.englishName:"Surah "+S.last):"Read and listen to all 114 surahs."}</p><div class="row"><button class="p grow" onclick="${S.last?`openS(${S.last})`:"go('quran')"}">${S.last?"Continue reading":"Open Quran"}</button>${S.last?`<button onclick="playSurah(${S.last})">▶ Listen</button>`:""}</div></div>`},
- cards:()=>`<div class="card row"><div class="grow"><b class="h">Revise</b><br><span class="mu">${S.cards.length} flashcards · ${S.notes.length} notes</span></div><button class="p" onclick="go('revise')">Review</button></div>`};
-function home(){const h=new Date().getHours(),g=h<5?"Peaceful night":h<12?"Good morning":h<17?"Good afternoon":"Good evening";
- $("v-home").innerHTML=`<h1>${g}, ${esc(S.name||"friend")}</h1>`+S.hw.filter(k=>!S.hoff.includes(k)).map(k=>W[k]()).join("")}
-
-/* study */
-let tq="",pt=null,left=0,mode="f";
-function tasks(){const L=S.tasks.map((t,i)=>[t,i]).filter(([t])=>t.t.toLowerCase().includes(tq.toLowerCase())).sort((a,b)=>(a[0].due||"9999-12-31").localeCompare(b[0].due||"9999-12-31")||b[0].p-a[0].p);
- $("tasks").innerHTML=L.map(([t,i])=>`<div class="card row"><input type="checkbox" ${t.d?"checked":""} onchange="S.tasks[${i}].d=this.checked;save();tasks()"><span class="grow ${t.d?"done":""}">${esc(t.t)}${t.due?`<br><small class="mu">Due ${t.due}</small>`:""}</span><span class="chip">${["Low","Med","High"][t.p]}</span><button onclick="S.tasks.splice(${i},1);save();tasks()">✕</button></div>`).join("")||'<p class="mu">No tasks yet. Add your first one above.</p>'}
-function addTask(){const v=$("tin").value.trim();if(!v)return;S.tasks.unshift({t:v,d:false,p:+$("tp").value,due:$("td").value});$("tin").value="";save();tasks()}
-function exams(){const L=S.exams.map((e,i)=>[e,i]).sort((a,b)=>a[0].d<b[0].d?-1:1);$("exams").innerHTML=L.map(([e,i])=>`<div class="card row"><div class="grow"><b>${esc(e.n)}</b><br><small class="mu">${e.d}</small></div><span class="chip">${dl(e.d)}</span><button onclick="S.exams.splice(${i},1);save();exams()">✕</button></div>`).join("")||'<p class="mu">No exams added.</p>'}
-function addExam(){const n=$("en").value.trim(),d=$("ed").value;if(!n||!d)return toast("Enter a name and a date");S.exams.push({n,d});$("en").value="";save();exams()}
-function pmode(m){mode=m;$("mf").classList.toggle("p",m=="f");$("mb").classList.toggle("p",m=="b");pomoReset()}
-function pshow(){$("pomo").textContent=String(Math.floor(left/60)).padStart(2,"0")+":"+String(left%60).padStart(2,"0");$("psess").textContent=S.ses+" sessions · "+(S.log[today()]||0)+" min today"}
-function pomoReset(){clearInterval(pt);pt=null;left=(mode=="f"?S.fmin:S.bmin)*60;$("pbtn").textContent="Start";pshow()}
-function beep(){if(!S.snd)return;try{const c=new AudioContext(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=660;g.gain.setValueAtTime(.2,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+1.2);o.start();o.stop(c.currentTime+1.2)}catch(e){}}
-function notify(t,b){if(S.notif&&"Notification"in window&&Notification.permission=="granted")new Notification(t,{body:b})}
-function pomoToggle(){if(pt){clearInterval(pt);pt=null;$("pbtn").textContent="Resume";return}$("pbtn").textContent="Pause";
- pt=setInterval(()=>{left--;pshow();if(left<=0){clearInterval(pt);pt=null;beep();if(mode=="f"){S.ses++;S.log[today()]=(S.log[today()]||0)+S.fmin;save();notify("Focus session done","Take a short break.");toast("Session complete 🎉");pmode("b")}else{notify("Break over","Back to focus.");toast("Break over");pmode("f")}}},1000)}
-
-/* revise */
-let cq="",nq="",rc=-1;
-function rvNext(){const L=S.cards;if(!L.length){$("rv").innerHTML='<p class="mu">Add a flashcard below to start revising.</p>';return}
- const mk=Math.min(...L.map(c=>c.k));let P=L.map((c,i)=>i).filter(i=>L[i].k==mk);if(P.length>1)P=P.filter(i=>i!=rc);rc=P[Math.floor(Math.random()*P.length)];
- $("rv").innerHTML=`<div class="h c" style="font-size:1.2em;margin:10px 0">${esc(L[rc].q)}</div><button class="p" style="width:100%" onclick="rvShow()">Show answer</button>`}
-function rvShow(){const c=S.cards[rc];$("rv").innerHTML=`<div class="h c" style="font-size:1.2em;margin:10px 0">${esc(c.q)}</div><p class="c" style="margin-bottom:10px">${esc(c.a)}</p><div class="row"><button class="grow" onclick="rvGrade(-1)">Again</button><button class="p grow" onclick="rvGrade(1)">Got it</button></div>`}
-function rvGrade(d){S.cards[rc].k=Math.max(0,S.cards[rc].k+d);save();rvNext()}
-function cards(){$("clist").innerHTML=S.cards.map((c,i)=>[c,i]).filter(([c])=>(c.q+c.a).toLowerCase().includes(cq.toLowerCase())).map(([c,i])=>`<div class="card row"><div class="grow"><b>${esc(c.q)}</b><br><small class="mu">${esc(c.a)}</small></div><button onclick="S.cards.splice(${i},1);save();cards()">✕</button></div>`).join("");rvNext()}
-function addCard(){const q=$("fq").value.trim(),a=$("fa").value.trim();if(!q||!a)return toast("Enter a question and an answer");S.cards.push({q,a,k:0});$("fq").value=$("fa").value="";save();cards()}
-function notes(){$("notes").innerHTML=S.notes.map((n,i)=>[n,i]).filter(([n])=>(n.t+n.b).toLowerCase().includes(nq.toLowerCase())).map(([n,i])=>`<div class="card"><input placeholder="Title" value="${esc(n.t)}" oninput="S.notes[${i}].t=this.value;save()" style="font-weight:700;margin-bottom:6px"><textarea rows="4" placeholder="Write your note…" oninput="S.notes[${i}].b=this.value;save()">${esc(n.b)}</textarea><button style="margin-top:6px" onclick="S.notes.splice(${i},1);save();notes()">Delete</button></div>`).join("")||'<p class="mu">No notes found.</p>'}
-const GR=[["A",4],["A-",3.7],["B+",3.3],["B",3],["B-",2.7],["C+",2.3],["C",2],["D",1],["F",0]];
-function gpa(){$("gpa").innerHTML=S.gpa.map((r,i)=>`<div class="row"><select class="grow" onchange="S.gpa[${i}].g=+this.value;gcalc()">${GR.map(g=>`<option value="${g[1]}" ${g[1]==r.g?"selected":""}>${g[0]} (${g[1]})</option>`).join("")}</select><input type="number" min="1" max="10" value="${r.c}" style="width:80px" oninput="S.gpa[${i}].c=+this.value;gcalc()"><button onclick="S.gpa.splice(${i},1);gpa()">✕</button></div>`).join("");gcalc()}
-function gcalc(){save();const c=S.gpa.reduce((a,r)=>a+r.c,0);$("gres").textContent=c?(S.gpa.reduce((a,r)=>a+r.g*r.c,0)/c).toFixed(2):"–"}
-
-/* quran */
-let surahs=[];try{surahs=JSON.parse(localStorage.getItem("spq")||"[]")}catch(e){}
-async function ensure(){if(surahs.length)return true;try{surahs=(await(await fetch("https://api.alquran.cloud/v1/surah")).json()).data.map(s=>({number:s.number,englishName:s.englishName,englishNameTranslation:s.englishNameTranslation,numberOfAyahs:s.numberOfAyahs,name:s.name}));localStorage.setItem("spq",JSON.stringify(surahs));return true}catch(e){return false}}
-const gstart=n=>surahs.slice(0,n-1).reduce((a,s)=>a+s.numberOfAyahs,0)+1;
-let au=new Audio(),P={l:[],i:0,s:0,t:""};
-function load(){au.src=`https://cdn.islamic.network/quran/audio/128/${S.rec}/${P.l[P.i]}.mp3`;au.play().catch(()=>toast("Audio needs an internet connection"));pl();hlt()}
-function playList(l,s,t,i=0){P={l,i,s,t};load()}
-function playSurah(n){const s=surahs[n-1];if(!s)return toast("Load the surah list first");S.last=n;save();playList(Array.from({length:s.numberOfAyahs},(_,k)=>gstart(n)+k),n,s.englishName)}
-function playFrom(n,k){const s=surahs[n-1],b=gstart(n);playList(Array.from({length:s.numberOfAyahs-k+1},(_,j)=>b+k-1+j),n,s.englishName,0)}
-function pskip(d){const j=P.i+d;if(j>=0&&j<P.l.length){P.i=j;load()}}
-au.onended=()=>{if(P.i<P.l.length-1){P.i++;load()}else if(P.s&&S.auto&&P.s<114)playSurah(P.s+1);else pl()};au.onplay=au.onpause=()=>pl();
-function pl(){$("pbar").hidden=!P.l.length;$("ptitle").textContent=P.t+(P.l.length>1?" · "+(P.i+1)+"/"+P.l.length:"");$("pp").textContent=au.paused?"▶":"⏸"}
-function hlt(){document.querySelectorAll(".ay.pl").forEach(x=>x.classList.remove("pl"));const e=$("a"+P.l[P.i]);if(e){e.classList.add("pl");e.scrollIntoView({block:"center",behavior:"smooth"})}}
-async function qh(){const ok=await ensure();
- $("qhome").innerHTML=`<h1>📖 Quran</h1><div class="card"><small class="mu">Verse of the day</small><div class="ar" id="dar">…</div><p class="mu" id="den"></p><div class="row"><button id="vplay">▶ Listen</button><button id="vopen">Read surah</button></div></div>
- ${S.last&&ok?`<div class="card row"><div class="grow"><b class="h">Continue</b><br><small class="mu">${surahs[S.last-1].englishName}</small></div><button class="p" onclick="openS(${S.last})">Read</button><button onclick="playSurah(${S.last})">▶</button></div>`:""}
- ${S.bk.length?`<div class="card"><b class="h">Bookmarks</b>${S.bk.map(b=>`<div class="pt" onclick="openS(${b.s},${b.a})" style="cursor:pointer"><span>★ ${surahs[b.s-1]?surahs[b.s-1].englishName:"Surah "+b.s}, verse ${b.a}</span></div>`).join("")}</div>`:""}
- <input id="qs" placeholder="🔍 Search surah by name or number" oninput="qf(this.value)" style="margin-bottom:8px"><div id="qrows">${ok?"":'<p class="mu">Connect to the internet to load the surah list.</p>'}</div>`;
- if(ok)qf("");verse()}
-function qf(q){q=q.toLowerCase();$("qrows").innerHTML=surahs.filter(s=>(s.englishName+s.englishNameTranslation).toLowerCase().includes(q)||String(s.number)==q).map(s=>`<div class="card row"><span class="chip">${s.number}</span><div class="grow" onclick="openS(${s.number})" style="cursor:pointer"><b>${s.englishName}</b><br><small class="mu">${s.englishNameTranslation} · ${s.numberOfAyahs} verses</small></div><span class="ar" style="font-size:1.3em;line-height:1.4">${s.name.replace("سورة","")}</span><button class="p" onclick="playSurah(${s.number})" aria-label="Listen">▶</button></div>`).join("")||'<p class="mu">No surah found.</p>'}
-async function verse(){try{const d=Math.floor(Date.now()/864e5)%6236+1,r=(await(await fetch(`https://api.alquran.cloud/v1/ayah/${d}/editions/quran-uthmani,en.sahih`)).json()).data;
- $("dar").textContent=r[0].text;$("den").textContent=r[1].text+" ("+r[1].surah.englishName+" "+r[1].numberInSurah+")";$("vplay").onclick=()=>playList([d],0,"Verse of the day");$("vopen").onclick=()=>openS(r[0].surah.number,r[0].numberInSurah)}catch(e){if($("den"))$("den").textContent="Connect to the internet to see today’s verse."}}
-async function openS(n,f){go("quran");await ensure();S.last=n;save();$("qhome").hidden=true;$("qread").hidden=false;$("qread").innerHTML='<p class="mu">Loading…</p>';
- try{const r=(await(await fetch(`https://api.alquran.cloud/v1/surah/${n}/editions/quran-uthmani,en.sahih`)).json()).data,a=r[0].ayahs,e=r[1].ayahs;
- $("qread").innerHTML=`<div class="row"><button onclick="closeR()">← Surahs</button><b class="h grow c">${n}. ${r[0].englishName}</b><button class="p" onclick="playSurah(${n})">▶ Play</button></div><p class="mu c" style="margin:6px 0">${r[0].englishNameTranslation} · ${r[0].revelationType} · ${a.length} verses</p>`+(n!=1&&n!=9?'<div class="ar c">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>':"")+
- a.map((x,i)=>{const t=(i==0&&n!=1&&n!=9)?x.text.split(" ").slice(4).join(" "):x.text;return`<div class="card ay" id="a${x.number}"><div class="ar">${t} ﴿${x.numberInSurah}﴾</div>${S.tr?`<p class="mu">${esc(e[i].text)}</p>`:""}<div class="row"><button onclick="playFrom(${n},${x.numberInSurah})">▶</button><button onclick="bkm(${n},${x.numberInSurah},this)">${S.bk.some(b=>b.s==n&&b.a==x.numberInSurah)?"★":"☆"}</button></div></div>`}).join("");
- scrollTo(0,0);if(f){const el=$("a"+(gstart(n)+f-1));el&&el.scrollIntoView({block:"center"})}hlt()}catch(e){$("qread").innerHTML='<button onclick="closeR()">← Back</button><p class="mu">Could not load this surah. Check your connection.</p>'}}
-function closeR(){$("qread").hidden=true;$("qhome").hidden=false;qh()}
-function bkm(n,a,b){const i=S.bk.findIndex(x=>x.s==n&&x.a==a);i<0?S.bk.push({s:n,a}):S.bk.splice(i,1);save();b.textContent=i<0?"★":"☆"}
-
-/* global search */
-let GQ="";
-const TOOLS=[["Focus timer","study"],["Tasks","study"],["Exams","study"],["Flashcards","revise"],["Notes","revise"],["GPA calculator","revise"],["Quran","quran"],["Web resources","web"],["Settings","set"]];
-function openSearch(){$("so").hidden=false;$("sq").value="";gs("");setTimeout(()=>$("sq").focus(),50)}
-function closeS(){$("so").hidden=true}
-document.querySelector("header button").onclick=openSearch;
-function gs(q){GQ=q=q.trim();const l=q.toLowerCase(),row=(i,t,s,a)=>`<div class="card row sr" onclick="${a}"><span>${i}</span><div class="grow"><b>${esc(t)}</b><br><small class="mu">${s}</small></div></div>`;let h="";
- if(l){TOOLS.filter(t=>t[0].toLowerCase().includes(l)).forEach(t=>h+=row("➡️",t[0],"Open","closeS();go('"+t[1]+"')"));
-  S.tasks.filter(t=>t.t.toLowerCase().includes(l)).slice(0,5).forEach(t=>h+=row("✅",t.t,"Task","closeS();go('study')"));
-  S.notes.filter(n=>(n.t+n.b).toLowerCase().includes(l)).slice(0,5).forEach(n=>h+=row("📝",n.t||"Untitled note","Note","closeS();go('revise')"));
-  S.cards.filter(c=>(c.q+c.a).toLowerCase().includes(l)).slice(0,5).forEach(c=>h+=row("🃏",c.q,"Flashcard","closeS();go('revise')"));
-  S.exams.filter(e=>e.n.toLowerCase().includes(l)).forEach(e=>h+=row("🎓",e.n,e.d,"closeS();go('study')"));
-  surahs.filter(s=>(s.englishName+s.englishNameTranslation).toLowerCase().includes(l)||String(s.number)==l).slice(0,6).forEach(s=>h+=row("📖",s.englishName,"Surah "+s.number,`closeS();openS(${s.number})`));
-  h+=`<h3>Search the web for “${esc(q)}”</h3><div class="g2">`+Object.keys(E).map(k=>`<button onclick="web(GQ,'${k}')">${E[k][0]}</button>`).join("")+"</div>"}
- else h=`<p class="mu">Type to search your tasks, notes, flashcards, exams, surahs and the web.</p>`+S.rs.map(x=>`<button class="chip" style="border:0;margin:3px" onclick="$('sq').value=this.textContent;gs(this.textContent)">${esc(x)}</button>`).join("");
- $("sr").innerHTML=h}
-document.addEventListener("keydown",e=>{if(e.key=="Escape")closeS();if((e.ctrlKey||e.metaKey)&&e.key=="k"){e.preventDefault();openSearch()}});
-
-/* settings */
-const sl=(k,l,min,max,st=1)=>`<label class="op"><span>${l} <small id="v_${k}">${S[k]}</small></span><input type="range" min="${min}" max="${max}" step="${st}" value="${S[k]}" oninput="S['${k}']=+this.value;$('v_${k}').textContent=this.value;save();apply()"></label>`;
-const nu=(k,l,min,max)=>`<label class="op"><span>${l}</span><input type="number" min="${min}" max="${max}" value="${S[k]}" onchange="S['${k}']=Math.max(${min},Math.min(${max},+this.value||${min}));this.value=S['${k}'];save();pomoReset();home2()"></label>`;
-const tg=(k,l,f="")=>`<label class="op"><span>${l}</span><input type="checkbox" ${S[k]?"checked":""} onchange="S['${k}']=this.checked;save();apply();${f}"></label>`;
-const fsel=(k,l)=>`<label class="op"><span>${l}</span><select onchange="S['${k}']=this.value;save();apply()">${FONTS.map(f=>`<option ${S[k]==f?"selected":""}>${f}</option>`).join("")}</select></label>`;
-function st(){$("v-set").innerHTML=`<h1>⚙️ Settings</h1>
- <div class="card"><b class="h">Profile</b><label class="op"><span>Name</span><input value="${esc(S.name)}" oninput="S.name=this.value;save()"></label><p class="mu" style="margin:6px 0">${esc(S.user||"")}</p><button onclick="logout()">Sign out</button></div>
- <div class="card"><b class="h">Appearance</b><div class="row" id="themes" style="margin:8px 0"></div>
-  <label class="op"><span>Accent colour</span><span class="row" style="width:55%;flex-wrap:nowrap"><input type="color" value="${S.ac||"#e6b93c"}" oninput="S.ac=this.value;save();apply()"><button onclick="S.ac='';save();apply();st()">Reset</button></span></label>
-  ${fsel("fh","Heading font")}${fsel("fb","Body font")}${sl("fs","Text size",14,26)}${sl("ls","Letter spacing",0,3,.25)}${sl("ar","Arabic text size",22,52)}${sl("rad","Corner roundness",6,32)}${sl("bl","Glass blur",0,40)}
-  ${tg("liq","Liquid effects (blobs, ripples, waves)")}${tg("cmp","Compact layout")}</div>
- <div class="card"><b class="h">Home screen</b><p class="mu">Show, hide and reorder what appears on Home.</p><div id="hlay"></div><button style="margin-top:8px" onclick="S.hw=Object.keys(WN);S.hoff=[];save();hlay()">Reset layout</button></div>
- <div class="card"><b class="h">Study</b>${nu("fmin","Focus minutes",5,120)}${nu("bmin","Break minutes",1,60)}${nu("goal","Daily goal (minutes)",10,600)}${tg("snd","Timer sound")}${tg("hap","Vibration on tap")}${tg("notif","Notifications","if(this.checked&&'Notification' in window)Notification.requestPermission()")}</div>
- <div class="card"><b class="h">Quran</b><label class="op"><span>Reciter</span><select onchange="S.rec=this.value;save()">${[["ar.alafasy","Mishary Alafasy"],["ar.husary","Al-Husary"],["ar.abdulbasitmurattal","Abdul Basit"],["ar.minshawi","Minshawi"]].map(r=>`<option value="${r[0]}" ${S.rec==r[0]?"selected":""}>${r[1]}</option>`).join("")}</select></label>${tg("tr","Show English translation")}${tg("auto","Play the next surah automatically")}</div>
- <div class="card"><b class="h">Your data</b><div class="row" style="margin-top:6px"><button onclick="exp()">Export backup</button><button onclick="$('imp').click()">Import</button><button onclick="if(confirm('Erase all data on this device?')){localStorage.removeItem('sp');localStorage.removeItem('spq');location.reload()}">Erase</button></div><input type="file" id="imp" accept=".json" hidden onchange="imp(this.files[0])"></div>
- <div class="card"><b class="h">About StudyPilot</b><p class="mu" style="margin-top:6px">Founder: <b style="color:var(--tx)">Asjadh Rilwan</b></p><a class="wa" href="https://wa.me/94774209718?text=Hi%20Asjadh%2C%20I%20am%20using%20StudyPilot" target="_blank" rel="noopener">💬 WhatsApp · 077 420 9718</a></div>`;themes();hlay()}
-function themes(){$("themes").innerHTML=THEMES.map(t=>`<button class="${S.theme==t?"p":""}" onclick="S.theme='${t}';save();apply();themes()">${t}</button>`).join("")}
-function hlay(){$("hlay").innerHTML=S.hw.map((k,i)=>`<div class="op"><span>${WN[k]}</span><span class="row" style="flex-wrap:nowrap"><button onclick="mv(${i},-1)">↑</button><button onclick="mv(${i},1)">↓</button><input type="checkbox" ${S.hoff.includes(k)?"":"checked"} onchange="hvis('${k}',this.checked)"></span></div>`).join("")}
-function mv(i,d){const j=i+d;if(j<0||j>=S.hw.length)return;[S.hw[i],S.hw[j]]=[S.hw[j],S.hw[i]];save();hlay()}
-function hvis(k,on){S.hoff=on?S.hoff.filter(x=>x!=k):[...S.hoff,k];save()}
-function exp(){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(S,null,1)],{type:"application/json"}));a.download="studypilot-backup.json";a.click()}
-function imp(f){if(!f)return;const r=new FileReader();r.onload=()=>{try{Object.assign(S,JSON.parse(r.result));save();location.reload()}catch(e){toast("That file is not a valid backup")}};r.readAsText(f)}
-</script></body></html>
+ r.setProperty("--fs",S.fs+"px");r
