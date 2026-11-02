@@ -1,1 +1,1072 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0B1020">
+  <meta name="description" content="StudyPilot — plan your studies, focus and track your progress.">
+  <title>StudyPilot — Your Study Companion</title>
 
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0B1020;
+      --card: #151C2E;
+      --card2: #1C2540;
+      --purple: #9B87F5;
+      --cyan: #67DCE8;
+      --text: #F5F6FF;
+      --muted: #A6ADC5;
+      --border: #29324A;
+      --danger: #FF8C9A;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, sans-serif;
+      padding: 22px 16px 105px;
+      min-height: 100vh;
+    }
+
+    button, input, select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    button:focus-visible, input:focus-visible, select:focus-visible {
+      outline: 2px solid var(--cyan);
+      outline-offset: 3px;
+    }
+
+    header { margin: 8px 0 25px; }
+
+    .brand {
+      color: var(--purple);
+      font-weight: 850;
+      font-size: 15px;
+      letter-spacing: 2px;
+    }
+
+    h1 { font-size: 29px; margin: 13px 0 6px; }
+    h2 { font-size: 19px; margin: 0 0 15px; }
+    h3 { font-size: 16px; margin: 0 0 8px; }
+
+    p {
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .muted { color: var(--muted); }
+    .small { font-size: 12px; }
+    .accent { color: var(--purple); }
+    .cyan { color: var(--cyan); }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 19px;
+      padding: 17px;
+      margin: 13px 0;
+      min-width: 0;
+    }
+
+    .label {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 750;
+      letter-spacing: 1.2px;
+    }
+
+    .big {
+      font-size: 27px;
+      font-weight: 800;
+      margin: 8px 0;
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .between { justify-content: space-between; }
+    .wrap { flex-wrap: wrap; }
+
+    .btn {
+      border: 0;
+      border-radius: 12px;
+      background: var(--purple);
+      color: #111020;
+      padding: 12px 16px;
+      font-weight: 750;
+    }
+
+    .btn.secondary {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .btn.danger {
+      background: transparent;
+      color: var(--danger);
+      border: 1px solid var(--danger);
+    }
+
+    .btn:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+
+    input, select {
+      width: 100%;
+      min-width: 0;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid #39415A;
+      background: var(--bg);
+      color: var(--text);
+      margin: 7px 0 12px;
+    }
+
+    label {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 10px;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .form-actions .btn { flex: 1; }
+
+    .screen[hidden] { display: none !important; }
+
+    .progress-track {
+      width: 100%;
+      height: 9px;
+      background: var(--card2);
+      border-radius: 20px;
+      overflow: hidden;
+      margin: 12px 0;
+    }
+
+    .progress-fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--purple), var(--cyan));
+      border-radius: inherit;
+      transition: width .25s ease;
+    }
+
+    .task-list {
+      display: grid;
+      gap: 9px;
+      margin-top: 14px;
+    }
+
+    .task-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      padding: 11px;
+    }
+
+    .task-item input {
+      width: 20px;
+      height: 20px;
+      margin: 0;
+      flex-shrink: 0;
+      accent-color: var(--purple);
+    }
+
+    .task-text {
+      flex: 1;
+      overflow-wrap: anywhere;
+    }
+
+    .task-text.done {
+      text-decoration: line-through;
+      color: var(--muted);
+    }
+
+    .delete-task {
+      border: 0;
+      color: var(--danger);
+      background: transparent;
+      font-size: 21px;
+      padding: 4px 8px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .stat {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 13px;
+      min-width: 0;
+    }
+
+    .stat-number {
+      font-size: 23px;
+      font-weight: 800;
+      margin-top: 6px;
+      overflow-wrap: anywhere;
+    }
+
+    .timer {
+      text-align: center;
+      padding: 20px 5px;
+    }
+
+    .timer-number {
+      font-size: clamp(48px, 15vw, 68px);
+      letter-spacing: 2px;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .timer-actions {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .empty {
+      color: var(--muted);
+      text-align: center;
+      padding: 20px 8px;
+      font-size: 14px;
+    }
+
+    .setting-row {
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .setting-row:last-child { border-bottom: 0; }
+
+    .credit {
+      text-align: right;
+      color: var(--purple);
+      font-size: 10px;
+      letter-spacing: 1px;
+      line-height: 1.8;
+      margin: 27px 2px 0;
+    }
+
+    .credit strong {
+      font-size: 12px;
+      letter-spacing: .3px;
+    }
+
+    .nav {
+      position: fixed;
+      z-index: 10;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      padding: 9px 4px max(9px, env(safe-area-inset-bottom));
+      background: #11182A;
+      border-top: 1px solid var(--border);
+    }
+
+    .nav button {
+      background: transparent;
+      border: 0;
+      color: var(--muted);
+      font-size: 11px;
+      padding: 8px 1px;
+      border-radius: 10px;
+      font-weight: 650;
+    }
+
+    .nav button .nav-icon {
+      display: block;
+      font-size: 19px;
+      margin-bottom: 3px;
+    }
+
+    .nav button.active {
+      color: var(--purple);
+      background: #24203F;
+    }
+
+    body.light {
+      color-scheme: light;
+      --bg: #F4F5FC;
+      --card: #FFFFFF;
+      --card2: #E8E9F6;
+      --text: #17182A;
+      --muted: #626780;
+      --border: #D8DBE9;
+    }
+
+    body.light .nav { background: #FFFFFF; }
+    body.light .task-item,
+    body.light .stat { background: #F4F5FC; }
+    body.light input,
+    body.light select { background: #FFFFFF; }
+
+    @media (min-width: 700px) {
+      body {
+        max-width: 760px;
+        margin: 0 auto;
+        padding-top: 35px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="brand">STUDYPILOT ✦</div>
+    <h1 id="greeting">Make today count.</h1>
+    <p id="todayDate">Your personal space to plan, focus and grow.</p>
+  </header>
+
+  <main>
+    <!-- HOME -->
+    <section class="screen" id="homeScreen">
+      <div class="card">
+        <div class="label">TODAY'S PROGRESS</div>
+        <div class="big" id="homeProgress">0% complete</div>
+        <div class="progress-track">
+          <div class="progress-fill" id="homeProgressBar"></div>
+        </div>
+        <p id="homeTaskCount">Your study journey starts here.</p>
+      </div>
+
+      <div class="stats">
+        <div class="stat">
+          <div class="label">TASKS LEFT</div>
+          <div class="stat-number" id="homePending">0</div>
+        </div>
+        <div class="stat">
+          <div class="label">FOCUS MINUTES</div>
+          <div class="stat-number" id="homeFocus">0</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Your next step</h2>
+        <p>Turn your study goals into small, achievable tasks.</p>
+        <button class="btn" data-go="study">Open study planner →</button>
+        <button class="btn secondary" data-go="focus">Start focusing</button>
+      </div>
+
+      <div class="card">
+        <div class="label">STUDY TIP</div>
+        <h2>Small steps build progress.</h2>
+        <p>Choose one clear task, focus on it, then take a short break.</p>
+      </div>
+    </section>
+
+    <!-- STUDY -->
+    <section class="screen" id="studyScreen" hidden>
+      <h2>Your study planner</h2>
+      <p>Create tasks, track completion and organise your next study session.</p>
+
+      <div class="card">
+        <form id="taskForm">
+          <label for="taskInput">Task or topic</label>
+          <input id="taskInput" maxlength="120"
+            placeholder="e.g. Revise cell structure" required>
+
+          <label for="subjectInput">Subject (optional)</label>
+          <input id="subjectInput" maxlength="60"
+            placeholder="e.g. Biology">
+
+          <div class="form-actions">
+            <button class="btn" type="submit">+ Add task</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="card">
+        <div class="row between wrap">
+          <h2>My tasks</h2>
+          <span class="small muted" id="studyTaskCount">0 tasks</span>
+        </div>
+        <div id="taskList" class="task-list"></div>
+      </div>
+    </section>
+
+    <!-- FOCUS -->
+    <section class="screen" id="focusScreen" hidden>
+      <h2>Focus mode</h2>
+      <p>Give one task your full attention.</p>
+
+      <div class="card timer">
+        <div class="label" id="timerMode">FOCUS SESSION</div>
+        <div class="timer-number" id="timerDisplay">25:00</div>
+        <p id="timerStatus">Ready when you are.</p>
+
+        <div class="timer-actions">
+          <button class="btn" id="startPauseBtn">Start focus</button>
+          <button class="btn secondary" id="resetTimerBtn">Reset</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Session settings</h2>
+        <label for="focusMinutes">Focus duration (minutes)</label>
+        <select id="focusMinutes">
+          <option value="15">15 minutes</option>
+          <option value="25" selected>25 minutes</option>
+          <option value="30">30 minutes</option>
+          <option value="45">45 minutes</option>
+          <option value="60">60 minutes</option>
+        </select>
+
+        <label for="breakMinutes">Break duration (minutes)</label>
+        <select id="breakMinutes">
+          <option value="5" selected>5 minutes</option>
+          <option value="10">10 minutes</option>
+          <option value="15">15 minutes</option>
+        </select>
+        <p class="small">Keep the page open for the most reliable timer behavior. Background browser timers may be delayed by Android.</p>
+      </div>
+    </section>
+
+    <!-- PROGRESS -->
+    <section class="screen" id="progressScreen" hidden>
+      <h2>Your progress</h2>
+      <p>Review your completed tasks and recorded focus time.</p>
+
+      <div class="stats">
+        <div class="stat">
+          <div class="label">TOTAL TASKS</div>
+          <div class="stat-number" id="totalTasks">0</div>
+        </div>
+        <div class="stat">
+          <div class="label">COMPLETED</div>
+          <div class="stat-number" id="completedTasks">0</div>
+        </div>
+        <div class="stat">
+          <div class="label">COMPLETION</div>
+          <div class="stat-number" id="completionRate">0%</div>
+        </div>
+        <div class="stat">
+          <div class="label">FOCUS MINUTES</div>
+          <div class="stat-number" id="totalFocus">0</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Task completion</h2>
+        <div class="progress-track">
+          <div class="progress-fill" id="progressBar"></div>
+        </div>
+        <p id="progressMessage">Add your first task to begin tracking.</p>
+      </div>
+
+      <div class="card">
+        <h2>Recent focus sessions</h2>
+        <div id="sessionList"></div>
+      </div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section class="screen" id="settingsScreen" hidden>
+      <h2>Settings</h2>
+      <p>Personalise your StudyPilot experience.</p>
+
+      <div class="card">
+        <div class="setting-row">
+          <h3>Appearance</h3>
+          <p class="small">Choose the interface theme.</p>
+          <button class="btn secondary" id="themeBtn">Switch to light mode</button>
+        </div>
+
+        <div class="setting-row">
+          <h3>Data backup</h3>
+          <p class="small">Export your tasks and focus history to a JSON file.</p>
+          <button class="btn" id="exportBtn">Export my data</button>
+          <label for="importFile">Restore a previous StudyPilot backup</label>
+          <input id="importFile" type="file" accept=".json,application/json">
+        </div>
+
+        <div class="setting-row">
+          <h3>Privacy</h3>
+          <p class="small">This prototype stores tasks and settings in this browser on this device. It does not sync them to a cloud account.</p>
+        </div>
+
+        <div class="setting-row">
+          <h3>Clear local data</h3>
+          <p class="small">Permanently remove this prototype's saved tasks, focus history and settings from this browser.</p>
+          <button class="btn danger" id="clearDataBtn">Clear my data</button>
+        </div>
+      </div>
+
+      <div class="card" id="about">
+        <div class="label">ABOUT</div>
+        <h2>StudyPilot</h2>
+        <p>Your personal study companion for planning, focus, revision and progress tracking.</p>
+        <p class="small">Version 1.0 prototype · Under development</p>
+        <div class="credit">
+          FOUNDER &amp; CREATOR<br>
+          <strong>Asjadh Rilwan</strong>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="credit">
+    FOUNDER &amp; CREATOR<br>
+    <strong>Asjadh Rilwan</strong>
+  </div>
+
+  <nav class="nav" aria-label="Main navigation">
+    <button class="active" data-go="home" aria-current="page">
+      <span class="nav-icon">⌂</span>Home
+    </button>
+    <button data-go="study">
+      <span class="nav-icon">▤</span>Study
+    </button>
+    <button data-go="focus">
+      <span class="nav-icon">◷</span>Focus
+    </button>
+    <button data-go="progress">
+      <span class="nav-icon">▥</span>Progress
+    </button>
+    <button data-go="settings">
+      <span class="nav-icon">⚙</span>Settings
+    </button>
+  </nav>
+
+  <script>
+    (() => {
+      'use strict';
+
+      const DATA_KEY = 'studypilot-data-v1';
+      const THEME_KEY = 'studypilot-theme-v1';
+
+      const $ = id => document.getElementById(id);
+
+      function makeId() {
+        return Date.now().toString(36) +
+          Math.random().toString(36).slice(2, 8);
+      }
+
+      function emptyData() {
+        return { tasks: [], sessions: [] };
+      }
+
+      function validData(value) {
+        if (!value || typeof value !== 'object') return false;
+        if (!Array.isArray(value.tasks) ||
+            !Array.isArray(value.sessions)) return false;
+
+        return value.tasks.every(t =>
+          t && typeof t.text === 'string' &&
+          typeof t.done === 'boolean' &&
+          typeof t.subject === 'string'
+        ) && value.sessions.every(s =>
+          s && Number.isFinite(s.minutes) &&
+          s.minutes >= 0 &&
+          typeof s.date === 'string'
+        );
+      }
+
+      function loadData() {
+        try {
+          const raw = localStorage.getItem(DATA_KEY);
+          if (!raw) return emptyData();
+
+          const parsed = JSON.parse(raw);
+          if (validData(parsed)) return parsed;
+
+          console.warn('StudyPilot data was not in the expected format.');
+        } catch (error) {
+          console.warn('StudyPilot could not load saved data.', error);
+        }
+
+        return emptyData();
+      }
+
+      let data = loadData();
+
+      function saveData() {
+        try {
+          localStorage.setItem(DATA_KEY, JSON.stringify(data));
+          return true;
+        } catch (error) {
+          alert('StudyPilot could not save data. Check your browser storage.');
+          console.error(error);
+          return false;
+        }
+      }
+
+      function showScreen(name) {
+        const allowed = ['home', 'study', 'focus', 'progress', 'settings'];
+        if (!allowed.includes(name)) name = 'home';
+
+        document.querySelectorAll('.screen').forEach(screen => {
+          screen.hidden = screen.id !== name + 'Screen';
+        });
+
+        document.querySelectorAll('.nav [data-go]').forEach(button => {
+          const active = button.dataset.go === name;
+          button.classList.toggle('active', active);
+
+          if (active) button.setAttribute('aria-current', 'page');
+          else button.removeAttribute('aria-current');
+        });
+
+        window.scrollTo({ top: 0, behavior: 'auto' });
+
+        if (name === 'settings') renderThemeButton();
+      }
+
+      document.querySelectorAll('[data-go]').forEach(button => {
+        button.addEventListener('click', () => {
+          showScreen(button.dataset.go);
+        });
+      });
+
+      // Date and greeting
+      function updateDate() {
+        const now = new Date();
+        const hour = now.getHours();
+
+        $('greeting').textContent =
+          hour < 12 ? 'Good morning.' :
+          hour < 17 ? 'Good afternoon.' : 'Good evening.';
+
+        $('todayDate').textContent = now.toLocaleDateString(undefined, {
+          weekday: 'long',
+          month: 'long',
+          day: 'numeric',
+          year: 'numeric'
+        });
+      }
+
+      // Study tasks
+      function renderTasks() {
+        const list = $('taskList');
+        list.replaceChildren();
+
+        if (data.tasks.length === 0) {
+          const empty = document.createElement('div');
+          empty.className = 'empty';
+          empty.textContent = 'No tasks yet. Add your first study task above.';
+          list.append(empty);
+        }
+
+        data.tasks.forEach(task => {
+          const row = document.createElement('div');
+          row.className = 'task-item';
+
+          const checkbox = document.createElement('input');
+          checkbox.type = 'checkbox';
+          checkbox.checked = task.done;
+          checkbox.setAttribute('aria-label', 'Mark task completed');
+
+          checkbox.addEventListener('change', () => {
+            task.done = checkbox.checked;
+            saveData();
+            renderAll();
+          });
+
+          const textWrap = document.createElement('div');
+          textWrap.className = 'task-text' + (task.done ? ' done' : '');
+
+          const title = document.createElement('div');
+          title.textContent = task.text;
+          textWrap.append(title);
+
+          if (task.subject) {
+            const subject = document.createElement('div');
+            subject.className = 'small muted';
+            subject.textContent = task.subject;
+            textWrap.append(subject);
+          }
+
+          const remove = document.createElement('button');
+          remove.className = 'delete-task';
+          remove.type = 'button';
+          remove.textContent = '×';
+          remove.setAttribute('aria-label', 'Delete task');
+
+          remove.addEventListener('click', () => {
+            if (!confirm('Delete this task?')) return;
+            data.tasks = data.tasks.filter(t => t.id !== task.id);
+            saveData();
+            renderAll();
+          });
+
+          row.append(checkbox, textWrap, remove);
+          list.append(row);
+        });
+
+        $('studyTaskCount').textContent =
+          data.tasks.length + (data.tasks.length === 1 ? ' task' : ' tasks');
+      }
+
+      $('taskForm').addEventListener('submit', event => {
+        event.preventDefault();
+
+        const text = $('taskInput').value.trim();
+        const subject = $('subjectInput').value.trim();
+
+        if (!text) return;
+
+        data.tasks.push({
+          id: makeId(),
+          text,
+          subject,
+          done: false,
+          createdAt: new Date().toISOString()
+        });
+
+        if (saveData()) {
+          $('taskInput').value = '';
+          $('subjectInput').value = '';
+          renderAll();
+        } else {
+          data.tasks.pop();
+          renderAll();
+        }
+      });
+
+      // Focus timer: deadline-based to reduce timer drift
+      let remainingSeconds = 25 * 60;
+      let timerInterval = null;
+      let deadline = null;
+      let timerRunning = false;
+      let currentMode = 'focus';
+
+      function selectedDuration() {
+        const id = currentMode === 'focus' ? 'focusMinutes' : 'breakMinutes';
+        return Number($(id).value) * 60;
+      }
+
+      function formatTime(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+
+        return String(mins).padStart(2, '0') + ':' +
+          String(secs).padStart(2, '0');
+      }
+
+      function updateTimerDisplay() {
+        $('timerDisplay').textContent = formatTime(remainingSeconds);
+        $('timerMode').textContent =
+          currentMode === 'focus' ? 'FOCUS SESSION' : 'BREAK TIME';
+        $('startPauseBtn').textContent =
+          timerRunning ? 'Pause' :
+          remainingSeconds < selectedDuration() ? 'Resume' :
+          currentMode === 'focus' ? 'Start focus' : 'Start break';
+      }
+
+      function stopTimerInterval() {
+        if (timerInterval !== null) {
+          clearInterval(timerInterval);
+          timerInterval = null;
+        }
+      }
+
+      function finishTimer() {
+        stopTimerInterval();
+        timerRunning = false;
+        deadline = null;
+
+        if (currentMode === 'focus') {
+          const today = new Date().toISOString().slice(0, 10);
+
+          data.sessions.unshift({
+            id: makeId(),
+            minutes: Number($('focusMinutes').value),
+            date: today
+          });
+
+          data.sessions = data.sessions.slice(0, 100);
+          saveData();
+
+          $('timerStatus').textContent = 'Focus session complete. Well done!';
+          renderAll();
+          alert('Focus session complete! Take a short break.');
+        } else {
+          $('timerStatus').textContent = 'Break complete. Ready to focus again?';
+          alert('Break complete. Ready for another focus session?');
+        }
+
+        remainingSeconds = selectedDuration();
+        updateTimerDisplay();
+      }
+
+      function tickTimer() {
+        if (!timerRunning || deadline === null) return;
+
+        remainingSeconds = Math.max(
+          0, Math.ceil((deadline - Date.now()) / 1000)
+        );
+
+        updateTimerDisplay();
+
+        if (remainingSeconds <= 0) finishTimer();
+      }
+
+      function pauseTimer() {
+        if (timerRunning && deadline !== null) {
+          remainingSeconds = Math.max(
+            0, Math.ceil((deadline - Date.now()) / 1000)
+          );
+        }
+
+        stopTimerInterval();
+        timerRunning = false;
+        deadline = null;
+        updateTimerDisplay();
+        $('timerStatus').textContent = 'Timer paused.';
+      }
+
+      function startTimer() {
+        if (timerRunning) {
+          pauseTimer();
+          return;
+        }
+
+        if (remainingSeconds <= 0) remainingSeconds = selectedDuration();
+
+        timerRunning = true;
+        deadline = Date.now() + remainingSeconds * 1000;
+        $('timerStatus').textContent = 'Stay focused. You can do this.';
+        updateTimerDisplay();
+
+        stopTimerInterval();
+        timerInterval = setInterval(tickTimer, 250);
+      }
+
+      function resetTimer() {
+        stopTimerInterval();
+        timerRunning = false;
+        deadline = null;
+        remainingSeconds = selectedDuration();
+        $('timerStatus').textContent = 'Timer reset. Ready when you are.';
+        updateTimerDisplay();
+      }
+
+      $('startPauseBtn').addEventListener('click', startTimer);
+      $('resetTimerBtn').addEventListener('click', resetTimer);
+
+      ['focusMinutes', 'breakMinutes'].forEach(id => {
+        $(id).addEventListener('change', () => {
+          if (!timerRunning) resetTimer();
+        });
+      });
+
+      // Progress dashboard
+      function renderProgress() {
+        const total = data.tasks.length;
+        const done = data.tasks.filter(task => task.done).length;
+        const percent = total ? Math.round(done / total * 100) : 0;
+        const minutes = data.sessions.reduce((sum, s) => sum + s.minutes, 0);
+
+        $('totalTasks').textContent = total;
+        $('completedTasks').textContent = done;
+        $('completionRate').textContent = percent + '%';
+        $('totalFocus').textContent = minutes;
+
+        $('progressBar').style.width = percent + '%';
+        $('progressMessage').textContent = total
+          ? done + ' of ' + total + ' tasks completed.'
+          : 'Add your first task to begin tracking.';
+
+        const sessionList = $('sessionList');
+        sessionList.replaceChildren();
+
+        if (data.sessions.length === 0) {
+          const empty = document.createElement('div');
+          empty.className = 'empty';
+          empty.textContent = 'Completed focus sessions will appear here.';
+          sessionList.append(empty);
+          return;
+        }
+
+        data.sessions.slice(0, 10).forEach(session => {
+          const item = document.createElement('div');
+          item.className = 'setting-row row between wrap';
+
+          const date = document.createElement('span');
+          date.textContent = session.date;
+
+          const duration = document.createElement('strong');
+          duration.textContent = session.minutes + ' min';
+
+          item.append(date, duration);
+          sessionList.append(item);
+        });
+      }
+
+      // Home summary
+      function renderHome() {
+        const total = data.tasks.length;
+        const done = data.tasks.filter(task => task.done).length;
+        const pending = total - done;
+        const percent = total ? Math.round(done / total * 100) : 0;
+
+        $('homeProgress').textContent = percent + '% complete';
+        $('homeProgressBar').style.width = percent + '%';
+        $('homeTaskCount').textContent =
+          done + ' of ' + total + ' tasks completed';
+        $('homePending').textContent = pending;
+        $('homeFocus').textContent = data.sessions.reduce(
+          (sum, s) => sum + s.minutes, 0
+        );
+      }
+
+      // Theme preference
+      function applyTheme() {
+        let theme = 'dark';
+
+        try {
+          theme = localStorage.getItem(THEME_KEY) || 'dark';
+        } catch {}
+
+        document.body.classList.toggle('light', theme === 'light');
+        renderThemeButton();
+      }
+
+      function renderThemeButton() {
+        const light = document.body.classList.contains('light');
+        $('themeBtn').textContent =
+          light ? 'Switch to dark mode' : 'Switch to light mode';
+      }
+
+      $('themeBtn').addEventListener('click', () => {
+        const light = document.body.classList.toggle('light');
+
+        try {
+          localStorage.setItem(THEME_KEY, light ? 'light' : 'dark');
+        } catch {}
+
+        renderThemeButton();
+      });
+
+      // Export data backup
+      $('exportBtn').addEventListener('click', () => {
+        try {
+          const backup = {
+            app: 'StudyPilot',
+            version: 1,
+            exportedAt: new Date().toISOString(),
+            data
+          };
+
+          const blob = new Blob(
+            [JSON.stringify(backup, null, 2)],
+            { type: 'application/json' }
+          );
+
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = 'studypilot-backup.json';
+          document.body.append(link);
+          link.click();
+          link.remove();
+          URL.revokeObjectURL(url);
+        } catch (error) {
+          alert('Could not export your backup in this browser.');
+          console.error(error);
+        }
+      });
+
+      // Import backup
+      $('importFile').addEventListener('change', async event => {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        try {
+          const parsed = JSON.parse(await file.text());
+          const imported = parsed && parsed.app === 'StudyPilot'
+            ? parsed.data : parsed;
+
+          if (!validData(imported)) {
+            throw new Error('Invalid StudyPilot backup.');
+          }
+
+          if (!confirm('Import this backup and replace current tasks and sessions?')) {
+            event.target.value = '';
+            return;
+          }
+
+          const previous = data;
+          data = imported;
+
+          if (saveData()) {
+            renderAll();
+            alert('StudyPilot backup imported successfully.');
+          } else {
+            data = previous;
+            renderAll();
+          }
+        } catch (error) {
+          alert('This backup file is invalid or cannot be read.');
+          console.error(error);
+        }
+
+        event.target.value = '';
+      });
+
+      // Clear only StudyPilot data
+      $('clearDataBtn').addEventListener('click', () => {
+        if (!confirm('Delete all StudyPilot tasks and focus history from this browser? This cannot be undone unless you have a backup.')) {
+          return;
+        }
+
+        const previous = data;
+        data = emptyData();
+
+        if (saveData()) {
+          renderAll();
+          resetTimer();
+          alert('StudyPilot data cleared.');
+        } else {
+          data = previous;
+          renderAll();
+        }
+      });
+
+      function renderAll() {
+        renderTasks();
+        renderHome();
+        renderProgress();
+      }
+
+      // Initialise
+      updateDate();
+      applyTheme();
+      renderAll();
+      resetTimer();
+      showScreen('home');
+    })();
+  </script>
+</body>
+  </html>
