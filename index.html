@@ -1,61 +1,713 @@
-<!doctype html>
-<html lang="en" data-theme="dark" data-accent="indigo" data-glass="2" data-motion="full" data-density="cozy" data-font="sans">
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>StudyPilot — Learn smarter. Prepare better. Grow every day.</title>
-<meta name="description" content="StudyPilot: study planner, notes, flashcards, quizzes, exam simulator, focus room and Quran reader. Built by Asjadh Rilwan.">
-<meta name="theme-color" content="#0b0d14">
-<meta name="color-scheme" content="dark light">
+<title>StudyPilot</title>
+<meta name="description" content="Learn smarter. Prepare better. Grow every day.">
+<meta name="theme-color" content="#070b1a">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="StudyPilot">
-<link rel="manifest" href="./manifest.json">
-<link rel="icon" href="./icon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="./icon-192.png">
-<link rel="stylesheet" href="./style.css">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+*{box-sizing:border-box;margin:0}
+:root{--accent:#5eead4;--on:#04121a;--glow:rgba(94,234,212,.28);--g:.6;--bg1:#070b1a;--bg2:#12204a;--tx:#eef2ff;--mu:#a3aed0;--solid:#141d3d;--bd:rgba(255,255,255,.16);--card:rgba(255,255,255,calc(var(--g)*.14));--warn:#fbbf24;--bad:#fb7185;--r:20px}
+[data-theme=light]{--bg1:#eef2fb;--bg2:#dbe5fb;--tx:#0f1730;--mu:#4a5780;--solid:#fff;--bd:rgba(15,23,48,.14);--card:rgba(255,255,255,calc(.35 + var(--g)*.5))}
+[data-theme=amoled]{--bg1:#000;--bg2:#000;--solid:#0a0a0a;--card:rgba(255,255,255,calc(var(--g)*.08))}
+html{font-size:100%;-webkit-text-size-adjust:100%}
+body{min-height:100vh;color:var(--tx);font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans","Noto Sans Tamil","Noto Sans Sinhala","Noto Sans Arabic",sans-serif;line-height:1.5;background:radial-gradient(700px 420px at 90% -5%,var(--glow),transparent 70%),linear-gradient(165deg,var(--bg2),var(--bg1)) fixed;padding-top:env(safe-area-inset-top)}
+#app{max-width:560px;margin:0 auto;padding:16px 16px calc(100px + env(safe-area-inset-bottom))}
+h1{font-size:1.65rem;line-height:1.2;letter-spacing:-.02em;margin-bottom:6px}
+h2{font-size:1.05rem;margin-bottom:8px}
+p{margin-bottom:8px}
+.mu,small{color:var(--mu)}
+small{display:block;font-size:.78rem}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:var(--r);padding:16px;margin-bottom:12px;backdrop-filter:blur(14px) saturate(140%);-webkit-backdrop-filter:blur(14px) saturate(140%)}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.card,#nav{background:var(--solid)}}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.pill{font-size:.75rem;padding:2px 10px;border:1px solid var(--bd);border-radius:99px;color:var(--mu)}
+.hero{display:flex;gap:16px;align-items:center;margin:8px 0 16px}
+.ring{--p:0;flex:none;width:104px;height:104px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--accent) calc(var(--p)*1%),rgba(128,140,180,.25) 0)}
+.ring b{width:80px;height:80px;border-radius:50%;display:grid;place-items:center;background:var(--solid);font-size:1.25rem}
+.meter{height:8px;border-radius:9px;background:rgba(128,140,180,.25);overflow:hidden;margin:6px 0 4px}
+.meter i{display:block;height:100%;background:var(--accent);border-radius:9px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid .card{margin:0}
+.stat b{display:block;font-size:1.7rem;line-height:1.1}
+.stat span{color:var(--mu);font-size:.82rem}
+.grid+.card,.grid+section{margin-top:12px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:8px}
+.center{text-align:center}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:46px;padding:0 18px;border:0;border-radius:14px;background:var(--accent);color:var(--on);font:inherit;font-weight:650;cursor:pointer;text-decoration:none}
+.btn.ghost{background:transparent;color:var(--tx);border:1px solid var(--bd)}
+.btn.danger{background:transparent;color:var(--bad);border:1px solid var(--bad)}
+.btn:active{transform:scale(.97)}
+label{display:block;font-size:.85rem;color:var(--mu);margin-bottom:10px}
+input,select,textarea{display:block;width:100%;min-height:46px;margin-top:4px;padding:10px 12px;border-radius:12px;border:1px solid var(--bd);background:var(--solid);color:var(--tx);font:inherit}
+input[type=range]{padding:0;accent-color:var(--accent)}
+input[type=color]{padding:2px}
+input[type=checkbox]{display:inline-block;width:22px;min-height:22px;margin:0 8px 0 0;vertical-align:middle;accent-color:var(--accent)}
+textarea{resize:vertical}
+form.card input,form.card select{margin-bottom:8px}
+:focus-visible{outline:3px solid var(--tx);outline-offset:2px}
+.seg{display:flex;gap:4px;padding:4px;border:1px solid var(--bd);border-radius:16px;margin:8px 0 12px}
+.seg button{flex:1;min-height:42px;border:0;border-radius:12px;background:none;color:var(--mu);font:inherit;cursor:pointer}
+.seg button.on{background:var(--accent);color:var(--on);font-weight:650}
+ul{list-style:none;padding:0}
+.task{display:flex;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--bd)}
+.task:last-child{border:0}
+.task div{flex:1;min-width:0;overflow-wrap:anywhere}
+.task.done b{text-decoration:line-through;opacity:.6}
+.chk{flex:none;width:34px;height:34px;border-radius:50%;border:2px solid var(--accent);background:none;color:var(--accent);font-size:1rem;cursor:pointer}
+.task.done .chk{background:var(--accent);color:var(--on)}
+.ic{flex:none;width:44px;height:44px;border:0;background:none;font-size:1.1rem;cursor:pointer}
+.bars{display:flex;gap:8px;align-items:flex-end;height:120px}
+.bar{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:4px}
+.bar i{display:block;width:100%;background:var(--accent);border-radius:8px 8px 3px 3px;min-height:4px}
+.bar small{margin:0}
+.clock{font-size:4.2rem;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.03em;line-height:1.1;margin:10px 0 4px}
+.flash{font-size:1.2rem;padding:14px 0;overflow-wrap:anywhere}
+details.card summary{cursor:pointer;font-weight:650;min-height:32px}
+details.card textarea,details.card input{margin-top:8px}
+#nav{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(10px + env(safe-area-inset-bottom));width:min(540px,calc(100% - 20px));display:flex;gap:2px;padding:6px;border-radius:26px;background:var(--card);border:1px solid var(--bd);backdrop-filter:blur(18px) saturate(150%);-webkit-backdrop-filter:blur(18px) saturate(150%);z-index:5}
+#nav button{flex:1;min-height:52px;border:0;border-radius:20px;background:none;color:var(--mu);font:inherit;font-size:.62rem;padding:0 1px;display:grid;place-items:center;cursor:pointer;transition:background .2s}
+#nav button i{font-style:normal;font-size:1.25rem;line-height:1}
+#nav button.on{background:var(--accent);color:var(--on)}
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(92px + env(safe-area-inset-bottom));display:none;gap:12px;align-items:center;max-width:calc(100% - 24px);padding:10px 16px;border-radius:14px;background:var(--solid);color:var(--tx);border:1px solid var(--bd);z-index:9}
+#toast.on{display:flex}
+#toast button{border:0;border-radius:10px;padding:8px 12px;background:var(--accent);color:var(--on);font:inherit;font-weight:650;cursor:pointer}
+#fatal{position:fixed;top:env(safe-area-inset-top);left:0;right:0;z-index:20;padding:10px 14px;background:var(--bad);color:#2a0710;font-size:.9rem}
+#fatal[hidden]{display:none}
+#fatal button{margin-left:6px;padding:4px 10px;border-radius:8px;border:1px solid #2a0710;background:none;color:inherit;font:inherit}
+[data-calm="1"] *,[data-calm="1"] *::before{animation:none!important;transition:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+[data-calm="1"] .card,[data-calm="1"] #nav{background:var(--solid)}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+[hidden]{display:none!important}
+input[type=hidden]{display:none}
+.btn.block{width:100%;justify-content:flex-start;margin-bottom:8px;text-align:left}
+.seg{overflow-x:auto}
+.seg button{white-space:nowrap;padding:0 10px}
+#nav button span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+</style>
 </head>
 <body>
-<a class="skip" href="#view">Skip to content</a>
+<div id="app"><main id="view"><p style="padding:24px;opacity:.7">Loading StudyPilot…</p></main></div>
+<nav id="nav" aria-label="Main"></nav>
+<div id="toast" role="status" aria-live="polite"></div>
+<div id="fatal" role="alert" hidden></div>
+<noscript><p style="padding:20px;color:#fff">StudyPilot needs JavaScript turned on.</p></noscript>
+<script>
+(() => {
+'use strict';
+const KEY = 'studypilot.v3', VER = '3.1.0', DRE = /^\d{4}-\d{2}-\d{2}$/;
+const FOUNDER = {
+  name: 'Asjadh Rilwan',
+  wa: 'https://wa.me/94774209718',
+  tag: 'Learn smarter. Prepare better. Grow every day.',
+  mission: 'Make effective learning, exam preparation, and personal development accessible to students.'
+};
+const TR = {
+  en: { home: 'Home', study: 'Study', focus: 'Focus', progress: 'Progress', settings: 'Settings', tools: 'Tools', am: 'Good morning', pm: 'Good afternoon', ev: 'Good evening' },
+  ta: { home: 'முகப்பு', study: 'படிப்பு', focus: 'கவனம்', progress: 'முன்னேற்றம்', settings: 'அமைப்புகள்', tools: 'கருவிகள்', am: 'காலை வணக்கம்', pm: 'மதிய வணக்கம்', ev: 'மாலை வணக்கம்' },
+  si: { home: 'මුල් පිටුව', study: 'අධ්‍යයනය', focus: 'අවධානය', progress: 'ප්‍රගතිය', settings: 'සැකසුම්', tools: 'මෙවලම්', am: 'සුභ උදෑසනක්', pm: 'සුභ දහවලක්', ev: 'සුභ සන්ධ්‍යාවක්' }
+};
+const LANGS = ['en', 'ta', 'si'], LOC = { en: 'en-GB', ta: 'ta-IN', si: 'si-LK' };
+const THEMES = ['system', 'dark', 'light', 'amoled'];
+const TIPS = [
+  'Study in short bursts. 25 focused minutes beats an hour of drifting.',
+  'Test yourself instead of rereading. Recalling builds memory.',
+  'Start with the topic you find hardest while your mind is fresh.',
+  'Sleep is part of studying. Rest helps memory settle.',
+  'Explain a topic out loud in your own words to find the gaps.',
+  'Plan tomorrow in two minutes tonight.',
+  'Small steps add up. A rest day is fine too.'
+];
 
-<div id="splash" class="splash" aria-hidden="true">
-  <div class="splash-mark">🧭</div>
-  <div class="splash-name">StudyPilot</div>
-</div>
+const $ = s => document.querySelector(s);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+const clamp = (n, a, b, d) => { n = Number(n); return Number.isFinite(n) ? Math.min(b, Math.max(a, n)) : d; };
+const day = (d = new Date()) => { const p = n => String(n).padStart(2, '0'); return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()); };
+const addDays = (s, n) => { const d = new Date(s + 'T00:00:00'); d.setDate(d.getDate() + n); return day(d); };
+const daysTo = s => Math.round((new Date(s + 'T00:00:00') - new Date(day() + 'T00:00:00')) / 864e5);
+const fmt = s => String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0');
+const L = (a, f, m) => (Array.isArray(a) ? a : []).map(f).filter(Boolean).slice(0, m);
+const PR = { high: 'h', medium: 'm', low: 'l' }, ORD = { h: 0, m: 1, l: 2 }, DOT = { h: '🔴', m: '🟡', l: '🟢' };
 
-<div id="netbar" class="netbar" hidden>You are offline — saved data still works.</div>
+/* ---------- data normalisers (also read older backups safely) ---------- */
+const nt = x => {
+  if (!x || typeof x !== 'object') return null;
+  const t = String(x.t || x.title || x.text || x.name || '').trim();
+  if (!t) return null;
+  return { id: String(x.id || uid()), t: t.slice(0, 200), pri: ORD[x.pri] !== undefined ? x.pri : PR[String(x.priority || '').toLowerCase()] || 'm', sub: String(x.sub || x.subject || '').slice(0, 40), due: DRE.test(x.due || '') ? x.due : '', done: !!(x.done || x.completed), doneOn: DRE.test(x.doneOn || '') ? x.doneOn : '' };
+};
+const nn = x => (x && typeof x === 'object' && (x.t || x.b || x.title || x.body || x.text)) ? { id: String(x.id || uid()), t: String(x.t || x.title || 'Untitled').slice(0, 120), b: String(x.b || x.body || x.text || '').slice(0, 20000), ts: Number(x.ts) || Date.now() } : null;
+const nc = x => {
+  if (!x || typeof x !== 'object') return null;
+  const q = String(x.q || x.front || '').trim(), a = String(x.a || x.back || '').trim();
+  if (!q || !a) return null;
+  return { id: String(x.id || uid()), q: q.slice(0, 500), a: a.slice(0, 1000), due: DRE.test(x.due || '') ? x.due : day(), ivl: clamp(x.ivl, 0, 3650, 0), ease: clamp(x.ease, 1.3, 3.5, 2.3), reps: clamp(x.reps, 0, 999, 0) };
+};
+const ns = x => {
+  if (!x || typeof x !== 'object') return null;
+  const sec = Number(x.sec) || (Number(x.min || x.minutes) || 0) * 60;
+  if (!(sec > 0)) return null;
+  return { id: String(x.id || uid()), date: DRE.test(x.date || '') ? x.date : (x.ts ? day(new Date(x.ts)) : day()), sec: Math.round(Math.min(sec, 86400)), plan: Number(x.plan) || 0, sub: String(x.sub || '').slice(0, 40) };
+};
+function sanitize(o) {
+  o = o && typeof o === 'object' && !Array.isArray(o) ? o : {};
+  const s = {
+    name: typeof o.name === 'string' ? o.name.slice(0, 40) : '',
+    goal: clamp(o.goal, 10, 720, 120), focus: clamp(o.focus, 5, 120, 25), brk: clamp(o.brk, 1, 60, 5),
+    theme: THEMES.includes(o.theme) ? o.theme : 'dark',
+    accent: /^#[0-9a-f]{6}$/i.test(o.accent) ? o.accent : '#5eead4',
+    glass: clamp(o.glass, 0, 100, 60), font: clamp(o.font, 85, 130, 100),
+    lang: LANGS.includes(o.lang) ? o.lang : 'en', calm: !!o.calm,
+    tasks: L(o.tasks, nt, 3000), notes: L(o.notes, nn, 500), cards: L(o.cards, nc, 5000), sessions: L(o.sessions, ns, 5000),
+    exam: (o.exam && typeof o.exam.name === 'string' && DRE.test(o.exam.date || '')) ? { name: o.exam.name.slice(0, 80), date: o.exam.date } : null,
+    xp: clamp(o.xp, 0, 1e7, 0), awarded: {}
+  };
+  if (o.awarded && typeof o.awarded === 'object') Object.keys(o.awarded).slice(0, 20000).forEach(k => { if (o.awarded[k]) s.awarded[k] = 1; });
+  s.subjects = L(o.subjects, nsub, 100); s.quizzes = L(o.quizzes, nq, 2000); s.mistakes = L(o.mistakes, nmis, 2000); s.attempts = L(o.attempts, nat, 500);
+  const t = o.timer && typeof o.timer === 'object' ? o.timer : {}, m = t.mode === 'break' ? 'break' : 'focus';
+  const dur = clamp(t.dur, 60, 14400, (m === 'focus' ? s.focus : s.brk) * 60);
+  s.timer = { mode: m, dur, rem: clamp(t.rem, 0, dur, dur), endsAt: Number(t.endsAt) > 0 ? Number(t.endsAt) : 0, taskId: typeof t.taskId === 'string' ? t.taskId : '' };
+  return s;
+}
+function load() {
+  try { const r = localStorage.getItem(KEY); if (r) return sanitize(JSON.parse(r)); } catch (e) { /* fall through */ }
+  // First run of v3: adopt data from an older StudyPilot key without touching it.
+  try {
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k && k.indexOf(KEY) !== 0 && /studypilot/i.test(k)) {
+        const v = JSON.parse(localStorage.getItem(k));
+        if (v && typeof v === 'object' && !Array.isArray(v)) return sanitize(v);
+      }
+    }
+  } catch (e) { /* ignore */ }
+  return sanitize(null);
+}
+let S = load(), st = 0, dip = null;
+const flush = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { toast('Could not save. Storage may be full or blocked. Export a backup.'); } };
+const save = () => { clearTimeout(st); st = setTimeout(flush, 200); };
 
-<header id="appbar" class="appbar" hidden>
-  <div class="appbar-in">
-    <button class="iconbtn" data-act="back" aria-label="Back" hidden>‹</button>
-    <div class="brand" data-act="go" data-to="home">
-      <span class="brand-mark" aria-hidden="true">🧭</span>
-      <span class="brand-txt"><b>StudyPilot</b><i>Learn smarter</i></span>
-    </div>
-    <div class="appbar-actions">
-      <button class="iconbtn" data-act="go" data-to="search" aria-label="Search">🔍</button>
-      <button class="iconbtn" data-act="install" id="installBtn" aria-label="Install app" hidden>⬇</button>
-      <button class="iconbtn" data-act="go" data-to="settings" aria-label="Settings">⚙</button>
-    </div>
-  </div>
-</header>
+/* ---------- helpers ---------- */
+const standalone = () => matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+const sortT = a => a.slice().sort((x, y) => ORD[x.pri] - ORD[y.pri] || (x.due || '9').localeCompare(y.due || '9'));
+const t = k => (TR[S.lang] && TR[S.lang][k]) || TR.en[k] || k;
+const lvl = () => Math.floor(Math.sqrt(S.xp / 50)) + 1;
+const mins = d => Math.round(S.sessions.filter(x => x.date === d).reduce((a, x) => a + x.sec, 0) / 60);
+function award(id, xp) { if (S.awarded[id]) return false; S.awarded[id] = 1; S.xp += xp; return true; }
+function streak() {
+  const a = new Set(S.sessions.map(x => x.date).concat(S.tasks.filter(x => x.done && x.doneOn).map(x => x.doneOn)));
+  let d = day(), n = 0;
+  if (!a.has(d)) d = addDays(d, -1);
+  while (a.has(d)) { n++; d = addDays(d, -1); }
+  return n;
+}
+function toast(m, btn, fn) {
+  const el = $('#toast');
+  el.innerHTML = '<span>' + esc(m) + '</span>' + (btn ? '<button>' + esc(btn) + '</button>' : '');
+  el.className = 'on';
+  clearTimeout(toast.t);
+  if (btn) el.querySelector('button').onclick = fn; else toast.t = setTimeout(() => { el.className = ''; }, 3200);
+}
+function look() {
+  const d = document.documentElement;
+  const th = S.theme === 'system' ? (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark') : S.theme;
+  d.dataset.theme = th; d.lang = S.lang;
+  d.dataset.calm = (S.calm || matchMedia('(prefers-reduced-motion: reduce)').matches) ? '1' : '0';
+  const n = parseInt(S.accent.slice(1), 16), r = n >> 16, g = (n >> 8) & 255, b = n & 255;
+  d.style.setProperty('--accent', S.accent);
+  d.style.setProperty('--glow', 'rgba(' + r + ',' + g + ',' + b + ',.28)');
+  d.style.setProperty('--on', (r * 299 + g * 587 + b * 114) / 255000 > 0.5 ? '#04121a' : '#ffffff');
+  d.style.setProperty('--g', S.glass / 100);
+  d.style.fontSize = S.font + '%';
+  const m = $('meta[name=theme-color]');
+  if (m) m.setAttribute('content', th === 'light' ? '#eef2fb' : th === 'amoled' ? '#000000' : '#070b1a');
+}
 
-<main id="view" tabindex="-1"></main>
+/* ---------- focus timer (wall-clock based, survives backgrounding) ---------- */
+const left = () => { const tm = S.timer; return tm.endsAt ? Math.max(0, Math.ceil((tm.endsAt - Date.now()) / 1000)) : tm.rem; };
+function setTimer(mode, min) { const tm = S.timer; S.timer = { mode, dur: min * 60, rem: min * 60, endsAt: 0, taskId: tm.taskId }; }
+function logSession(sec) {
+  if (sec < 60) return false;
+  const tk = S.tasks.find(x => x.id === S.timer.taskId), id = uid();
+  S.sessions.push({ id, date: day(), sec: Math.round(sec), plan: S.timer.dur, sub: tk ? tk.sub : '' });
+  if (S.sessions.length > 5000) S.sessions.shift();
+  award('sess:' + id, Math.floor(sec / 60));
+  return true;
+}
+function complete() {
+  const tm = S.timer, wasFocus = tm.mode === 'focus';
+  if (wasFocus) logSession(tm.dur);
+  const nm = wasFocus ? 'break' : 'focus';
+  setTimer(nm, nm === 'focus' ? S.focus : S.brk);
+  try { if (navigator.vibrate) navigator.vibrate([200, 100, 200]); } catch (e) { /* ignore */ }
+  toast(wasFocus ? 'Focus session saved. Time for a break.' : 'Break over. Ready when you are.');
+  save(); render();
+}
+function tickNow() {
+  if (S.timer.endsAt && left() <= 0) { complete(); return; }
+  const c = $('#clock'); if (c) c.textContent = fmt(left());
+}
+setInterval(() => { if (S.timer.endsAt) tickNow(); }, 500);
 
-<nav id="tabbar" class="tabbar" aria-label="Primary" hidden>
-  <div class="tabbar-in" id="tabbarIn"></div>
-</nav>
+/* ---------- flashcards: simple spaced repetition ---------- */
+function rate(id, q) {
+  const c = S.cards.find(x => x.id === id); if (!c) return;
+  if (q === 'h') { c.ivl = 1; c.ease = Math.max(1.3, c.ease - 0.2); c.reps = 0; }
+  else if (q === 'g') { c.ivl = c.reps === 0 ? 1 : c.reps === 1 ? 3 : Math.round(c.ivl * c.ease); c.reps++; }
+  else { c.ivl = c.reps === 0 ? 3 : Math.round(c.ivl * c.ease * 1.3) + 1; c.ease = Math.min(3.5, c.ease + 0.1); c.reps++; }
+  c.due = addDays(day(), c.ivl);
+  award('rev:' + id + ':' + day(), 1);
+  ui.shown = false; save(); render();
+}
 
-<div id="sheetRoot"></div>
-<div id="modalRoot"></div>
-<div id="toastRoot" class="toast-root" aria-live="polite" aria-atomic="false"></div>
-<div id="installBanner" class="installbar" hidden>
-  <span>Install StudyPilot for offline study.</span>
-  <button class="btn btn-sm btn-primary" data-act="install">Install</button>
-  <button class="iconbtn" data-act="dismiss-install" aria-label="Dismiss">✕</button>
-</div>
+/* ---------- views ---------- */
+const TABS = ['home', 'study', 'focus', 'progress', 'tools', 'settings'];
+const ICON = { home: '🏠', study: '📚', focus: '⏱', progress: '📊', tools: '🧰', settings: '⚙️' };
+const ui = { sub: 'tasks', flt: 'all', rv: false, shown: false };
+const cur = () => { const h = location.hash.replace(/^#\/?/, ''); return TABS.includes(h) ? h : 'home'; };
+const go = k => { if (cur() === k && location.hash) render(); else location.hash = '#/' + k; };
 
-<script src="./app.js" defer></script>
+const installCard = () => standalone() ? '' : dip
+  ? '<section class="card"><h2>Install StudyPilot</h2><p class="mu">Open it like an app, even offline.</p><button class="btn" data-act="install">Install app</button></section>'
+  : '<section class="card"><h2>Install StudyPilot</h2><p class="mu">In Chrome, open the ⋮ menu and choose Install app or Add to Home screen.</p></section>';
+
+const VIEWS = {
+  home() {
+    const n = new Date(), h = n.getHours(), g = h < 12 ? 'am' : h < 18 ? 'pm' : 'ev', today = day();
+    const pend = sortT(S.tasks.filter(x => !x.done)), dn = S.tasks.filter(x => x.done && x.doneOn === today).length;
+    const pct = dn + pend.length ? Math.round(dn / (dn + pend.length) * 100) : 0;
+    const nx = pend[0], due = S.cards.filter(c => c.due <= today).length, ex = S.exam ? daysTo(S.exam.date) : null, mt = mins(today);
+    return '<header class="top"><p class="mu">' + esc(n.toLocaleDateString(LOC[S.lang], { weekday: 'long', day: 'numeric', month: 'long' })) + '</p><span class="pill">' + (navigator.onLine ? 'Online' : 'Offline') + '</span></header>'
+      + '<section class="hero"><div class="ring" style="--p:' + pct + '"><b>' + pct + '%</b></div><div><h1>' + t(g) + (S.name ? ', ' + esc(S.name) : '') + '.</h1><p class="mu">Today: ' + dn + ' done, ' + pend.length + ' to go</p></div></section>'
+      + '<section class="card"><p class="mu">Study tip</p><p>' + esc(TIPS[n.getDate() % TIPS.length]) + '</p></section>'
+      + '<section class="card"><p class="mu">Your next step</p>' + (nx
+        ? '<h2>' + esc(nx.t) + '</h2><button class="btn" data-act="focusTask" data-id="' + esc(nx.id) + '">▶ Start focus</button>'
+        : '<h2>Add your first task</h2><button class="btn" data-act="qa" data-to="study" data-s="tasks">＋ Add task</button>') + '</section>'
+      + '<section class="card"><p class="mu">Focus goal</p><div class="meter"><i style="width:' + Math.min(100, Math.round(mt / S.goal * 100)) + '%"></i></div><small>' + mt + ' of ' + S.goal + ' minutes today</small></section>'
+      + '<section class="grid"><div class="card stat"><b>' + pend.length + '</b><span>Tasks left</span></div><div class="card stat"><b>' + mt + '</b><span>Focus minutes</span></div><div class="card stat"><b>' + streak() + '</b><span>Day streak</span></div><div class="card stat"><b>' + due + '</b><span>Cards due</span></div><div class="card stat"><b>' + lvl() + '</b><span>Level (' + S.xp + ' XP)</span></div><button class="card stat" data-act="qa" data-to="study" data-s="cards" style="text-align:left;color:inherit;font:inherit;cursor:pointer"><b>＋</b><span>Review flashcards</span></button></section>'
+      + (ex !== null
+        ? '<section class="card"><p class="mu">⏳ Exam countdown</p><h2>' + esc(S.exam.name) + '</h2><p>' + (ex > 0 ? ex + ' days left' : ex === 0 ? 'Today' : 'Date has passed') + '</p><button class="btn ghost" data-act="exClear">Remove</button></section>'
+        : '<form class="card" data-form="exam"><h2>⏳ Exam countdown</h2><input name="name" required maxlength="80" placeholder="Exam name"><input name="date" type="date" required aria-label="Exam date"><button class="btn">Save exam</button></form>')
+      + recCard() + installCard();
+  },
+  study() {
+    const names = { tasks: 'Tasks', notes: 'Notes', cards: 'Cards', quiz: 'Quiz', plan: 'Plan' };
+    return '<h1>' + t('study') + '</h1><div class="seg">' + Object.keys(names).map(k => '<button data-sub="' + k + '" class="' + (ui.sub === k ? 'on' : '') + '">' + names[k] + '</button>').join('') + '</div>' + SUB[ui.sub]();
+  },
+  focus() {
+    const tm = S.timer, run = !!tm.endsAt, pend = sortT(S.tasks.filter(x => !x.done)), el = tm.dur - left();
+    return '<h1>' + t('focus') + '</h1><section class="card center"><div class="seg"><button data-act="mode" data-m="focus" class="' + (tm.mode === 'focus' ? 'on' : '') + '">Focus</button><button data-act="mode" data-m="break" class="' + (tm.mode === 'break' ? 'on' : '') + '">Break</button></div>'
+      + (tm.mode === 'focus' && !run ? '<div class="row" style="justify-content:center">' + [15, 25, 45, 60].map(m => '<button class="btn ghost" data-act="dur" data-min="' + m + '">' + m + '</button>').join('') + '</div>' : '')
+      + '<div id="clock" class="clock" role="timer">' + fmt(left()) + '</div><p class="mu">' + (run ? 'Running' : el > 0 ? 'Paused' : 'Ready') + '</p>'
+      + '<div class="row" style="justify-content:center">' + (run ? '<button class="btn" data-act="pause">⏸ Pause</button>' : '<button class="btn" data-act="start">▶ Start</button>') + '<button class="btn ghost" data-act="reset" aria-label="Reset">↺ Reset</button>' + (tm.mode === 'focus' && el >= 60 ? '<button class="btn ghost" data-act="finish">Finish and save</button>' : '') + '</div></section>'
+      + '<section class="card"><label>Working on<select data-timer-task><option value="">No task</option>' + pend.map(x => '<option value="' + esc(x.id) + '"' + (x.id === tm.taskId ? ' selected' : '') + '>' + esc(x.t) + '</option>').join('') + '</select></label><p class="mu">Time is counted from the clock, so it stays correct if the app goes to the background. Sessions under 1 minute are not saved.</p></section>';
+  },
+  progress() {
+    const today = day(), days = []; for (let i = 6; i >= 0; i--) days.push(addDays(today, -i));
+    const vals = days.map(mins), mx = Math.max(1, ...vals), wk = vals.reduce((a, b) => a + b, 0);
+    const by = {}; S.sessions.forEach(x => { const k = x.sub || 'General'; by[k] = (by[k] || 0) + x.sec; });
+    const subs = Object.keys(by).sort((a, b) => by[b] - by[a]).slice(0, 8), recent = S.sessions.slice(-5).reverse();
+    return '<h1>' + t('progress') + '</h1><section class="grid"><div class="card stat"><b>' + mins(today) + '</b><span>Min today</span></div><div class="card stat"><b>' + wk + '</b><span>Min this week</span></div><div class="card stat"><b>' + S.tasks.filter(x => x.done).length + '</b><span>Tasks done</span></div><div class="card stat"><b>' + streak() + '</b><span>Day streak</span></div></section>'
+      + '<section class="card"><h2>Last 7 days</h2><div class="bars">' + days.map((d, i) => '<div class="bar" title="' + vals[i] + ' min"><i style="height:' + Math.max(4, Math.round(vals[i] / mx * 100)) + '%"></i><small>' + esc(new Date(d + 'T00:00:00').toLocaleDateString(LOC[S.lang], { weekday: 'narrow' })) + '</small></div>').join('') + '</div></section>'
+      + '<section class="card"><h2>Subjects</h2>' + (subs.length ? '<ul>' + subs.map(k => '<li class="task"><div><b>' + esc(k) + '</b></div><span>' + Math.round(by[k] / 60) + ' min</span></li>').join('') + '</ul>' : '<p class="mu">Finish a focus session and your subjects appear here.</p>') + '</section>'
+      + '<section class="card"><h2>Recent sessions</h2>' + (recent.length ? '<ul>' + recent.map(x => '<li class="task"><div><b>' + esc(x.sub || 'General') + '</b><small>' + esc(x.date) + '</small></div><span>' + Math.round(x.sec / 60) + ' min</span></li>').join('') + '</ul>' : '<p class="mu">No sessions yet.</p>') + '</section>'
+      + '<p class="mu"><small>All numbers come from sessions and tasks saved on this device.</small></p>';
+  },
+  settings() {
+    const opt = (v, l, c) => '<option value="' + v + '"' + (c === v ? ' selected' : '') + '>' + l + '</option>';
+    const num = (k, l, a, b) => '<label>' + l + '<input type="number" inputmode="numeric" min="' + a + '" max="' + b + '" value="' + S[k] + '" data-set="' + k + '"></label>';
+    const fb = FOUNDER.wa + '?text=' + encodeURIComponent('StudyPilot feedback (v' + VER + '): ');
+    return '<h1>' + t('settings') + '</h1>'
+      + '<section class="card"><h2>Profile and goals</h2><label>Your name<input data-set="name" maxlength="40" value="' + esc(S.name) + '" autocomplete="given-name"></label>' + num('goal', 'Daily focus goal (minutes)', 10, 720) + num('focus', 'Focus length (minutes)', 5, 120) + num('brk', 'Break length (minutes)', 1, 60) + '</section>'
+      + '<section class="card"><h2>Look and feel</h2><label>Theme<select data-set="theme">' + opt('system', 'System', S.theme) + opt('dark', 'Dark', S.theme) + opt('light', 'Light', S.theme) + opt('amoled', 'AMOLED black', S.theme) + '</select></label>'
+      + '<label>Language<select data-set="lang">' + opt('en', 'English', S.lang) + opt('ta', 'தமிழ்', S.lang) + opt('si', 'සිංහල', S.lang) + '</select></label>'
+      + '<label>Accent colour<input type="color" data-set="accent" value="' + esc(S.accent) + '"></label><label>Glass strength<input type="range" min="0" max="100" value="' + S.glass + '" data-set="glass"></label><label>Text size<input type="range" min="85" max="130" value="' + S.font + '" data-set="font"></label>'
+      + '<label><input type="checkbox" data-set="calm"' + (S.calm ? ' checked' : '') + '>Low-power mode (no blur or animation)</label></section>'
+      + '<section class="card"><h2>Backup</h2><p class="mu">Your data stays on this device.</p><div class="row"><button class="btn" data-act="export">⬇ Export</button><button class="btn ghost" data-act="import">⬆ Import</button><button class="btn danger" data-act="clear">🗑 Clear all</button></div><input id="file" type="file" accept="application/json,.json" hidden></section>'
+      + installCard()
+      + '<section class="card"><h2>About StudyPilot</h2><p>Version ' + VER + '</p><p class="mu">' + esc(FOUNDER.tag) + '</p><p>Founder and Creator<br><b>' + esc(FOUNDER.name) + '</b></p><p class="mu">' + esc(FOUNDER.mission) + '</p><div class="row"><a class="btn" href="' + esc(FOUNDER.wa) + '" target="_blank" rel="noopener noreferrer">WhatsApp support</a><a class="btn ghost" href="' + esc(fb) + '" target="_blank" rel="noopener noreferrer">Send feedback</a></div><p class="mu"><small>Feedback opens WhatsApp with a message ready for you to send. Nothing is sent automatically.</small></p><p class="mu"><small>Not included yet: AI tutor, Quran audio, study groups. These need online services that are not set up.</small></p></section>';
+  }
+};
+const SUB = {
+  tasks() {
+    const f = ui.flt, list = sortT(S.tasks).filter(x => f === 'all' || (f === 'done' ? x.done : !x.done)), today = day();
+    return '<form class="card" data-form="task"><input name="t" required maxlength="200" placeholder="What do you need to do?" aria-label="Task"><select name="pri" aria-label="Priority"><option value="h">🔴 High priority</option><option value="m" selected>🟡 Medium priority</option><option value="l">🟢 Low priority</option></select><input name="sub" maxlength="40" placeholder="Subject (optional)" aria-label="Subject"><input name="due" type="date" aria-label="Due date"><button class="btn">＋ Add task</button></form>'
+      + '<div class="seg">' + [['all', 'All'], ['pending', 'Pending'], ['done', 'Done']].map(a => '<button data-flt="' + a[0] + '" class="' + (f === a[0] ? 'on' : '') + '">' + a[1] + '</button>').join('') + '</div>'
+      + (list.length ? '<section class="card"><ul>' + list.map(x => '<li class="task' + (x.done ? ' done' : '') + '"><button class="chk" data-act="tog" data-id="' + esc(x.id) + '" aria-label="Mark done" aria-pressed="' + x.done + '">' + (x.done ? '✓' : '') + '</button><div><b>' + DOT[x.pri] + ' ' + esc(x.t) + '</b><small>' + esc(x.sub) + (x.due ? (x.sub ? ', ' : '') + (!x.done && x.due < today ? 'overdue, ' : 'due ') + esc(x.due) : '') + '</small></div><button class="ic" data-act="del" data-id="' + esc(x.id) + '" aria-label="Delete task">🗑</button></li>').join('') + '</ul></section>' : '<p class="mu center">Nothing here yet. Add a task above.</p>');
+  },
+  notes() {
+    return '<form class="card" data-form="note"><input name="t" required maxlength="120" placeholder="Note title" aria-label="Title"><textarea name="b" rows="3" placeholder="Write your note" aria-label="Note"></textarea><button class="btn">＋ Add note</button></form>'
+      + (S.notes.length ? S.notes.slice().reverse().map(n => '<details class="card"><summary>' + esc(n.t) + '</summary><input data-nt data-id="' + esc(n.id) + '" maxlength="120" value="' + esc(n.t) + '" aria-label="Title"><textarea data-nb data-id="' + esc(n.id) + '" rows="6" aria-label="Note">' + esc(n.b) + '</textarea><small>Saves automatically</small><button class="btn danger" data-act="delnote" data-id="' + esc(n.id) + '">Delete note</button></details>').join('') : '<p class="mu center">No notes yet.</p>');
+  },
+  cards() {
+    const today = day(), dueL = S.cards.filter(c => c.due <= today), c = dueL[0];
+    let top;
+    if (ui.rv && c) top = '<section class="card center"><small>' + dueL.length + ' due</small><p class="flash">' + esc(c.q) + '</p>' + (ui.shown ? '<p class="flash mu">' + esc(c.a) + '</p><div class="row" style="justify-content:center"><button class="btn ghost" data-act="rate" data-id="' + esc(c.id) + '" data-q="h">Hard</button><button class="btn" data-act="rate" data-id="' + esc(c.id) + '" data-q="g">Good</button><button class="btn ghost" data-act="rate" data-id="' + esc(c.id) + '" data-q="e">Easy</button></div>' : '<button class="btn" data-act="rvShow">Show answer</button>') + '</section>';
+    else { ui.rv = false; top = '<section class="card"><h2>' + (dueL.length ? dueL.length + ' cards due' : S.cards.length ? 'All caught up' : 'No flashcards yet') + '</h2>' + (dueL.length ? '<button class="btn" data-act="rvStart">Start review</button>' : '<p class="mu">Add a card below to start.</p>') + '</section>'; }
+    return top + '<form class="card" data-form="card"><input name="q" required maxlength="500" placeholder="Front (question)" aria-label="Front"><input name="a" required maxlength="1000" placeholder="Back (answer)" aria-label="Back"><button class="btn">＋ Add card</button></form>'
+      + (S.cards.length ? '<section class="card"><h2>All cards (' + S.cards.length + ')</h2><ul>' + S.cards.slice(-30).reverse().map(x => '<li class="task"><div><b>' + esc(x.q) + '</b><small>next review ' + esc(x.due) + '</small></div><button class="ic" data-act="delcard" data-id="' + esc(x.id) + '" aria-label="Delete card">🗑</button></li>').join('') + '</ul></section>' : '');
+  }
+};
+
+function render() {
+  const tab = cur();
+  $('#nav').innerHTML = TABS.map(k => '<button data-go="' + k + '" class="' + (k === tab ? 'on' : '') + '" aria-label="' + esc(t(k)) + '"' + (k === tab ? ' aria-current="page"' : '') + '><i>' + ICON[k] + '</i><span>' + esc(t(k)) + '</span></button>').join('');
+  try { $('#view').innerHTML = VIEWS[tab](); }
+  catch (e) { console.error(e); $('#view').innerHTML = '<section class="card"><h2>This screen hit a problem</h2><p class="mu">Your data is safe on this device.</p><button class="btn" data-act="reload">Reload</button></section>'; }
+  if (tab === 'focus') tickNow();
+}
+
+/* ---------- actions ---------- */
+const FORM = {
+  task(d) {
+    const x = String(d.t || '').trim(); if (!x) return;
+    S.tasks.push({ id: uid(), t: x.slice(0, 200), pri: ORD[d.pri] !== undefined ? d.pri : 'm', sub: String(d.sub || '').trim().slice(0, 40), due: DRE.test(d.due || '') ? d.due : '', done: false, doneOn: '' });
+    save(); render(); toast('Task added');
+  },
+  note(d) { const x = String(d.t || '').trim(); if (!x) return; S.notes.push({ id: uid(), t: x.slice(0, 120), b: String(d.b || '').slice(0, 20000), ts: Date.now() }); save(); render(); toast('Note added'); },
+  card(d) { const q = String(d.q || '').trim(), a = String(d.a || '').trim(); if (!q || !a) return; S.cards.push({ id: uid(), q: q.slice(0, 500), a: a.slice(0, 1000), due: day(), ivl: 0, ease: 2.3, reps: 0 }); save(); render(); toast('Card added'); },
+  exam(d) { const n = String(d.name || '').trim(); if (!n || !DRE.test(d.date || '')) return; S.exam = { name: n.slice(0, 80), date: d.date }; save(); render(); }
+};
+function exportData() {
+  const b = new Blob([JSON.stringify({ app: 'StudyPilot', version: VER, exported: new Date().toISOString(), data: S }, null, 1)], { type: 'application/json' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'studypilot-backup-' + day() + '.json';
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  toast('Backup downloaded');
+}
+function importFile(el) {
+  const f = el.files && el.files[0]; el.value = ''; if (!f) return;
+  if (f.size > 2e6) { toast('File too large (max 2 MB)'); return; }
+  const r = new FileReader();
+  r.onerror = () => toast('Could not read that file');
+  r.onload = () => {
+    try {
+      const j = JSON.parse(r.result), d = sanitize(j && j.data ? j.data : j);
+      if (!d.tasks.length && !d.notes.length && !d.cards.length && !d.sessions.length) { toast('No StudyPilot data found in that file'); return; }
+      if (!confirm('Replace your current data with this backup? A copy of your current data is kept for recovery.')) return;
+      try { localStorage.setItem(KEY + '.prev', JSON.stringify(S)); } catch (e) { /* ignore */ }
+      S = d; flush(); look(); render(); toast('Backup imported');
+    } catch (e) { toast('That file is not a valid backup'); }
+  };
+  r.readAsText(f);
+}
+const ACT = {
+  reload() { location.reload(); },
+  hide() { $('#fatal').hidden = true; },
+  async install() { if (!dip) return; dip.prompt(); try { await dip.userChoice; } catch (e) { /* ignore */ } dip = null; render(); },
+  qa(D) { if (D.s) ui.sub = D.s; go(D.to); },
+  tog(D) { const x = S.tasks.find(k => k.id === D.id); if (!x) return; x.done = !x.done; x.doneOn = x.done ? day() : ''; if (x.done && award('task:' + x.id, 10)) toast('+10 XP'); save(); render(); },
+  del(D) { if (confirm('Delete this task?')) { S.tasks = S.tasks.filter(k => k.id !== D.id); save(); render(); } },
+  delnote(D) { if (confirm('Delete this note?')) { S.notes = S.notes.filter(k => k.id !== D.id); save(); render(); } },
+  delcard(D) { if (confirm('Delete this card?')) { S.cards = S.cards.filter(k => k.id !== D.id); save(); render(); } },
+  focusTask(D) { S.timer.taskId = D.id; save(); go('focus'); },
+  exClear() { S.exam = null; save(); render(); },
+  rvStart() { ui.rv = true; ui.shown = false; render(); },
+  rvShow() { ui.shown = true; render(); },
+  rate(D) { rate(D.id, D.q); },
+  mode(D) { if (S.timer.endsAt) { toast('Pause the timer first'); return; } const m = D.m === 'break' ? 'break' : 'focus'; setTimer(m, m === 'focus' ? S.focus : S.brk); save(); render(); },
+  dur(D) { if (S.timer.endsAt) return; setTimer('focus', clamp(D.min, 1, 240, 25)); save(); render(); },
+  start() { const tm = S.timer; if (tm.endsAt) return; if (tm.rem <= 0) tm.rem = tm.dur; tm.endsAt = Date.now() + tm.rem * 1000; save(); render(); },
+  pause() { const tm = S.timer; tm.rem = left(); tm.endsAt = 0; save(); render(); },
+  reset() { const tm = S.timer; if (tm.mode === 'focus' && tm.dur - left() >= 60 && !confirm('Discard this session without saving?')) return; tm.rem = tm.dur; tm.endsAt = 0; save(); render(); },
+  finish() { const tm = S.timer, el = tm.dur - left(); if (!logSession(el)) { toast('Focus at least 1 minute to save a session'); return; } tm.rem = tm.dur; tm.endsAt = 0; save(); render(); toast('Session saved'); },
+  export: exportData,
+  import() { const f = $('#file'); if (f) f.click(); },
+  clear() {
+    if (!confirm('Clear ALL StudyPilot data on this device? This cannot be undone. Export a backup first if unsure.')) return;
+    try { localStorage.removeItem(KEY); localStorage.removeItem(KEY + '.prev'); } catch (e) { /* ignore */ }
+    S = sanitize(null); flush(); look(); render(); toast('All data cleared');
+  }
+};
+const RNG = { goal: [10, 720, 120], focus: [5, 120, 25], brk: [1, 60, 5], glass: [0, 100, 60], font: [85, 130, 100] };
+function applySet(el) {
+  const k = el.dataset.set, v = el.value;
+  if (RNG[k]) {
+    const r = RNG[k]; S[k] = clamp(v, r[0], r[1], r[2]);
+    if ((k === 'focus' || k === 'brk') && !S.timer.endsAt && S.timer.mode === (k === 'focus' ? 'focus' : 'break')) { S.timer.dur = S.timer.rem = S[k] * 60; }
+  }
+  else if (k === 'name') S.name = v.trim().slice(0, 40);
+  else if (k === 'calm') S.calm = el.checked;
+  else if (k === 'theme' && THEMES.includes(v)) S.theme = v;
+  else if (k === 'lang' && LANGS.includes(v)) S.lang = v;
+  else if (k === 'accent' && /^#[0-9a-f]{6}$/i.test(v)) S.accent = v;
+  save(); look();
+}
+
+/* ---------- events ---------- */
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-go],[data-sub],[data-flt],[data-act]'); if (!b) return;
+  const D = b.dataset;
+  if (D.go) { go(D.go); return; }
+  if (D.sub) { ui.sub = D.sub; render(); return; }
+  if (D.flt) { ui.flt = D.flt; render(); return; }
+  const f = ACT[D.act]; if (f) f(D, b);
+});
+document.addEventListener('submit', e => {
+  const f = e.target.closest('form[data-form]'); if (!f) return;
+  e.preventDefault();
+  const h = FORM[f.dataset.form]; if (h) h(Object.fromEntries(new FormData(f)));
+});
+document.addEventListener('input', e => {
+  const el = e.target;
+  if (el.dataset.nt !== undefined || el.dataset.nb !== undefined) {
+    const n = S.notes.find(x => x.id === el.dataset.id);
+    if (n) { if (el.dataset.nt !== undefined) n.t = el.value.slice(0, 120); else n.b = el.value.slice(0, 20000); n.ts = Date.now(); save(); }
+    return;
+  }
+  if (el.type === 'range' || el.type === 'color') applySet(el);
+});
+document.addEventListener('change', e => {
+  const el = e.target;
+  if (el.id === 'file') { importFile(el); return; }
+  if (el.dataset.timerTask !== undefined) { S.timer.taskId = el.value; save(); return; }
+  if (el.dataset.set) { applySet(el); if (el.dataset.set === 'theme' || el.dataset.set === 'lang') render(); }
+});
+addEventListener('hashchange', () => { render(); window.scrollTo(0, 0); });
+addEventListener('pagehide', flush);
+document.addEventListener('visibilitychange', () => { if (document.hidden) flush(); else tickNow(); });
+addEventListener('online', () => { if (cur() === 'home') render(); toast('Back online'); });
+addEventListener('offline', () => { if (cur() === 'home') render(); toast('You are offline. StudyPilot still works.'); });
+try { matchMedia('(prefers-color-scheme: light)').addEventListener('change', look); } catch (e) { /* older browsers */ }
+
+/* ---------- errors, install, service worker ---------- */
+function fatal(m) { const f = $('#fatal'); f.hidden = false; f.innerHTML = '<b>Something went wrong.</b> ' + esc(m) + ' <button data-act="reload">Reload</button><button data-act="hide">Dismiss</button>'; }
+addEventListener('error', e => { if (e && e.message) fatal(e.message); });
+addEventListener('unhandledrejection', () => fatal('A background task failed.'));
+addEventListener('beforeinstallprompt', e => { e.preventDefault(); dip = e; if (cur() === 'home' || cur() === 'settings') render(); });
+addEventListener('appinstalled', () => { dip = null; toast('StudyPilot installed'); render(); });
+
+if ('serviceWorker' in navigator) {
+  addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').then(reg => {
+      reg.addEventListener('updatefound', () => {
+        const w = reg.installing; if (!w) return;
+        w.addEventListener('statechange', () => {
+          if (w.state === 'installed' && navigator.serviceWorker.controller) toast('A new version is ready.', 'Reload', () => w.postMessage('SKIP_WAITING'));
+        });
+      });
+    }).catch(() => { /* app still works without it */ });
+    let reloading = false;
+    const hadController = !!navigator.serviceWorker.controller;
+    navigator.serviceWorker.addEventListener('controllerchange', () => { if (hadController && !reloading) { reloading = true; location.reload(); } });
+  });
+}
+
+/* ===== feature pack: subjects, quiz, mistakes, tools, search ===== */
+function nsub(x) {
+  if (!x || typeof x !== 'object' || !String(x.name || '').trim()) return null;
+  return { id: String(x.id || uid()), name: String(x.name).trim().slice(0, 60), exam: DRE.test(x.exam || '') ? x.exam : '',
+    topics: L(x.topics, y => (y && String(y.n || '').trim()) ? { id: String(y.id || uid()), n: String(y.n).trim().slice(0, 100), conf: clamp(y.conf, 0, 5, 0), last: DRE.test(y.last || '') ? y.last : '' } : null, 300) };
+}
+function nq(x) {
+  if (!x || typeof x !== 'object') return null;
+  const type = ['mcq', 'tf', 'short'].includes(x.type) ? x.type : '', q = String(x.q || '').trim();
+  let a = String(x.a == null ? '' : x.a).trim();
+  if (!type || !q || !a) return null;
+  if (type === 'tf') a = /^t/i.test(a) ? 'True' : 'False';
+  const opts = type === 'mcq' ? (Array.isArray(x.opts) ? x.opts : []).map(o => String(o).trim().slice(0, 120)).filter(Boolean).slice(0, 6) : [];
+  if (type === 'mcq' && (opts.length < 2 || !opts.includes(a))) return null;
+  return { id: String(x.id || uid()), type, q: q.slice(0, 300), opts, a: a.slice(0, 200), why: String(x.why || '').slice(0, 400), topic: String(x.topic || '').slice(0, 40) };
+}
+function nmis(x) { return x && typeof x === 'object' && x.qid ? { id: String(x.id || uid()), qid: String(x.qid), given: String(x.given || '').slice(0, 200), fixed: !!x.fixed, date: DRE.test(x.date || '') ? x.date : day() } : null; }
+function nat(x) { return x && typeof x === 'object' && Number(x.total) > 0 ? { id: String(x.id || uid()), date: DRE.test(x.date || '') ? x.date : day(), total: clamp(x.total, 1, 500, 1), right: clamp(x.right, 0, 500, 0) } : null; }
+
+ui.open = {};
+const UNITS = {
+  Length: { mm: .001, cm: .01, m: 1, km: 1000, in: .0254, ft: .3048, mi: 1609.344 },
+  Mass: { g: .001, kg: 1, lb: .45359237, oz: .028349523125 },
+  Time: { s: 1, min: 60, h: 3600, day: 86400 },
+  Temperature: { C: 0, F: 0, K: 0 }
+};
+const FORMULAS = [
+  ['Maths', 'Pythagoras', 'a² + b² = c²'], ['Maths', 'Quadratic formula', 'x = (−b ± √(b² − 4ac)) / 2a'], ['Maths', 'Area of a circle', 'A = πr²'], ['Maths', 'Circumference', 'C = 2πr'],
+  ['Physics', 'Velocity', 'v = u + at'], ['Physics', 'Displacement', 's = ut + ½at²'], ['Physics', "Newton's second law", 'F = ma'], ['Physics', "Ohm's law", 'V = IR'],
+  ['Physics', 'Electrical power', 'P = VI'], ['Physics', 'Kinetic energy', 'KE = ½mv²'], ['Physics', 'Density', 'ρ = m / V'],
+  ['Chemistry', 'Moles', 'n = m / M'], ['Chemistry', 'Ideal gas law', 'PV = nRT'], ['Chemistry', 'pH', 'pH = −log₁₀[H⁺]']
+];
+
+/* planner: "What should I study now?" */
+function rec() {
+  let best = null, bs = -1;
+  S.subjects.forEach(s => {
+    const de = s.exam ? daysTo(s.exam) : null;
+    s.topics.forEach(p => {
+      const age = p.last ? Math.min(30, -daysTo(p.last)) : 30;
+      let sc = (5 - p.conf) * 2 + age / 3;
+      if (de !== null && de >= 0 && de <= 30) sc += (30 - de) / 3;
+      if (sc > bs) { bs = sc; best = { s, p, de }; }
+    });
+  });
+  return best;
+}
+function recCard() {
+  const r = rec();
+  return '<section class="card"><p class="mu">What should I study now?</p>' + (r
+    ? '<h2>' + esc(r.p.n) + '</h2><p class="mu">' + esc(r.s.name) + (r.de !== null && r.de >= 0 ? ', exam in ' + r.de + ' days' : '') + '. Suggested from your confidence ratings, last revision and exam dates.</p><button class="btn" data-act="qa" data-to="study" data-s="plan">Open planner</button>'
+    : '<p class="mu">Add a subject and topics in Study, then Plan, to get a suggestion.</p>') + '</section>';
+}
+SUB.plan = () => {
+  const r = rec();
+  return '<form class="card" data-form="subj"><input name="name" required maxlength="60" placeholder="Subject name" aria-label="Subject"><input name="exam" type="date" aria-label="Exam date (optional)"><button class="btn">＋ Add subject</button></form>'
+    + (r ? '<section class="card"><p class="mu">Study next</p><h2>' + esc(r.p.n) + '</h2><small>' + esc(r.s.name) + '. A suggestion, not a guarantee.</small></section>' : '')
+    + S.subjects.map(s => {
+      const n = s.topics.length, ok = s.topics.filter(p => p.conf >= 4).length, sid = esc(s.id);
+      return '<details class="card" data-sid="' + sid + '"' + (ui.open[s.id] ? ' open' : '') + '><summary>' + esc(s.name) + '</summary><small>' + (s.exam ? 'Exam ' + esc(s.exam) + ' (' + daysTo(s.exam) + ' days). ' : '') + ok + ' of ' + n + ' topics rated 4 or 5</small><div class="meter"><i style="width:' + (n ? Math.round(ok / n * 100) : 0) + '%"></i></div><ul>'
+        + s.topics.map(p => '<li class="task"><div><b>' + esc(p.n) + '</b><small>' + (p.last ? 'revised ' + esc(p.last) : 'not revised yet') + '</small></div><select data-conf data-sid="' + sid + '" data-id="' + esc(p.id) + '" aria-label="Confidence" style="width:84px;margin:0">'
+          + [0, 1, 2, 3, 4, 5].map(v => '<option value="' + v + '"' + (v === p.conf ? ' selected' : '') + '>' + (v ? v + '/5' : '?') + '</option>').join('') + '</select><button class="ic" data-act="rev" data-sid="' + sid + '" data-id="' + esc(p.id) + '" aria-label="Mark revised today">✔</button><button class="ic" data-act="tdel" data-sid="' + sid + '" data-id="' + esc(p.id) + '" aria-label="Delete topic">🗑</button></li>').join('')
+        + '</ul><form data-form="topic"><input type="hidden" name="sid" value="' + sid + '"><input name="n" required maxlength="100" placeholder="Add a topic" aria-label="Topic" style="margin-bottom:8px"><button class="btn ghost">＋ Topic</button></form><div class="row"><button class="btn danger" data-act="sdel" data-id="' + sid + '">Delete subject</button></div></details>';
+    }).join('');
+};
+
+/* quiz + mistake notebook */
+function qStart(ids) {
+  ids = ids.slice();
+  for (let i = ids.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); const tmp = ids[i]; ids[i] = ids[j]; ids[j] = tmp; }
+  ui.qz = { id: uid(), ids: ids.slice(0, 10), i: 0, right: 0, res: null, saved: false }; render();
+}
+function qAns(v) {
+  const q = ui.qz; if (!q || q.res) return;
+  const x = S.quizzes.find(k => k.id === q.ids[q.i]); if (!x) return;
+  v = String(v).trim();
+  const ok = x.type === 'short' ? v.toLowerCase() === x.a.toLowerCase() : v === x.a;
+  q.res = { ok, v };
+  if (ok) { q.right++; S.mistakes.forEach(m => { if (m.qid === x.id) m.fixed = true; }); }
+  else if (!S.mistakes.some(m => m.qid === x.id && !m.fixed)) S.mistakes.push({ id: uid(), qid: x.id, given: v.slice(0, 200), fixed: false, date: day() });
+  save(); render();
+}
+function qzView(q) {
+  if (q.i >= q.ids.length) {
+    const p = q.ids.length ? Math.round(q.right / q.ids.length * 100) : 0;
+    return '<section class="card center"><h2>Score: ' + q.right + ' / ' + q.ids.length + ' (' + p + '%)</h2><p class="mu">This is the result for this set only. It does not predict exam results.</p><button class="btn" data-act="qend">Done</button></section>';
+  }
+  const x = S.quizzes.find(k => k.id === q.ids[q.i]);
+  if (!x) { q.i++; return qzView(q); }
+  let body;
+  if (q.res) body = '<p class="flash">' + (q.res.ok ? 'Correct ✓' : 'Not quite ✕') + '</p>' + (q.res.ok ? '' : '<p>Answer: <b>' + esc(x.a) + '</b></p>') + (x.why ? '<p class="mu">' + esc(x.why) + '</p>' : '') + '<button class="btn" data-act="qnext">' + (q.i + 1 >= q.ids.length ? 'See score' : 'Next') + '</button>';
+  else if (x.type === 'short') body = '<form data-form="qshort"><input name="v" required maxlength="200" placeholder="Your answer" autocomplete="off" aria-label="Answer" style="margin-bottom:8px"><button class="btn">Check</button></form><small>Short answers are matched exactly, ignoring capital letters.</small>';
+  else body = (x.type === 'tf' ? ['True', 'False'] : x.opts).map(o => '<button class="btn ghost block" data-act="qpick" data-v="' + esc(o) + '">' + esc(o) + '</button>').join('');
+  return '<section class="card"><small>Question ' + (q.i + 1) + ' of ' + q.ids.length + '</small><p class="flash">' + esc(x.q) + '</p>' + body + '</section>';
+}
+SUB.quiz = () => {
+  if (ui.qz) return qzView(ui.qz);
+  const un = S.mistakes.filter(m => !m.fixed && S.quizzes.some(k => k.id === m.qid)), at = S.attempts.slice(-5).reverse();
+  return '<section class="card"><h2>' + S.quizzes.length + ' questions</h2><div class="row">' + (S.quizzes.length ? '<button class="btn" data-act="qstart">Start practice</button>' : '') + (un.length ? '<button class="btn ghost" data-act="qretry">Retry mistakes (' + un.length + ')</button>' : '') + '</div>' + (S.quizzes.length ? '' : '<p class="mu">Add your first question below.</p>') + '</section>'
+    + '<form class="card" data-form="quiz"><select name="type" aria-label="Type"><option value="mcq">Multiple choice</option><option value="tf">True or false</option><option value="short">Short answer</option></select><input name="q" required maxlength="300" placeholder="Question" aria-label="Question"><input name="opts" maxlength="500" placeholder="Choices separated by ; (multiple choice only)" aria-label="Choices"><input name="a" required maxlength="200" placeholder="Correct answer (True or False for true/false)" aria-label="Answer"><input name="why" maxlength="400" placeholder="Explanation (optional)" aria-label="Explanation"><input name="topic" maxlength="40" placeholder="Topic (optional)" aria-label="Topic"><button class="btn">＋ Add question</button></form>'
+    + (at.length ? '<section class="card"><h2>Recent attempts</h2><ul>' + at.map(a => '<li class="task"><div><b>' + a.right + ' / ' + a.total + '</b><small>' + esc(a.date) + '</small></div><span>' + Math.round(a.right / a.total * 100) + '%</span></li>').join('') + '</ul></section>' : '')
+    + (un.length ? '<section class="card"><h2>Mistake notebook</h2><ul>' + un.map(m => { const x = S.quizzes.find(k => k.id === m.qid); return '<li class="task"><div><b>' + esc(x.q) + '</b><small>You answered: ' + esc(m.given) + '. Correct: ' + esc(x.a) + '</small></div></li>'; }).join('') + '</ul></section>' : '')
+    + (S.quizzes.length ? '<section class="card"><h2>All questions</h2><ul>' + S.quizzes.slice(-20).reverse().map(x => '<li class="task"><div><b>' + esc(x.q) + '</b><small>' + esc(x.type) + (x.topic ? ', ' + esc(x.topic) : '') + '</small></div><button class="ic" data-act="qdel" data-id="' + esc(x.id) + '" aria-label="Delete question">🗑</button></li>').join('') + '</ul></section>' : '');
+};
+
+/* tools: search, calculator, converter, formulas */
+function calc(src) {
+  const s = String(src).toLowerCase().replace(/\s+/g, '').replace(/×/g, '*').replace(/÷/g, '/'), F = { sin: Math.sin, cos: Math.cos, tan: Math.tan, sqrt: Math.sqrt, log: Math.log10, ln: Math.log, abs: Math.abs };
+  let i = 0;
+  const peek = () => s[i];
+  function num() {
+    const m = /^(\d+\.?\d*|\.\d+)(e[+-]?\d+)?/.exec(s.slice(i));
+    if (m) { i += m[0].length; return parseFloat(m[0]); }
+    const w = /^[a-z]+/.exec(s.slice(i)); if (!w) throw new Error('x');
+    i += w[0].length;
+    if (w[0] === 'pi') return Math.PI;
+    if (w[0] === 'e') return Math.E;
+    if (F[w[0]] && peek() === '(') { i++; const v = add(); if (peek() !== ')') throw new Error('x'); i++; return F[w[0]](v); }
+    throw new Error('x');
+  }
+  function pri() { if (peek() === '(') { i++; const v = add(); if (peek() !== ')') throw new Error('x'); i++; return v; } if (peek() === '+') { i++; return pri(); } return num(); }
+  function pow() { if (peek() === '-') { i++; return -pow(); } const b = pri(); if (peek() === '^') { i++; return Math.pow(b, pow()); } return b; }
+  function mul() { let v = pow(); while (peek() === '*' || peek() === '/') { const o = s[i++], r = pow(); v = o === '*' ? v * r : v / r; } return v; }
+  function add() { let v = mul(); while (peek() === '+' || peek() === '-') { const o = s[i++], r = mul(); v = o === '+' ? v + r : v - r; } return v; }
+  const v = add();
+  if (i !== s.length || !Number.isFinite(v)) throw new Error('x');
+  return v;
+}
+function searchRes() {
+  const q = (ui.q || '').toLowerCase().trim(); if (!q) return '';
+  const R = [], m = s => String(s).toLowerCase().indexOf(q) >= 0;
+  S.tasks.forEach(x => { if (m(x.t + ' ' + x.sub)) R.push(['Task', x.t]); });
+  S.notes.forEach(x => { if (m(x.t + ' ' + x.b)) R.push(['Note', x.t]); });
+  S.cards.forEach(x => { if (m(x.q + ' ' + x.a)) R.push(['Card', x.q]); });
+  S.quizzes.forEach(x => { if (m(x.q + ' ' + x.topic)) R.push(['Quiz', x.q]); });
+  S.subjects.forEach(s => { if (m(s.name)) R.push(['Subject', s.name]); s.topics.forEach(p => { if (m(p.n)) R.push(['Topic', p.n + ' (' + s.name + ')']); }); });
+  FORMULAS.forEach(f => { if (m(f[0] + ' ' + f[1] + ' ' + f[2])) R.push(['Formula', f[1] + ': ' + f[2]]); });
+  return '<section class="card"><small>' + R.length + ' results</small>' + (R.length ? '<ul>' + R.slice(0, 30).map(r => '<li class="task"><div><b>' + esc(r[1]) + '</b><small>' + r[0] + '</small></div></li>').join('') + '</ul>' : '<p class="mu">Nothing matches. Try a shorter word.</p>') + '</section>';
+}
+VIEWS.tools = () => {
+  const cat = UNITS[ui.uc] ? ui.uc : 'Length', U = UNITS[cat], ks = Object.keys(U);
+  const fr = U[ui.cf] !== undefined ? ui.cf : ks[0], to = U[ui.ct] !== undefined ? ui.ct : ks[1];
+  const so = (sel) => ks.map(k => '<option' + (k === sel ? ' selected' : '') + '>' + k + '</option>').join('');
+  const grp = [...new Set(FORMULAS.map(f => f[0]))];
+  return '<h1>' + t('tools') + '</h1>'
+    + '<form class="card" data-form="search"><h2>Search everything</h2><input name="q" maxlength="100" value="' + esc(ui.q || '') + '" placeholder="Tasks, notes, cards, quiz, topics, formulas" aria-label="Search"><button class="btn">Search</button></form>' + searchRes()
+    + '<form class="card" data-form="calc"><h2>Calculator</h2><input name="e" maxlength="120" value="' + esc(ui.ce || '') + '" placeholder="2*(3+4)^2/5, sqrt(16), sin(pi/2)" aria-label="Expression" autocomplete="off"><button class="btn">Calculate</button>' + (ui.cr ? '<p class="flash"><b>' + esc(ui.cr) + '</b></p>' : '') + '<small>Trigonometry uses radians.</small></form>'
+    + '<section class="card"><h2>Unit converter</h2><div class="seg">' + Object.keys(UNITS).map(c => '<button data-act="ucat" data-c="' + c + '" class="' + (c === cat ? 'on' : '') + '">' + c + '</button>').join('') + '</div><form data-form="conv"><input name="v" type="number" step="any" value="' + esc(ui.cv || '') + '" placeholder="Value" aria-label="Value" style="margin-bottom:8px"><div class="row"><select name="from" aria-label="From" style="flex:1">' + so(fr) + '</select><select name="to" aria-label="To" style="flex:1">' + so(to) + '</select></div><div class="row"><button class="btn">Convert</button></div></form>' + (ui.conv ? '<p class="flash"><b>' + esc(ui.conv) + '</b></p>' : '') + '</section>'
+    + '<h2 style="margin:16px 0 8px">Formula library</h2>' + grp.map(g => '<details class="card"><summary>' + g + '</summary><ul>' + FORMULAS.filter(f => f[0] === g).map(f => '<li class="task"><div><b>' + f[2] + '</b><small>' + f[1] + '</small></div></li>').join('') + '</ul></details>').join('');
+};
+
+/* forms, actions, events */
+Object.assign(FORM, {
+  subj(d) { const n = String(d.name || '').trim(); if (!n) return; const id = uid(); S.subjects.push({ id, name: n.slice(0, 60), exam: DRE.test(d.exam || '') ? d.exam : '', topics: [] }); ui.open[id] = true; save(); render(); },
+  topic(d) { const s = S.subjects.find(k => k.id === d.sid), n = String(d.n || '').trim(); if (!s || !n || s.topics.length >= 300) return; s.topics.push({ id: uid(), n: n.slice(0, 100), conf: 0, last: '' }); ui.open[s.id] = true; save(); render(); },
+  quiz(d) {
+    const x = nq({ type: ['mcq', 'tf', 'short'].includes(d.type) ? d.type : 'mcq', q: d.q, a: d.a, why: d.why, topic: d.topic, opts: String(d.opts || '').split(';') });
+    if (!x) { toast('Check the question: multiple choice needs 2 or more choices that include the correct answer.'); return; }
+    S.quizzes.push(x); save(); render(); toast('Question added');
+  },
+  qshort(d) { qAns(d.v); },
+  search(d) { ui.q = String(d.q || '').slice(0, 100); render(); },
+  calc(d) { ui.ce = String(d.e || '').slice(0, 120); try { ui.cr = String(+calc(d.e).toPrecision(12)); } catch (e) { ui.cr = 'Check the expression'; } render(); },
+  conv(d) {
+    const cat = UNITS[ui.uc] ? ui.uc : 'Length', U = UNITS[cat], v = Number(d.v);
+    ui.cf = d.from; ui.ct = d.to; ui.cv = String(d.v || '');
+    if (d.v === '' || !Number.isFinite(v) || U[d.from] === undefined || U[d.to] === undefined) { ui.conv = 'Enter a number'; render(); return; }
+    let r;
+    if (cat === 'Temperature') { const c = d.from === 'C' ? v : d.from === 'F' ? (v - 32) * 5 / 9 : v - 273.15; r = d.to === 'C' ? c : d.to === 'F' ? c * 9 / 5 + 32 : c + 273.15; }
+    else r = v * U[d.from] / U[d.to];
+    ui.conv = v + ' ' + d.from + ' = ' + (+r.toPrecision(10)) + ' ' + d.to; render();
+  }
+});
+Object.assign(ACT, {
+  rev(D) { const s = S.subjects.find(k => k.id === D.sid), p = s && s.topics.find(k => k.id === D.id); if (!p) return; p.last = day(); if (award('topic:' + p.id + ':' + day(), 2)) toast('Revised. +2 XP'); save(); render(); },
+  tdel(D) { const s = S.subjects.find(k => k.id === D.sid); if (s && confirm('Delete this topic?')) { s.topics = s.topics.filter(k => k.id !== D.id); save(); render(); } },
+  sdel(D) { if (confirm('Delete this subject and its topics?')) { S.subjects = S.subjects.filter(k => k.id !== D.id); save(); render(); } },
+  qdel(D) { if (confirm('Delete this question?')) { S.quizzes = S.quizzes.filter(k => k.id !== D.id); save(); render(); } },
+  qstart() { if (S.quizzes.length) qStart(S.quizzes.map(x => x.id)); },
+  qretry() { const ids = [...new Set(S.mistakes.filter(m => !m.fixed && S.quizzes.some(k => k.id === m.qid)).map(m => m.qid))]; if (ids.length) qStart(ids); },
+  qpick(D) { qAns(D.v); },
+  qnext() {
+    const q = ui.qz; if (!q || !q.res) return;
+    q.res = null; q.i++;
+    if (q.i >= q.ids.length && !q.saved) { q.saved = true; S.attempts.push({ id: q.id, date: day(), total: q.ids.length, right: q.right }); if (S.attempts.length > 500) S.attempts.shift(); award('quiz:' + q.id, q.right * 2); }
+    save(); render();
+  },
+  qend() { ui.qz = null; render(); },
+  ucat(D) { if (UNITS[D.c]) { ui.uc = D.c; ui.cf = ui.ct = ui.conv = ''; render(); } }
+});
+document.addEventListener('toggle', e => { const d = e.target; if (d && d.dataset && d.dataset.sid) ui.open[d.dataset.sid] = d.open; }, true);
+document.addEventListener('change', e => {
+  const el = e.target;
+  if (el.dataset && el.dataset.conf !== undefined) {
+    const s = S.subjects.find(k => k.id === el.dataset.sid), p = s && s.topics.find(k => k.id === el.dataset.id);
+    if (p) { p.conf = clamp(el.value, 0, 5, 0); save(); render(); }
+  }
+});
+
+
+/* ---------- start ---------- */
+look();
+const go0 = new URLSearchParams(location.search).get('go');
+if (TABS.includes(go0) && !location.hash) location.hash = '#/' + go0;
+render();
+})();
+</script>
 </body>
 </html>
