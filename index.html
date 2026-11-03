@@ -104,7 +104,7 @@ input[type=hidden]{display:none}
 <script>
 (() => {
 'use strict';
-const KEY = 'studypilot.v3', VER = '3.1.0', DRE = /^\d{4}-\d{2}-\d{2}$/;
+const KEY = 'studypilot.v3', VER = '3.3.0', DRE = /^\d{4}-\d{2}-\d{2}$/;
 const FOUNDER = {
   name: 'Asjadh Rilwan',
   wa: 'https://wa.me/94774209718',
@@ -117,7 +117,7 @@ const TR = {
   si: { home: 'මුල් පිටුව', study: 'අධ්‍යයනය', focus: 'අවධානය', progress: 'ප්‍රගතිය', settings: 'සැකසුම්', tools: 'මෙවලම්', am: 'සුභ උදෑසනක්', pm: 'සුභ දහවලක්', ev: 'සුභ සන්ධ්‍යාවක්' }
 };
 const LANGS = ['en', 'ta', 'si'], LOC = { en: 'en-GB', ta: 'ta-IN', si: 'si-LK' };
-const THEMES = ['system', 'dark', 'light', 'amoled'];
+const THEMES = ['system', 'dark', 'light', 'amoled', 'luxe', 'gold', 'silver', 'emerald', 'ocean'];
 const TIPS = [
   'Study in short bursts. 25 focused minutes beats an hour of drifting.',
   'Test yourself instead of rereading. Recalling builds memory.',
@@ -164,8 +164,8 @@ function sanitize(o) {
   const s = {
     name: typeof o.name === 'string' ? o.name.slice(0, 40) : '',
     goal: clamp(o.goal, 10, 720, 120), focus: clamp(o.focus, 5, 120, 25), brk: clamp(o.brk, 1, 60, 5),
-    theme: THEMES.includes(o.theme) ? o.theme : 'dark',
-    accent: /^#[0-9a-f]{6}$/i.test(o.accent) ? o.accent : '#5eead4',
+    theme: THEMES.includes(o.theme) ? o.theme : 'luxe',
+    accent: /^#[0-9a-f]{6}$/i.test(o.accent) ? o.accent : '#e6c35c',
     glass: clamp(o.glass, 0, 100, 60), font: clamp(o.font, 85, 130, 100),
     lang: LANGS.includes(o.lang) ? o.lang : 'en', calm: !!o.calm,
     tasks: L(o.tasks, nt, 3000), notes: L(o.notes, nn, 500), cards: L(o.cards, nc, 5000), sessions: L(o.sessions, ns, 5000),
@@ -329,7 +329,7 @@ const VIEWS = {
     const fb = FOUNDER.wa + '?text=' + encodeURIComponent('StudyPilot feedback (v' + VER + '): ');
     return '<h1>' + t('settings') + '</h1>'
       + '<section class="card"><h2>Profile and goals</h2><label>Your name<input data-set="name" maxlength="40" value="' + esc(S.name) + '" autocomplete="given-name"></label>' + num('goal', 'Daily focus goal (minutes)', 10, 720) + num('focus', 'Focus length (minutes)', 5, 120) + num('brk', 'Break length (minutes)', 1, 60) + '</section>'
-      + '<section class="card"><h2>Look and feel</h2><label>Theme<select data-set="theme">' + opt('system', 'System', S.theme) + opt('dark', 'Dark', S.theme) + opt('light', 'Light', S.theme) + opt('amoled', 'AMOLED black', S.theme) + '</select></label>'
+      + '<section class="card"><h2>Look and feel</h2><label>Theme<select data-set="theme">' + opt('system', 'System', S.theme) + opt('dark', 'Dark', S.theme) + opt('light', 'Light', S.theme) + opt('luxe', 'Luxe: black, gold, silver', S.theme) + opt('gold', 'Gold', S.theme) + opt('silver', 'Silver', S.theme) + opt('amoled', 'AMOLED black', S.theme) + '</select></label>'
       + '<label>Language<select data-set="lang">' + opt('en', 'English', S.lang) + opt('ta', 'தமிழ்', S.lang) + opt('si', 'සිංහල', S.lang) + '</select></label>'
       + '<label>Accent colour<input type="color" data-set="accent" value="' + esc(S.accent) + '"></label><label>Glass strength<input type="range" min="0" max="100" value="' + S.glass + '" data-set="glass"></label><label>Text size<input type="range" min="85" max="130" value="' + S.font + '" data-set="font"></label>'
       + '<label><input type="checkbox" data-set="calm"' + (S.calm ? ' checked' : '') + '>Low-power mode (no blur or animation)</label></section>'
@@ -774,7 +774,7 @@ document.addEventListener('change', e => {
   } catch (e) { /* ignore */ }
 
   /* ---------- register tabs, nav, look ---------- */
-  THEMES.push('gold', 'silver', 'emerald', 'ocean');
+  
   TABS.push('ai', 'more', 'quran', 'prayer', 'web', 'habits', 'gpa', 'stopwatch', 'looks');
   Object.assign(ICON, { ai: '🤖', more: '✨', quran: '📖', prayer: '🕌', web: '🌐', habits: '✅', gpa: '🎓', stopwatch: '⏲', looks: '🎨' });
   Object.assign(TR.en, { ai: 'AI', more: 'More', quran: 'Quran', prayer: 'Prayer', web: 'Web', habits: 'Habits', gpa: 'GPA', stopwatch: 'Study timer', looks: 'Looks' });
@@ -941,6 +941,200 @@ document.addEventListener('change', e => {
     if (el.dataset.x === 'serif') { X.serif = el.checked; sx(); look(); }
     if (el.dataset.rec !== undefined) { X.rec = el.value; sx(); }
   });
+
+  /* ===== Premium upgrade 2 ===== */
+  const FF = { sys: 'system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans"', serif: 'Georgia,"Times New Roman",serif', human: '"Trebuchet MS","Segoe UI",Candara,sans-serif', round: '"Segoe UI Variable",Nunito,"Varela Round",system-ui', mono: 'ui-monospace,"SF Mono",Consolas,monospace' };
+  X.home = Object.assign({ clock: 1, tasks: 1, sched: 1, quote: 1, activity: 1, qa: 1 }, X.home || {});
+  if (!X.m2) { X.m2 = 1; X.shine = true; S.theme = 'gold'; S.accent = '#d4af37'; save(); }
+  sx();
+  const sty2 = document.createElement('style');
+  sty2.textContent = `
+body{font-family:var(--ff,system-ui),"Noto Sans Tamil","Noto Sans Sinhala","Noto Sans Arabic",sans-serif}
+[data-shine="1"] h1,[data-shine="1"] .gold{background:linear-gradient(100deg,#fff 0%,#d4af37 35%,#e9e9ef 55%,#d4af37 80%);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:shn 10s linear infinite}
+@keyframes shn{to{background-position:-220% 0}}
+[data-shine="1"] .gl::after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.09),transparent);transform:skewX(-20deg);animation:swp 9s ease-in-out infinite;pointer-events:none}
+@keyframes swp{0%,60%{left:-60%}100%{left:130%}}
+.sp{position:absolute;inset:0;background-image:radial-gradient(1.5px 1.5px at 12% 22%,rgba(255,255,255,.9),transparent),radial-gradient(1.5px 1.5px at 68% 14%,rgba(255,226,150,.9),transparent),radial-gradient(1px 1px at 84% 52%,rgba(255,255,255,.8),transparent),radial-gradient(1.5px 1.5px at 30% 70%,rgba(255,226,150,.8),transparent),radial-gradient(1px 1px at 52% 88%,rgba(255,255,255,.8),transparent),radial-gradient(1px 1px at 92% 82%,rgba(255,226,150,.8),transparent);animation:tw 7s ease-in-out infinite alternate}
+@keyframes tw{from{opacity:.25}to{opacity:.85}}
+#view.pg{animation:pgi .3s ease-out}
+@keyframes pgi{from{opacity:0;transform:translateY(10px)}}
+#nav{overflow-x:auto;scrollbar-width:none;justify-content:flex-start}#nav::-webkit-scrollbar{display:none}#nav button{flex:0 0 62px}
+.clk{font-size:2.7rem;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.1}
+.wd{display:flex;gap:6px;margin-top:6px}.wd span{flex:1;text-align:center;font-size:.68rem;color:var(--mu)}.wd i{display:block;width:18px;height:18px;margin:2px auto 0;border-radius:50%;border:1.5px solid var(--bd)}.wd i.on{background:var(--accent);border-color:var(--accent)}
+[data-hc="1"]{--bd:rgba(255,255,255,.65);--mu:#dfe5f7}
+.fb{font-weight:800;letter-spacing:.02em}
+`;
+  document.head.appendChild(sty2);
+  const sp = document.createElement('div'); sp.className = 'sp'; lv.appendChild(sp);
+  const _l2 = look;
+  look = function () { _l2(); const d = document.documentElement; d.dataset.shine = X.shine ? '1' : '0'; d.dataset.hc = X.hc ? '1' : '0'; d.style.setProperty('--ff', FF[X.ff] || FF.sys); };
+
+  /* navigation: every destination is its own tab, bar scrolls sideways */
+  NAV.length = 0; NAV.push('home', 'study', 'focus', 'habits', 'tools', 'gpa', 'prayer', 'quran', 'progress', 'ai', 'more', 'settings');
+  let lastTab = '';
+  const _r2 = render;
+  render = function () {
+    _r2();
+    const v = $('#view'), tab = cur();
+    if (tab !== lastTab && !S.calm) { v.classList.remove('pg'); void v.offsetWidth; v.classList.add('pg'); }
+    lastTab = tab;
+    const nv = $('#nav'), on = nv.querySelector('.on'); if (on) nv.scrollLeft = on.offsetLeft - nv.clientWidth / 2 + on.offsetWidth / 2;
+  };
+
+  /* luxury home */
+  const QUOTES = ['Small steps, taken every day, add up to big results.', 'Focus on progress, not perfection.', 'Consistency beats intensity.', 'A calm mind remembers more.', 'Today’s effort is tomorrow’s confidence.', 'Learning is a habit. Build it one day at a time.', 'Ask questions. Curiosity is how learning begins.'];
+  const recent = () => {
+    const a = [];
+    S.sessions.slice(-8).forEach(x => a.push([x.date, '⏱ Focus ' + Math.round(x.sec / 60) + ' min' + (x.sub ? ' · ' + x.sub : '')]));
+    S.tasks.filter(x => x.done && x.doneOn).slice(-8).forEach(x => a.push([x.doneOn, '✅ ' + x.t]));
+    S.attempts.slice(-4).forEach(x => a.push([x.date, '🧠 Quiz ' + x.right + '/' + x.total]));
+    return a.sort((p, q) => q[0].localeCompare(p[0])).slice(0, 5);
+  };
+  const clockStr = () => new Date().toLocaleTimeString(LOC[S.lang], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  setInterval(() => { const c = $('#hclk'); if (c) c.textContent = clockStr(); }, 1000);
+  VIEWS.home = () => {
+    const n = new Date(), today = day(), hr = n.getHours(), g = hr < 12 ? 'am' : hr < 18 ? 'pm' : 'ev', H = X.home;
+    const doy = Math.floor((n - new Date(n.getFullYear(), 0, 0)) / 864e5);
+    const pend = sortT(S.tasks.filter(x => !x.done)), dn = S.tasks.filter(x => x.done && x.doneOn === today).length;
+    const pct = dn + pend.length ? Math.round(dn / (dn + pend.length) * 100) : 0, mt = mins(today), gp = Math.min(100, Math.round(mt / S.goal * 100));
+    const ex = S.exam ? daysTo(S.exam.date) : null, sch = pend.filter(x => x.due && daysTo(x.due) <= 7).sort((a, b) => a.due.localeCompare(b.due)).slice(0, 4), act = recent();
+    const QA = [['focus', '⏱', 'Focus'], ['study|tasks', '➕', 'Add task'], ['study|cards', '🗂', 'Cards'], ['ai', '🤖', 'Ask AI'], ['habits', '✅', 'Habits'], ['quran', '📖', 'Quran']];
+    return '<section class="card gl"><div class="top"><p class="mu">' + esc(n.toLocaleDateString(LOC[S.lang], { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })) + '</p><span class="pill">' + (navigator.onLine ? 'Online' : 'Offline') + '</span></div>'
+      + '<h1>' + t(g) + (S.name ? ', <span class="fb">' + esc(S.name) + '</span>' : '') + '</h1>' + (H.clock ? '<p class="clk" id="hclk">' + clockStr() + '</p>' : '')
+      + '<div class="hero" style="margin:12px 0 0"><div class="ring" style="--p:' + pct + '"><b>' + pct + '%</b></div><div><p><b>' + dn + '</b> done today · <b>' + pend.length + '</b> to go</p><div class="meter"><i style="width:' + gp + '%"></i></div><small>' + mt + ' of ' + S.goal + ' focus minutes (' + gp + '%)</small></div></div></section>'
+      + (H.qa ? '<section class="hub">' + QA.map(q => { const p = q[0].split('|'); return p[1] ? '<button class="card hubi" data-act="qa" data-to="' + p[0] + '" data-s="' + p[1] + '"><i>' + q[1] + '</i><span>' + q[2] + '</span></button>' : '<button class="card hubi" data-go="' + p[0] + '"><i>' + q[1] + '</i><span>' + q[2] + '</span></button>'; }).join('') + '</section>' : '')
+      + (H.tasks ? '<section class="card"><h2>Today’s tasks</h2>' + (pend.length ? '<ul>' + pend.slice(0, 4).map(x => '<li class="task"><button class="chk" data-act="tog" data-id="' + esc(x.id) + '" aria-label="Mark done"></button><div><b>' + DOT[x.pri] + ' ' + esc(x.t) + '</b><small>' + esc(x.sub) + '</small></div></li>').join('') + '</ul><button class="btn ghost" data-act="focusTask" data-id="' + esc(pend[0].id) + '">▶ Focus on the first one</button>' : '<p class="mu">No tasks yet. Tap “Add task” above to plan your day.</p>') + '</section>' : '')
+      + (H.sched ? '<section class="card"><h2>Study schedule</h2>' + (sch.length ? '<ul>' + sch.map(x => '<li class="task"><div><b>' + esc(x.t) + '</b><small>' + (daysTo(x.due) < 0 ? 'overdue' : daysTo(x.due) === 0 ? 'due today' : 'due in ' + daysTo(x.due) + ' days') + '</small></div></li>').join('') + '</ul>' : '<p class="mu">Tasks with a due date in the next 7 days appear here.</p>') + '</section>' + recCard() : '')
+      + (ex !== null
+        ? '<section class="card"><p class="mu">⏳ Exam countdown</p><h2>' + esc(S.exam.name) + '</h2><p class="big">' + (ex > 0 ? ex + ' days' : ex === 0 ? 'Today' : 'Passed') + '</p><button class="btn ghost" data-act="exClear">Remove</button></section>'
+        : '<form class="card" data-form="exam"><h2>⏳ Exam countdown</h2><input name="name" required maxlength="80" placeholder="Exam name"><input name="date" type="date" required aria-label="Exam date"><button class="btn">Save exam</button></form>')
+      + (H.quote ? '<section class="card gl"><p class="mu">Today’s study tip</p><p>' + esc(TIPS[doy % TIPS.length]) + '</p><p class="mu" style="margin-top:10px">Motivation</p><p><i>' + esc(QUOTES[doy % QUOTES.length]) + '</i></p></section>' : '')
+      + (H.activity ? '<section class="card"><h2>Recent activity</h2>' + (act.length ? '<ul>' + act.map(a => '<li class="task"><div><b>' + esc(a[1]) + '</b><small>' + esc(a[0]) + '</small></div></li>').join('') + '</ul>' : '<p class="mu">Finish a focus session, task or quiz and it shows here.</p>') + '</section>' : '')
+      + installCard() + '<p class="center mu"><small>Founded by <span class="fb">' + esc(FOUNDER.name) + '</span></small></p>';
+  };
+  const m0 = VIEWS.more;
+  VIEWS.more = () => m0() + '<section class="card gl"><h2>About StudyPilot</h2><p>Version ' + VER + '</p><p>Founder and Creator<br><b class="fb">' + esc(FOUNDER.name) + '</b></p><p class="mu">' + esc(FOUNDER.tag) + '</p><p class="mu"><small>Privacy: your tasks, notes and settings are stored only on this device. Online features (Quran, prayer times, AI) send only what you search or ask to those services.</small></p></section>';
+
+  /* habits */
+  const HSUG = ['Drink water 💧', 'Read 20 minutes 📖', 'Exercise 🏃', 'Pray on time 🕌', 'Revise notes ✍️', 'Sleep before 11 pm 😴', 'No phone while studying 📵', 'Review flashcards 🗂'];
+  const wkDays = () => { const d = new Date(), s = new Date(d.getFullYear(), d.getMonth(), d.getDate() - ((d.getDay() + 6) % 7)); return [0, 1, 2, 3, 4, 5, 6].map(i => day(new Date(s.getFullYear(), s.getMonth(), s.getDate() + i))); };
+  VIEWS.habits = () => hd('Habits')
+    + '<details class="card"><summary>How habits work</summary><p class="mu" style="margin-top:8px">1) Add a small habit. 2) Tap the circle each day you do it. 3) Your streak counts days in a row. Missing a day resets it, so keep habits small. Set a reminder time and StudyPilot shows a reminder while the app is open.</p></details>'
+    + '<section class="card"><h2>Common habits</h2><div class="row">' + HSUG.map(h => '<button class="btn ghost" data-act="habadd" data-n="' + esc(h) + '" style="min-height:38px">' + esc(h) + '</button>').join('') + '</div></section>'
+    + '<form class="card" data-form="habit"><h2>Custom habit</h2><input name="n" required maxlength="60" placeholder="e.g. Read 20 pages" aria-label="Habit"><input name="rt" type="time" aria-label="Reminder time (optional)"><button class="btn">＋ Add habit</button></form>'
+    + (X.habits.length ? X.habits.map(h => { const tot = Object.keys(h.days).length, r30 = [...Array(30)].filter((_, i) => h.days[addDays(day(), -i)]).length; return '<section class="card"><div class="task" style="border:0;padding:0"><button class="chk" data-act="hab" data-id="' + esc(h.id) + '" aria-label="Done today">' + (h.days[day()] ? '✓' : '') + '</button><div><b>' + esc(h.n) + '</b><small>🔥 ' + hs(h) + ' day streak · ' + tot + ' check-ins · ' + Math.round(r30 / 30 * 100) + '% last 30 days</small></div><button class="ic" data-act="habdel" data-id="' + esc(h.id) + '" aria-label="Delete">🗑</button></div><div class="wd">' + wkDays().map((d, i) => '<span>' + 'MTWTFSS'[i] + '<i class="' + (h.days[d] ? 'on' : '') + '"></i></span>').join('') + '</div><label style="margin:10px 0 0">Reminder time<input type="time" data-hrt data-id="' + esc(h.id) + '" value="' + esc(h.rt || '') + '"></label></section>'; }).join('') : '<p class="mu center">Pick a common habit above or add your own.</p>');
+  FORM.habit = d => { const n = String(d.n || '').trim(); if (!n || X.habits.length >= 50) return; X.habits.push({ id: uid(), n: n.slice(0, 60), days: {}, rt: /^\d\d:\d\d$/.test(d.rt || '') ? d.rt : '' }); sx(); render(); };
+  ACT.habadd = D => { if (X.habits.some(h => h.n === D.n)) { toast('Already added'); return; } if (X.habits.length < 50) { X.habits.push({ id: uid(), n: D.n, days: {}, rt: '' }); sx(); render(); } };
+  const fired = new Set();
+  setInterval(() => { const n = new Date(), hm = String(n.getHours()).padStart(2, '0') + ':' + String(n.getMinutes()).padStart(2, '0'); X.habits.forEach(h => { const k = day() + hm + h.id; if (h.rt === hm && !h.days[day()] && !fired.has(k)) { fired.add(k); toast('Habit reminder: ' + h.n); try { if (window.Notification && Notification.permission === 'granted') new Notification('StudyPilot', { body: h.n }); } catch (e) { /* ignore */ } } }); }, 20000);
+
+  /* GPA */
+  const GDEF = 'A+=4.0\nA=4.0\nA-=3.7\nB+=3.3\nB=3.0\nB-=2.7\nC+=2.3\nC=2.0\nC-=1.7\nD=1.0\nF=0';
+  X.gs = X.gs || GDEF; X.gl = Array.isArray(X.gl) ? X.gl.slice(0, 30) : []; X.gb = X.gb == null ? 1 : X.gb;
+  function pscale(tx) { const m = {}, er = []; String(tx).split('\n').forEach((l, i) => { l = l.trim(); if (!l) return; const p = l.split('='), g = (p[0] || '').trim().toUpperCase(), v = parseFloat(p[1]); if (p.length !== 2 || !g || !(v >= 0 && v <= 10)) er.push('Scale line ' + (i + 1) + ' should look like A=4.0'); else m[g] = v; }); return { m, er }; }
+  function gcalc(tx) {
+    const sc = pscale(X.gs), er = sc.er.slice(); let pts = 0, wp = 0, cr = 0, n = 0;
+    String(tx).split('\n').forEach((l, i) => { l = l.trim(); if (!l) return; const p = l.split(',').map(s => s.trim()), g = (p[1] || '').toUpperCase(), c = parseFloat(p[2]); if (p.length < 3 || sc.m[g] === undefined || !(c > 0 && c <= 30)) { er.push('Line ' + (i + 1) + ': write  Course, Grade, Credits  (grade must exist in your scale)'); return; } const h = /^h/i.test(p[3] || ''); pts += sc.m[g] * c; wp += (sc.m[g] + (h ? +X.gb : 0)) * c; cr += c; n++; });
+    return { er, n, cr, gpa: cr ? pts / cr : null, w: cr ? wp / cr : null };
+  }
+  VIEWS.gpa = () => { const r = ui.gres; return hd('GPA')
+    + '<details class="card"><summary>What is GPA?</summary><p class="mu" style="margin-top:8px">GPA (Grade Point Average) turns letter grades into points (for example A = 4.0), multiplies each by the course credits, adds them up and divides by total credits. Weighted GPA adds a bonus to harder courses (honors, marked H). Example: Maths A 4 credits, Physics B+ 3, English B 2 gives (4×4.0 + 3×3.3 + 2×3.0) ÷ 9 = 3.54.</p><p class="mu"><b>Sri Lanka:</b> O/L and A/L results are subject grades (O/L: A, B, C, S, W. A/L: A, B, C, S, F), not a GPA. University admission uses the Z-score, which is a different calculation. Confirm details with the Department of Examinations.</p></details>'
+    + '<form class="card" data-form="gpa"><h2>Calculator</h2><textarea name="g" rows="6" placeholder="Maths, A, 4&#10;Physics, B+, 3&#10;Chemistry, A, 3, H">' + esc(ui.gin || '') + '</textarea><button class="btn" style="margin-top:8px">Calculate</button>'
+    + (r ? (r.er.length ? '<p class="flash" style="color:var(--bad)">' + r.er.map(esc).join('<br>') + '</p>' : r.gpa === null ? '<p class="mu">Enter at least one course.</p>' : '<p class="flash"><b>GPA ' + r.gpa.toFixed(2) + '</b> · weighted ' + r.w.toFixed(2) + '<br><small>' + r.n + ' courses, ' + r.cr + ' credits</small></p><button class="btn ghost" type="button" data-act="gsv">Save this result</button>') : '') + '</form>'
+    + '<form class="card" data-form="gscale"><h2>Grading scale (editable)</h2><textarea name="s" rows="6">' + esc(X.gs) + '</textarea><label style="margin-top:8px">Honors bonus for weighted GPA<input name="b" type="number" step="0.1" min="0" max="2" value="' + esc(X.gb) + '"></label><div class="row"><button class="btn">Save scale</button><button class="btn ghost" type="button" data-act="gdef">Reset</button></div><small>One grade per line, like A=4.0</small></form>'
+    + (X.gl.length ? '<section class="card"><h2>Saved calculations</h2><ul>' + X.gl.map(s => '<li class="task"><div><b>GPA ' + s.gpa + ' (weighted ' + s.w + ')</b><small>' + esc(s.date) + ' · ' + s.cr + ' credits</small></div><button class="ic" data-act="gdel" data-id="' + esc(s.id) + '" aria-label="Delete">🗑</button></li>').join('') + '</ul></section>' : ''); };
+  FORM.gpa = d => { ui.gin = String(d.g || '').slice(0, 3000); ui.gres = gcalc(ui.gin); render(); };
+  FORM.gscale = d => { const p = pscale(d.s); if (p.er.length || !Object.keys(p.m).length) { toast(p.er[0] || 'Add at least one grade'); return; } X.gs = String(d.s).slice(0, 1000); X.gb = clamp(d.b, 0, 2, 1); sx(); ui.gres = null; render(); toast('Scale saved'); };
+  Object.assign(ACT, {
+    gdef() { X.gs = GDEF; X.gb = 1; sx(); ui.gres = null; render(); },
+    gsv() { const r = ui.gres; if (!r || r.gpa === null || r.er.length) return; X.gl.unshift({ id: uid(), date: day(), gpa: r.gpa.toFixed(2), w: r.w.toFixed(2), cr: r.cr }); X.gl = X.gl.slice(0, 30); sx(); render(); toast('Saved'); },
+    gdel(D) { X.gl = X.gl.filter(s => s.id !== D.id); sx(); render(); }
+  });
+
+  /* Quran reader: translations, transliteration, bookmarks, last read, verse search */
+  const TRN = { 'en.sahih': 'Saheeh International', 'en.pickthall': 'Pickthall', 'en.yusufali': 'Yusuf Ali', 'en.asad': 'Muhammad Asad' };
+  X.tr = TRN[X.tr] ? X.tr : 'en.sahih'; X.qfs = X.qfs || 1.6; X.bm = Array.isArray(X.bm) ? X.bm.slice(0, 200) : []; Q.s2 = {}; Q.gs = null;
+  const q0 = VIEWS.quran, sname = n => { const s = Q.list && Q.list.find(x => x[0] === n); return s ? s[1] : 'Surah ' + n; };
+  VIEWS.quran = () => {
+    const base = q0();
+    if (!ui.sur) {
+      const i = base.indexOf('</div>') + 6, g = Q.gs;
+      const ex = (X.lr ? '<section class="card"><p class="mu">Last read</p><h2>' + esc(sname(X.lr.n)) + ', ayah ' + X.lr.i + '</h2><button class="btn" data-act="qopen" data-n="' + X.lr.n + '">Continue reading</button></section>' : '')
+        + (X.bm.length ? '<section class="card"><h2>Bookmarks</h2><ul>' + X.bm.map(b => { const p = b.split(':'); return '<li class="task"><div><b>' + esc(sname(+p[0])) + ' : ' + p[1] + '</b></div><button class="ic" data-act="qopen" data-n="' + p[0] + '" aria-label="Open">📖</button></li>'; }).join('') + '</ul></section>' : '')
+        + '<section class="card"><h2>Reading preferences</h2><label>Translation<select data-qtr>' + Object.keys(TRN).map(k => '<option value="' + k + '"' + (k === X.tr ? ' selected' : '') + '>' + TRN[k] + '</option>').join('') + '</select></label><label><input type="checkbox" data-qtl' + (X.tl ? ' checked' : '') + '>Show transliteration</label><label>Arabic text size<input type="range" min="1.2" max="2.8" step="0.1" value="' + X.qfs + '" data-qfs></label></section>'
+        + '<form class="card" data-form="qg"><h2>Search verses (English)</h2><input name="q" maxlength="60" placeholder="e.g. patience" value="' + esc(g ? g.k : '') + '" aria-label="Search verses"><button class="btn">Search</button>' + (g ? (g.r ? (g.r.length ? '<ul>' + g.r.map(m => '<li class="task"><div><b>' + esc(m[1]) + ' ' + m[2] + '</b><small>' + esc(m[3]) + '</small></div><button class="ic" data-act="qopen" data-n="' + m[0] + '" aria-label="Open">📖</button></li>').join('') + '</ul>' : '<p class="mu">' + (g.e ? 'Search failed. Check your internet.' : 'No matches.') + '</p>') : '<p class="mu">Searching…</p>') : '') + '</form>';
+      return base.slice(0, i) + ex + base.slice(i);
+    }
+    const n = ui.sur, key = n + '|' + X.tr + '|' + (X.tl ? 1 : 0), d = Q.s2[key], f = (ui.vq || '').toLowerCase();
+    if (!X.lr || X.lr.n !== n) { X.lr = { n, i: 1 }; sx(); }
+    if (!d && !Q.busy && !Q.err) { Q.busy = 1; qget('https://api.alquran.cloud/v1/surah/' + n + '/editions/quran-uthmani,' + X.tr + (X.tl ? ',en.transliteration' : ''), j => { Q.s2[key] = { ar: j.data[0].ayahs.map(a => a.text), tr: j.data[1].ayahs.map(a => a.text), tl: X.tl && j.data[2] ? j.data[2].ayahs.map(a => a.text) : null }; Q.busy = 0; render(); }); }
+    const err = Q.err ? '<section class="card"><p>' + esc(Q.err) + '</p><button class="btn" data-act="qrl">Try again</button></section>' : '';
+    return '<div class="top"><h1>' + esc(sname(n)) + '</h1><button class="btn ghost" data-act="qback">← Surahs</button></div>'
+      + '<section class="card"><div class="row"><button class="btn" data-act="qplay" data-n="' + n + '">▶ Play recitation</button></div><form data-form="qv" style="margin-top:8px"><input name="q" maxlength="40" value="' + esc(ui.vq || '') + '" placeholder="Filter verses in this surah" aria-label="Filter verses"></form></section>' + err
+      + (d ? '<section class="card">' + d.ar.map((a, i) => (f && (a + ' ' + d.tr[i] + ' ' + (d.tl ? d.tl[i] : '')).toLowerCase().indexOf(f) < 0) ? '' : '<div style="padding:8px 0;border-bottom:1px solid var(--bd)"><p class="ar" lang="ar" style="font-size:' + X.qfs + 'rem">' + esc(a) + ' ﴿' + (i + 1) + '﴾</p>' + (d.tl ? '<p class="mu"><i>' + esc(d.tl[i]) + '</i></p>' : '') + '<p class="mu">' + esc(d.tr[i]) + '</p><div class="row"><button class="btn ghost" data-act="qbm" data-n="' + n + '" data-i="' + (i + 1) + '" style="min-height:36px">' + (X.bm.includes(n + ':' + (i + 1)) ? '🔖 Saved' : '🔖 Bookmark') + '</button><button class="btn ghost" data-act="qlr" data-n="' + n + '" data-i="' + (i + 1) + '" style="min-height:36px">📍 Last read</button></div></div>').join('') + '</section>' : Q.err ? '' : '<p class="mu center">Loading…</p>');
+  };
+  FORM.qv = d => { ui.vq = String(d.q || '').slice(0, 40); render(); };
+  FORM.qg = d => {
+    const k = String(d.q || '').trim().slice(0, 60); if (k.length < 3) { toast('Type at least 3 letters'); return; }
+    Q.gs = { k, r: null }; render();
+    fetch('https://api.alquran.cloud/v1/search/' + encodeURIComponent(k) + '/all/en.sahih').then(r => r.json()).then(j => { Q.gs.r = ((j.data && j.data.matches) || []).slice(0, 20).map(m => [m.surah.number, m.surah.englishName, m.numberInSurah, m.text]); render(); }).catch(() => { Q.gs.r = []; Q.gs.e = 1; render(); });
+  };
+  ACT.qbm = D => { const k = D.n + ':' + D.i; X.bm = X.bm.includes(k) ? X.bm.filter(b => b !== k) : X.bm.concat(k); sx(); render(); };
+  ACT.qlr = D => { X.lr = { n: +D.n, i: +D.i }; sx(); toast('Last read saved'); };
+  document.addEventListener('change', e => { const el = e.target; if (!el.dataset) return; if (el.dataset.qtr !== undefined) { X.tr = TRN[el.value] ? el.value : 'en.sahih'; sx(); } else if (el.dataset.qtl !== undefined) { X.tl = el.checked; sx(); } else if (el.dataset.qfs !== undefined) { X.qfs = clamp(el.value, 1.2, 2.8, 1.6); sx(); } else if (el.dataset.hrt !== undefined) { const h = X.habits.find(k => k.id === el.dataset.id); if (h) { h.rt = el.value; sx(); toast('Reminder saved'); } } });
+
+  /* Qibla (calculated from your real device location only) */
+  const p0 = VIEWS.prayer;
+  VIEWS.prayer = () => p0() + '<section class="card center"><h2>🧭 Qibla</h2>' + (X.qb != null ? '<p class="big">' + Math.round(X.qb) + '°</p><div style="font-size:3rem;display:inline-block;transform:rotate(' + X.qb + 'deg)">⬆️</div><small>Degrees clockwise from true North, calculated from your device location. Phone compasses use magnetic North, so confirm with a compass app.</small>' : '<p class="mu">Uses your device location once to calculate the direction. Nothing is sent anywhere.</p>') + '<button class="btn" data-act="qibla">Find Qibla direction</button></section>';
+  ACT.qibla = () => { if (!navigator.geolocation) { toast('Location is not available on this device'); return; } navigator.geolocation.getCurrentPosition(p => { const r = Math.PI / 180, a = p.coords.latitude * r, b = 21.4225 * r, dl = (39.8262 - p.coords.longitude) * r; X.qb = ((Math.atan2(Math.sin(dl) * Math.cos(b), Math.cos(a) * Math.sin(b) - Math.sin(a) * Math.cos(b) * Math.cos(dl)) / r) + 360) % 360; sx(); render(); }, () => toast('Location permission is needed for Qibla'), { timeout: 10000 }); };
+
+  /* advanced settings */
+  const s0 = VIEWS.settings, HL = { clock: 'Live clock', qa: 'Quick actions', tasks: 'Today’s tasks', sched: 'Study schedule', quote: 'Tip and motivation', activity: 'Recent activity' };
+  VIEWS.settings = () => s0() + '<section class="card"><h2>Appearance</h2><label>Font<select data-x2="ff">' + [['sys', 'System'], ['serif', 'Classic serif'], ['human', 'Humanist'], ['round', 'Rounded'], ['mono', 'Monospace']].map(o => '<option value="' + o[0] + '"' + ((X.ff || 'sys') === o[0] ? ' selected' : '') + '>' + o[1] + '</option>').join('') + '</select></label><label>Animations<select data-x2="anim"><option value="full"' + (S.calm ? '' : ' selected') + '>Full</option><option value="reduced"' + (S.calm ? ' selected' : '') + '>Reduced (faster, saves battery)</option></select></label><label><input type="checkbox" data-x2="shine"' + (X.shine ? ' checked' : '') + '>Gold shimmer effects</label><label><input type="checkbox" data-x2="hc"' + (X.hc ? ' checked' : '') + '>High contrast</label></section>'
+    + '<section class="card"><h2>Home screen</h2>' + Object.keys(HL).map(k => '<label><input type="checkbox" data-x2="h_' + k + '"' + (X.home[k] ? ' checked' : '') + '>' + HL[k] + '</label>').join('') + '</section>'
+    + '<section class="card"><h2>Notifications and privacy</h2><p class="mu">Habit reminders appear inside the app while it is open. Allow notifications to also get a system alert.</p><div class="row"><button class="btn" data-act="notif">Allow notifications</button><button class="btn danger" data-act="aiwipe">Delete AI chat history</button></div><p class="mu"><small>Your data stays on this device. Quran, prayer times and AI use online services only when you open them.</small></p></section>';
+  ACT.notif = () => { if (!window.Notification) { toast('Notifications are not supported here'); return; } Notification.requestPermission().then(p => toast(p === 'granted' ? 'Notifications allowed' : 'Notifications not allowed')); };
+  ACT.aiwipe = () => { X.chat = []; sx(); toast('AI chat deleted'); };
+  document.addEventListener('change', e => {
+    const el = e.target, k = el.dataset && el.dataset.x2; if (!k) return;
+    if (k === 'ff') X.ff = FF[el.value] ? el.value : 'sys'; else if (k === 'anim') { S.calm = el.value === 'reduced'; save(); } else if (k === 'shine') X.shine = el.checked; else if (k === 'hc') X.hc = el.checked; else if (k.indexOf('h_') === 0) X.home[k.slice(2)] = el.checked ? 1 : 0;
+    sx(); look();
+  });
+
+
+  /* ===== Luxe theme: black + metallic gold + silver, glitter, liquid glass ===== */
+  const sty3 = document.createElement('style');
+  sty3.textContent = `
+[data-theme=luxe]{--bg1:#000;--bg2:#1a1507;--tx:#fbf6e6;--mu:#bdb7a6;--solid:#0f0d08;--bd:rgba(230,195,92,.3);--glow:rgba(230,195,92,.3);--silver:#d9dde6}
+[data-theme=luxe] body{background:radial-gradient(900px 520px at 88% -8%,rgba(230,195,92,.30),transparent 65%),radial-gradient(760px 520px at -12% 45%,rgba(205,210,225,.16),transparent 65%),linear-gradient(165deg,#1d1808,#000 55%,#0c0d11) fixed}
+[data-theme=luxe] .live i:nth-child(1){background:#e6c35c;opacity:.4}
+[data-theme=luxe] .live i:nth-child(2){background:#c9ced9;opacity:.22}
+[data-theme=luxe] .live i:nth-child(3){background:#a9791f;opacity:.3}
+[data-theme=luxe] .card{background:linear-gradient(145deg,rgba(255,236,170,.15),rgba(255,255,255,.04) 42%,rgba(190,198,215,.11));border:1px solid transparent;backdrop-filter:blur(30px) saturate(210%) brightness(1.08);-webkit-backdrop-filter:blur(30px) saturate(210%) brightness(1.08);box-shadow:inset 0 1px 0 rgba(255,244,200,.5),inset 0 -1px 0 rgba(180,190,210,.28),inset 0 0 26px rgba(255,220,120,.07),0 18px 42px rgba(0,0,0,.6)}
+[data-theme=luxe] .card::before{inset:0;height:auto;padding:1px;border-radius:inherit;background:linear-gradient(135deg,rgba(255,236,170,.95),rgba(255,255,255,.1) 30%,rgba(205,210,225,.6) 60%,rgba(230,195,92,.85));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:.9}
+[data-theme=luxe] h1,[data-theme=luxe] h2{background:linear-gradient(100deg,#fff 0%,#f5dc8a 28%,#d9dde6 50%,#e6c35c 74%,#fff 100%);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:shn 9s linear infinite}
+[data-theme=luxe] .btn{background:linear-gradient(135deg,#fff1b8,#e6c35c 45%,#b8892b 78%,#f3e2a0);color:#1a1202;box-shadow:inset 0 1px 0 rgba(255,255,255,.75),0 8px 22px rgba(230,195,92,.35)}
+[data-theme=luxe] .btn.ghost{background:linear-gradient(135deg,rgba(255,255,255,.1),rgba(255,255,255,.02));color:var(--silver);border:1px solid rgba(217,221,230,.42);box-shadow:inset 0 1px 0 rgba(255,255,255,.22)}
+[data-theme=luxe] .btn.danger{background:transparent;color:var(--bad);box-shadow:none}
+[data-theme=luxe] .seg button.on,[data-theme=luxe] .chk,[data-theme=luxe] .task.done .chk{border-color:#e6c35c}
+[data-theme=luxe] .seg button.on,[data-theme=luxe] .task.done .chk{background:linear-gradient(135deg,#fff1b8,#e6c35c,#b8892b);color:#1a1202}
+[data-theme=luxe] .meter i,[data-theme=luxe] .bar i{background:linear-gradient(90deg,#b8892b,#f5dc8a,#fff)}
+[data-theme=luxe] #nav{background:linear-gradient(145deg,rgba(255,236,170,.16),rgba(18,15,8,.6));border:1px solid rgba(230,195,92,.42);backdrop-filter:blur(32px) saturate(210%);-webkit-backdrop-filter:blur(32px) saturate(210%);box-shadow:inset 0 1px 0 rgba(255,244,200,.5),0 14px 40px rgba(0,0,0,.65)}
+[data-theme=luxe] #nav button.on{background:linear-gradient(135deg,#fff1b8,#e6c35c,#b8892b);color:#1a1202;box-shadow:0 4px 14px rgba(230,195,92,.4)}
+[data-theme=luxe] input,[data-theme=luxe] select,[data-theme=luxe] textarea{background:rgba(0,0,0,.5);border:1px solid rgba(230,195,92,.32)}
+[data-theme=luxe] .ring b{background:#0b0a06}
+.live s{position:absolute;border-radius:50%;opacity:0;animation:tw2 5s ease-in-out infinite}
+@keyframes tw2{0%,100%{opacity:0;transform:scale(.4)}50%{opacity:1;transform:scale(1.15)}}
+`;
+  document.head.appendChild(sty3);
+  for (let i = 0; i < 34; i++) {
+    const g = document.createElement('s'), z = 2 + Math.random() * 3, c = ['#fff4c2', '#e6c35c', '#ffffff', '#d9dde6'][i % 4];
+    g.style.cssText = 'left:' + (Math.random() * 100).toFixed(1) + '%;top:' + (Math.random() * 100).toFixed(1) + '%;width:' + z.toFixed(1) + 'px;height:' + z.toFixed(1) + 'px;background:' + c + ';box-shadow:0 0 ' + (z * 3).toFixed(0) + 'px ' + c + ';animation-duration:' + (3 + Math.random() * 4).toFixed(1) + 's;animation-delay:-' + (Math.random() * 6).toFixed(1) + 's';
+    lv.appendChild(g);
+  }
+  PRE.unshift(['Luxe Black·Gold·Silver', 'luxe', '#e6c35c']);
+  if (!X.m3) { X.m3 = 1; X.shine = true; S.theme = 'luxe'; S.accent = '#e6c35c'; save(); sx(); }
+
 })();
 
 /* ---------- start ---------- */
